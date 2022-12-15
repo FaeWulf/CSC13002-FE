@@ -8,13 +8,12 @@
                     lớp ở nút phía dưới
                 </h3>
             </div>
-            <form action="/search" method="get">
+            <!-- <form action="" method=""> -->
                 <div class="search-container">
                     <div class="input-box">
                         <input
                             type="text"
                             placeholder="Tên học sinh..."
-                            spellcheck="false"
                         />
                         <span class="icon">
                             <i class="bx bx-search search-icon"></i>
@@ -22,7 +21,7 @@
                     </div>
                     <button id="btn-search">Tìm kiếm</button>
                 </div>
-            </form>
+            <!-- </form> -->
 
             <div class="table-content">
                 <table id="table-std">
@@ -30,8 +29,8 @@
                         <th class="text">STT</th>
                         <th class="text">Tên</th>
                         <th class="text">Lớp</th>
-                        <th class="text">TB Học kì 1</th>
-                        <th class="text">TB Học kì 2</th>
+                        <th class="text">Học kì 1</th>
+                        <th class="text">Học kì 2</th>
                     </thead>
                     <tbody>
                         <tr>
@@ -67,7 +66,6 @@ export default {
 };
 </script>
 <style scoped>
-
 body.dark .main-content .text {
     color: var(--text-color);
 }
@@ -101,6 +99,7 @@ h3 {
 }
 
 #btn-search {
+    margin-left: 20px;
     display: block;
     float: right;
     width: 150px;
@@ -188,5 +187,9 @@ table {
 }
 td, th {
     border: 1px solid var(--text-color);
+}
+
+#table-std th {
+    color: var(--primary-color);
 }
 </style>

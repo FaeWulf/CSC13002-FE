@@ -53,25 +53,30 @@
                 </div>
             </div>
         </div>
-        <div class="right-panel">   
+        <div class="right-panel">
             <div class="avatar">
                 <h1>Thông tin tài khoản</h1>
-                <h5>Giáo vụ</h5>
+                <h3>Giáo vụ</h3>
                 <div class="avt-img">
                     <img src="img/logo_small.png" alt="Avatar" />
                 </div>
-                <label for="myFile" id="change">Sửa</label>
-                <input type="file" id="myFile" name="Sửa" style="visibility:hidden;"/>
-                <input type="button" id="remove" value="Gỡ" />
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input id="email" name="email" type="email" disabled/>
-                    <label for="name">Tên</label>
-                    <input id="name" type="text" />
-                    <label for="phone">Số điện thoại</label>
-                    <input id="phone" type="text" />
-                    <!-- <label for="password">Mật khẩu</label>
-                                <input id="password" type="password" /> -->
+                <div class="img-btn">
+                    <label for="myFile" id="change"><i class='bx bx-check'></i><span>Sửa</span></label>
+                    <input type="file" id="myFile" name="Sửa" hidden/>
+                    <label for="myRemove" id="remove"><i class='bx bx-x'></i><span>Xoá</span></label>
+                    <input type="button" id="myRemove" value="Gỡ" hidden>
+                </div>
+                <div class="input-container">
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" disabled />
+
+                        <label for="name">Tên</label>
+                        <input id="name" type="text" />
+
+                        <label for="phone">Số điện thoại</label>
+                        <input id="phone" type="text" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -123,6 +128,7 @@ export default {
     text-align: center;
     margin-bottom: 30px;
 }
+
 .card {
     text-align: left;
     background-color: var(--body-color);
@@ -138,19 +144,27 @@ export default {
 }
 
 .avatar h1,
-h5 {
+h3 {
     text-align: center;
 }
 
-.input-group {
+.input-container {
+    display: flex;
+    flex-direction: row;
     justify-content: center;
-    margin: 30px 50px;
 }
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 30px 10px;
+}
+
 .input-group input {
-    display: block;
     height: 40px;
+    width: 300px;
     margin: 5px 0px 30px;
-    width: 60%;
     font-size: 25px;
     padding-left: 10px;
     color: var(--text-color);
@@ -159,30 +173,43 @@ h5 {
     border-radius: 6px;
 }
 
+.img-btn {
+    display: flex;
+    justify-content: center;
+}
+
 #remove {
-    margin: 0px 20px;
-    width: 100px;
-    max-height: 40px;
-    padding: 10px;
+    margin-left: 30px;
+    padding: 0 15px 0 10px;
+    height: 40px;
     background-color: var(--remove-btn);
-    color: var(--text-color);
+    color: #fff;
     border-radius: 20px 20px;
     border-width: 0;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+}
+
+#remove i{
+    padding-right: 5px;
     font-size: 20px;
 }
 
 #change {
-    margin-left: 50px;
-    width: 100px;
+    padding: 0 15px 0 10px;
     height: 40px;
-    padding: 10px 25px;
     background-color: var(--change-btn);
-    color: var(--text-color);
+    color: #fff;
     border-radius: 20px 20px;
     border-width: 0;
-    display: inline-block;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+}
+
+#change i {
+    padding-right: 5px;
     font-size: 20px;
 }
 
@@ -191,9 +218,10 @@ h5 {
 }
 
 .avt-img {
-   text-align: center;
-   margin: 10px;
+    text-align: center;
+    margin: 10px;
 }
+
 #email {
     pointer-events: none;
 }

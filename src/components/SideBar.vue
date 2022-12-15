@@ -337,7 +337,6 @@ body.dark .sidebar header .toggle {
     background-color: transparent;
     display: flex;
     align-items: center;
-    height: 100%;
     width: 100%;
     border-radius: 6px;
     text-decoration: none;
