@@ -7,7 +7,9 @@
                     <img @mouseover="openNav" src="img/logo_small.png" alt="" />
                 </span>
                 <div class="text logo-text">
-                    <span class="name">Nhóm <span class="groupname">14</span></span>
+                    <span class="name"
+                        >Nhóm <span class="groupname">14</span></span
+                    >
                     <span class="profession">Quản lý học sinh</span>
                 </div>
             </div>
@@ -20,9 +22,10 @@
                 <ul class="menu-links">
                     <router-link to="/home">
                         <li class="nav-link">
-                            <label @click="onTagClicked($event, 0)" :class="
-                                currentTab === 0 ? 'current-nav' : ''
-                            ">
+                            <label
+                                @click="onTagClicked($event, 0)"
+                                :class="currentTab === 0 ? 'current-nav' : ''"
+                            >
                                 <i class="bx bx-home-alt icon"></i>
                                 <span class="text nav-text">Trang chủ</span>
                             </label>
@@ -31,9 +34,10 @@
                     <!-- Tra cứu -->
                     <router-link to="/search">
                         <li class="nav-link">
-                            <label @click="onTagClicked($event, 1)" :class="
-                                currentTab === 1 ? 'current-nav' : ''
-                            ">
+                            <label
+                                @click="onTagClicked($event, 1)"
+                                :class="currentTab === 1 ? 'current-nav' : ''"
+                            >
                                 <i class="bx bx-search-alt icon"></i>
                                 <span class="text nav-text">Tra cứu</span>
                             </label>
@@ -42,9 +46,10 @@
                     <!-- Giáo vụ -->
                     <router-link to="/management">
                         <li class="nav-link">
-                            <label @click="onTagClicked($event, 2)" :class="
-                                currentTab === 2 ? 'current-nav' : ''
-                            ">
+                            <label
+                                @click="onTagClicked($event, 2)"
+                                :class="currentTab === 2 ? 'current-nav' : ''"
+                            >
                                 <i class="bx bx-edit icon"></i>
                                 <span class="text nav-text">Quản lý</span>
                             </label>
@@ -53,11 +58,10 @@
                     <!-- Quy định -->
                     <router-link to="/regulation">
                         <li class="nav-link">
-                            <label @click="onTagClicked($event, 3)" :class="
-                                currentTab === 3
-                                    ? 'current-nav'
-                                    : ''
-                            ">
+                            <label
+                                @click="onTagClicked($event, 3)"
+                                :class="currentTab === 3 ? 'current-nav' : ''"
+                            >
                                 <i class="bx bx-key icon"></i>
                                 <span class="text nav-text">Quy định</span>
                             </label>
@@ -66,9 +70,10 @@
                     <!-- Thông tin -->
                     <router-link to="/about">
                         <li class="nav-link">
-                            <label @click="onTagClicked($event, 4)" :class="
-                                currentTab === 4 ? 'current-nav' : ''
-                            ">
+                            <label
+                                @click="onTagClicked($event, 4)"
+                                :class="currentTab === 4 ? 'current-nav' : ''"
+                            >
                                 <i class="bx bx-info-circle icon"></i>
                                 <span class="text nav-text">Thông tin</span>
                             </label>
@@ -78,8 +83,17 @@
             </div>
 
             <div class="bottom-content">
+                <!-- Quên mật khẩu -->
+                <router-link style="text-decoration: none" to="/resetpassword">
+                    <li class="reset">
+                        <label @click="onResetPassword">
+                            <i class="bx bx-lock-open icon"></i>
+                            <span class="text nav-text">Quên mật khẩu</span>
+                        </label>
+                    </li>
+                </router-link>
                 <!-- Đăng xuất -->
-                <router-link style="text-decoration: none;" to="/login">
+                <router-link style="text-decoration: none" to="/login">
                     <li class="signout">
                         <label @click="onLogOut">
                             <i class="bx bx-log-out icon"></i>
@@ -94,7 +108,7 @@
                         <i class="bx bx-sun icon sun"></i>
                     </div>
                     <span class="mode-text text">{{
-                            this.isDarkMode ? 'Chế độ sáng' : 'Chế độ tối'
+                        this.isDarkMode ? 'Chế độ sáng' : 'Chế độ tối'
                     }}</span>
                     <div @click="changeMode" class="toggle-switch">
                         <span class="switch"></span>
@@ -127,7 +141,7 @@ export default {
     computed: {
         getTabName() {
             return 0;
-        }
+        },
     },
     methods: {
         changeMode() {
@@ -155,19 +169,27 @@ export default {
             // alert('You are signed out');
             // window.location.href = 'login.html';
         },
+        onResetPassword() {
+            // g_userName = '';
+            // g_isDarkMode = true;
+            // g_isNavClose = false;
+            // this.$tabName = 'Login';
+            // alert('You are signed out');
+            // window.location.href = 'login.html';
+        },
         onTagClicked(e, param1) {
             let tagNumber = parseInt(param1);
             if (tagNumber >= 0 && tagNumber <= 4) {
                 this.currentTab = tagNumber;
             }
             if (this.isNavClose) {
-                console.log(this.isNavClose)
-                document.getElementById('main').className = 'main-content close';
-            }
-            else {
+                console.log(this.isNavClose);
+                document.getElementById('main').className =
+                    'main-content close';
+            } else {
                 document.getElementById('main').className = 'main-content';
             }
-        }
+        },
     },
 };
 </script>
