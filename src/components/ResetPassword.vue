@@ -2,59 +2,51 @@
     <div class="container-fluid">
         <div class="form">
             <div class="text-center">
-                <h6><span>Đăng nhập</span> <span>Đăng ký</span></h6>
-                <input v-model="isBack" @click="onFlip" type="checkbox" class="checkbox" id="reg-log" />
-                <label for="reg-log"></label>
                 <div class="card-3d-wrap">
                     <div class="card-3d-wrapper">
-                        <!-- card front -->
                         <div class="card-front">
                             <div class="center-wrap">
-                                <h4 class="heading">Đăng nhập</h4>
+                                <h4 class="heading">Quên mật khẩu</h4>
                                 <div class="form-group">
-                                    <input :value="emailInput" @input="onEmailInput" type="email" class="form-style"
-                                        placeholder="Email" />
-                                    <i class="input-icon material-icons">alternate_email</i>
+                                    <input
+                                        :value="oldPassword"
+                                        @input="onGetPassword"
+                                        type="password"
+                                        class="form-style"
+                                        placeholder="Nhập mật khẩu cũ"
+                                    />
+                                    <span class="input-icon material-icons"
+                                        >lock_open</span
+                                    >
                                 </div>
                                 <div class="form-group">
-                                    <input :value="passwordInput" @input="onPasswordInput" type="password"
-                                        class="form-style" placeholder="Mật khẩu" />
-                                    <i class="input-icon material-icons">lock</i>
+                                    <input
+                                        :value="passwordInput"
+                                        @input="onPasswordInput"
+                                        type="password"
+                                        class="form-style"
+                                        placeholder="Nhập mật khẩu mới"
+                                    />
+                                    <i class="input-icon material-icons"
+                                        >lock</i
+                                    >
+                                </div>
+                                <div class="form-group">
+                                    <input
+                                        :value="passwordReInput"
+                                        @input="onPasswordReInput"
+                                        type="password"
+                                        class="form-style"
+                                        placeholder="Nhập lại mật khẩu"
+                                    />
+                                    <i class="input-icon material-icons"
+                                        >lock</i
+                                    >
                                 </div>
                                 <div class="form-warning">
                                     {{ warningText }}
                                 </div>
-                                <button href="#" class="btn" @click="onLogin">
-                                    Xong
-                                </button>
-                                <p class="text-center">
-                                    <a href="#" class="link">Quên mật khẩu</a>
-                                </p>
-                            </div>
-                        </div>
-                        <!-- card back -->
-                        <div class="card-back">
-                            <div class="center-wrap">
-                                <h4 class="heading">Đăng ký</h4>
-                                <div class="form-group">
-                                    <input :value="nameInput" @input="onNameInput" type="text" class="form-style"
-                                        placeholder="Tên đầy đủ" />
-                                    <i class="input-icon material-icons">perm_identity</i>
-                                </div>
-                                <div class="form-group">
-                                    <input :value="emailInput" @input="onEmailInput" type="email" class="form-style"
-                                        placeholder="Email" />
-                                    <i class="input-icon material-icons">alternate_email</i>
-                                </div>
-                                <div class="form-group">
-                                    <input :value="passwordInput" @input="onPasswordInput" type="password"
-                                        class="form-style" placeholder="Mật khẩu" />
-                                    <i class="input-icon material-icons">lock</i>
-                                </div>
-                                <div class="form-warning">
-                                    {{ warningText }}
-                                </div>
-                                <button href="#" class="btn" @click="onSignup">
+                                <button href="#" class="btn" @click="onChange">
                                     Xong
                                 </button>
                             </div>
@@ -66,74 +58,48 @@
     </div>
 </template>
 
-<script scoped>
+<script>
 export default {
-    name: 'Login-Register',
+    name: 'ResetPassword',
     // data: variables
     data() {
         return {
-            isBack: false,
-
-            nameInput: '',
-            emailInput: '',
+            oldPassword: '',
             passwordInput: '',
+            passwordReInput: '',
 
             warningText: '',
         };
     },
     // methods: functions
     methods: {
-        onEmailInput(e) {
-            this.emailInput = e.target.value;
-            if (
-                /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(
-                    this.emailInput
-                )
-            ) {
-                this.warningText = '';
-            } else {
-                this.warningText = 'Invalid Email';
-            }
-        },
-
         onPasswordInput(e) {
             this.passwordInput = e.target.value;
             if (
                 /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/.test(
                     this.passwordInput
                 )
-            ) {
-                if (this.warningText != 'Invalid Email') {
-                    this.warningText = '';
-                }
-            } else {
-                if (this.warningText != 'Invalid Email') {
-                    this.warningText = 'Invalid Password';
-                }
-            }
+            )
+                this.warningText = '';
+            else this.warningText = 'Invalid Password';
+        },
+        onPasswordReInput(e) {
+            this.passwordReInput = e.target.value;
+            if (
+                /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/.test(
+                    this.passwordReInput
+                )
+            )
+                this.warningText = '';
+            else this.warningText = 'Invalid Password';
+        },
+        onGetPassword(e) {
+            this.oldPassword = e.target.value;
         },
 
-        onLogin() {
-            console.log('Login...');
-            if (this == true) {
-                console.log(this.emailInput, this.passwordInput);
-            }
-        },
-
-        onFlip() {
-            // this.nameInput = '';
-            // this.emailInput = '';
-            // this.passwordInput = '';
-            // this.warningText = '';
-            // this.isBack = !this.isBack;
-        },
-
-        onNameInput() { },
-
-        onSignup() {
-            console.log('Sign Up...');
-            if (this === true) {
-                window.location.href = 'index.html';
+        onChange() {
+            if (this.passwordInput != this.passwordReInput) {
+                this.warningText = "Passwords don't match";
             }
         },
     },
@@ -141,8 +107,6 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
 * {
     margin: 0;
     padding: 0;
@@ -195,8 +159,8 @@ export default {
     font-size: 16px;
 }
 
-.container-fluid .checkbox:checked+label,
-.container-fluid .checkbox:not(:checked)+label {
+.container-fluid .checkbox:checked + label,
+.container-fluid .checkbox:not(:checked) + label {
     position: relative;
     display: block;
     width: 60px;
@@ -207,8 +171,8 @@ export default {
     cursor: pointer;
 }
 
-.container-fluid .checkbox:checked+label::before,
-.container-fluid .checkbox:not(:checked)+label::before {
+.container-fluid .checkbox:checked + label::before,
+.container-fluid .checkbox:not(:checked) + label::before {
     position: absolute;
     display: block;
     width: 36px;
@@ -226,7 +190,7 @@ export default {
     transition: all 0.5s ease;
 }
 
-.container-fluid .checkbox:checked+label::before {
+.container-fluid .checkbox:checked + label::before {
     transform: translateX(44px) rotate(-270deg);
 }
 
@@ -272,7 +236,7 @@ export default {
     transform: rotateY(180deg);
 }
 
-.container-fluid .checkbox:checked~.card-3d-wrap .card-3d-wrapper {
+.container-fluid .checkbox:checked ~ .card-3d-wrap .card-3d-wrapper {
     transform: rotateY(180deg);
 }
 
