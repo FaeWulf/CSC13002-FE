@@ -4,25 +4,25 @@
             href="#"
             :class="currentTag === 0 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 0)"
-            ><i class="bx bx-user-circle"></i> Tiếp nhận học sinh</a
+            ><i class="bx bx-user-circle"></i><span>Tiếp nhận học sinh</span></a
         >
         <a
             href="#"
             :class="currentTag === 1 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 1)"
-            ><i class="bx bx-layer"></i> Lập danh sách lớp</a
+            ><i class="bx bx-layer"></i><span>Lập danh sách lớp</span></a
         >
         <a
             href="#"
             :class="currentTag === 2 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 2)"
-            ><i class="bx bxs-keyboard"></i> Nhập bảng điểm</a
+            ><i class="bx bxs-keyboard"></i><span>Nhập bảng điểm</span></a
         >
         <a
             href="#"
             :class="currentTag === 3 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 3)"
-            ><i class="bx bxs-file-doc"></i>Lập báo cáo</a
+            ><i class="bx bxs-file-doc"></i><span>Lập báo cáo</span></a
         >
     </div>
     <!-- Tiếp nhận học sinh -->
@@ -30,8 +30,8 @@
         <div class="title">
             <span>Đã chọn</span>
             <div class="btn-group">
-                <button id="remove">Xoá học sinh</button>
-                <button id="change">Hoàn tất sửa đổi</button>
+                <button id="remove"><i class='bx bx-x'></i><span class="btn-text">Xoá học sinh</span></button>
+                <button id="change"><i class='bx bx-check'></i><span class="btn-text">Hoàn tất sửa đổi</span></button>
             </div>
         </div>
         <div class="info-table">
@@ -59,7 +59,7 @@
     <div class="tag-content" v-if="currentTag === 1">
         <div class="class-list">
             <div class="class-select">
-                <span>Danh sách lớp</span>
+                <span class="class-list-title">Danh sách lớp</span>
                 <select name="class">
                     <option value="10A1">10A1</option>
                     <option value="11A2">11A2</option>
@@ -67,8 +67,8 @@
                 </select>
             </div>
             <div class="btn-group">
-                <button id="remove">Xoá lớp</button>
-                <button id="change">Hoàn tất sửa đổi</button>
+                <button id="remove"><i class='bx bx-x'></i><span class="btn-text">Xoá lớp</span></button>
+                <button id="change"><i class='bx bx-x'></i><span class="btn-text">Hoàn tất sửa đổi</span></button>
             </div>
         </div>
         <div class="insert-table">
@@ -221,7 +221,7 @@
             </div>
             <div class="select-group">
                 <label for="term">Học kì</label>
-                <select name="term" id="term">
+                <select name="term2" id="term2">
                     <option value="HK1">HK1</option>
                     <option value="HK2">HK2</option>
                 </select>
@@ -238,8 +238,8 @@
         <div class="mark-title-table">
             <span>10A1 - HK1 - Toán</span>
             <div class="btn-group">
-                <button id="remove">Huỷ</button>
-                <button id="change">Xong</button>
+                <button id="remove"><i class='bx bx-x'></i><span class="btn-text">Huỷ</span></button>
+                <button id="change"><i class='bx bx-x'></i><span class="btn-text">Xong</span></button>
             </div>
         </div>
         <div class="mark-table">
@@ -316,8 +316,8 @@
         </div>
         <div class="report-select">
             <div class="select-group">
-                <label for="term">Học kì</label>
-                <select name="term" id="term">
+                <label for="term1">Học kì</label>
+                <select name="term" id="term1">
                     <option value="HK1">HK1_21-22</option>
                     <option value="HK2">HK2_21-22</option>
                 </select>
@@ -334,8 +334,8 @@
         <div class="report-title-table">
             <span>Báo cáo tổng kết HK1_21-22 - Toán</span>
             <div class="btn-group">
-                <button id="remove">Huỷ</button>
-                <button id="change">Xong</button>
+                <button id="remove"><i class='bx bx-x'></i><span class="btn-text">Huỷ</span></button>
+                <button id="change"><i class='bx bx-check'></i><span class="btn-text">Xong</span></button>
             </div>
         </div>
         <div class="report-table">
@@ -457,25 +457,37 @@ export default {
 }
 
 .nav-group .nav-selected {
+    color: #fff;
     background-color: var(--primary-color);
     opacity: 1;
 }
 
 .nav-group a {
+    display: flex;
+    align-items: center;
+    height: 50px;
     text-decoration: none;
     color: var(--text-color);
-    font-size: 25px;
-    padding: 10px;
+    font-size: 1.5rem;
+    padding: 0 25px 0 20px;
     opacity: 0.75;
-    border-radius: 10px;
+    border-radius: 6px;
     transition: var(--tran-03);
     margin: 0 10px;
 }
 .nav-group a:hover {
-    background-color: var(--primary-color);
+    background-color: var(--hover-color);
     color: var(--text-color);
-    border-radius: 10px;
     opacity: 1;
+}
+.nav-group .nav-selected:hover {
+    background-color: var(--selected-hover-color);
+    color: #fff;
+    opacity: 1;
+}
+
+.nav-group i {
+    padding-right: 10px;
 }
 
 /* CSS for Insert student tab */
@@ -484,30 +496,41 @@ export default {
     justify-content: space-around;
     margin-top: 55px;
 }
-
-.btn-group button {
-    max-width: 200px;
-    height: 40px;
-    margin: 0 10px;
-    border-radius: 15px;
-    font-size: 20px;
-    padding: 5px;
-    cursor: pointer;
-    border: 0;
-    color: var(--text-color);
-}
-
 .title span {
     font-size: 28px;
     color: var(--text-color);
     padding: 10px;
 }
 
+.btn-group button {
+    display: inline-flex;
+    height: 40px;
+    margin: 0 10px;
+    border-radius: 20px;
+    align-items: center;
+    font-size: 20px;
+    padding: 5px;
+    cursor: pointer;
+    border: 0;
+    color: var(--text-color);
+}
+.btn-group .btn-text {
+    font-size: 20px;
+    padding: 0px 15px 0px 0px;
+}
+.btn-group i {
+    font-size: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
 .btn-group #remove {
     background-color: var(--remove-btn);
 }
 .btn-group #change {
     background-color: var(--change-btn);
+}
+.btn-group button:hover {
+    opacity: 0.75;
 }
 
 .info-table {
@@ -552,9 +575,10 @@ export default {
 .class-list {
     display: flex;
     justify-content: space-evenly;
-    margin: 55px -150px 0 -150px;
+    align-items: center;
+    margin: 55px 0;
 }
-.class-list span {
+.class-list .class-list-title {
     font-size: 28px;
     color: var(--primary-color);
     font-weight: 900;
@@ -562,10 +586,15 @@ export default {
     line-height: 15px;
 }
 
-.class-list select {
-    width: 70px;
-    height: 30px;
+select {
+    height: 40px;
     font-size: 20px;
+    background: var(--body-color);
+    color: var(--text-color);
+    margin-left: 10px;
+    padding: 10px;
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
 }
 
 .insert-table {
@@ -607,6 +636,10 @@ export default {
     font-weight: 900;
 }
 
+.search-input {
+    display: flex;
+    align-items: center;
+}
 .search-insert-title input {
     height: 30px;
     width: 350px;
@@ -622,19 +655,26 @@ export default {
     font-size: 20px;
     border-radius: 8px;
     border: 0;
-    margin: 5px;
+    margin-left: 5px;
+}
+
+.search-insert-title i {
+    display: flex;
+    color: var(--text-color);
+    justify-content: center;
+    align-items: center;
 }
 
 #table-std td button {
     max-width: 200px;
     height: 40px;
     margin: 0 10px;
-    border-radius: 15px;
+    border-radius: 20px;
     font-size: 20px;
     padding: 5px;
     cursor: pointer;
-    border: 0;
-    color: var(--text-color);
+    background: var(--body-color);
+    padding: 0 15px;
 }
 
 #table-std td #remove {
@@ -690,12 +730,6 @@ export default {
     color: var(--text-color);
     font-weight: 900;
     padding: 20px;
-}
-
-.select-group select {
-    width: 70px;
-    height: 30px;
-    font-size: 20px;
 }
 
 .select-group #subject {
@@ -781,16 +815,9 @@ export default {
     padding: 20px;
 }
 
-.select-group select {
-    width: 70px;
-    height: 30px;
-    font-size: 20px;
-}
-
 .select-group #subject {
     width: 100px;
 }
-
 .report-title-table {
     display: flex;
     justify-content: space-evenly;
@@ -842,4 +869,5 @@ export default {
     padding: 5px 50px;
     color: var(--text-color);
 }
+
 </style>

@@ -105,9 +105,13 @@ h3 {
     width: 150px;
     font-size: 1.5rem;
     border-radius: 10px;
-    border: 1px solid var(--text-color);
-    color: var(--text-color);
-    background-color: var(--body-color);
+    border-width: 0;
+    color: #fff;
+    background: var(--primary-color);
+}
+
+#btn-search:hover {
+    background: var(--selected-hover-color);
 }
 
 .search input {
