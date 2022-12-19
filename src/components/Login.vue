@@ -107,11 +107,11 @@ export default {
                     "pass": "Gvu3...." 
                 },
                 "qly1": {
-                    "type": 0,
+                    "type": 3,
                     "pass": "Qly1...." 
                 },
                 "qly2": {
-                    "type": 0,
+                    "type": 3,
                     "pass": "Qly2...." 
                 }
             },
