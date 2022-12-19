@@ -9,8 +9,9 @@ import Regulation from '../components/Regulation.vue';
 import ResetPassword from '../components/ResetPassword.vue';
 
 const routes = [
-    { path: '/login', component: Login },
+    { path: '/', component: Login },
     { path: '/home', component: Home },
+    { path: '/login', component: Login },
     { path: '/search', component: Search },
     { path: '/management', component: Management },
     { path: '/regulation', component: Regulation },
