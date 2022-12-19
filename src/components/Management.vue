@@ -38,11 +38,11 @@
             <div class="btn-group">
                 <button id="remove">
                     <i class="bx bx-x"></i
-                    ><span class="btn-text">Xoá học sinh</span>
+                    ><span class="btn-text">Hủy bỏ</span>
                 </button>
                 <button id="change">
                     <i class="bx bx-check"></i
-                    ><span class="btn-text">Hoàn tất sửa đổi</span>
+                    ><span class="btn-text">Thêm học sinh</span>
                 </button>
             </div>
         </div>
@@ -137,14 +137,13 @@
             <div class="update-table">
                 <table>
                     <thead>
-                        <th>Tên</th>
+                        <th style="text-align: left; padding-left: 40px;">Tên</th>
                         <th>Lớp</th>
                         <th>Giới tính</th>
                         <th>Ngày sinh</th>
-                        <th>Điện thoại</th>
+                        <th style="padding-right: 40px;">Điện thoại</th>
                         <th hidden>Email</th>
                         <th hidden>Địa chỉ</th>
-                        <th></th>
                     </thead>
                     <tbody>
                         <tr @click="showDetails($event, 1)">
@@ -195,7 +194,7 @@
                     <i class="bx bx-x"></i><span class="btn-text">Xoá lớp</span>
                 </button>
                 <button id="change">
-                    <i class="bx bx-x"></i
+                    <i class="bx bx-check"></i
                     ><span class="btn-text">Hoàn tất sửa đổi</span>
                 </button>
             </div>
@@ -203,7 +202,7 @@
         <div class="insert-table">
             <table id="table-std">
                 <thead>
-                    <th>Tên</th>
+                    <th style="text-align: left;">Tên</th>
                     <th>Lớp</th>
                     <th>Giới tính</th>
                     <th></th>
@@ -283,7 +282,7 @@
             <div class="insert-table">
                 <table id="table-std">
                     <thead>
-                        <th>Tên</th>
+                        <th style="text-align: left;">Tên</th>
                         <th>Lớp</th>
                         <th>Giới tính</th>
                         <th></th>
@@ -371,7 +370,7 @@
                     <i class="bx bx-x"></i><span class="btn-text">Huỷ</span>
                 </button>
                 <button id="change">
-                    <i class="bx bx-x"></i><span class="btn-text">Xong</span>
+                    <i class="bx bx-check"></i><span class="btn-text">Xong</span>
                 </button>
             </div>
         </div>
@@ -580,7 +579,7 @@ export default {
     height: 50px;
     text-decoration: none;
     color: var(--text-color);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     padding: 0 25px 0 20px;
     opacity: 0.75;
     border-radius: 6px;
@@ -688,26 +687,57 @@ export default {
     display: flex;
     justify-content: center;
     margin-top: 40px;
-    height: 50vh;
+    max-height: 50vh;
     overflow-y: auto;
 }
 
 .update-table table {
-    border-spacing: 30px;
     border: 2px solid var(--text-color);
     border-radius: 25px;
+    padding: 10px 0;
+    max-width: 1060px;
 }
 
+.update-table td:first-child {
+    padding-left: 40px;
+    text-align: left;
+    width: 300px;
+}
+
+.update-table td:nth-child(2) {
+    text-align: center;
+    width: 150px;
+}
+
+.update-table td:nth-child(3) {
+    text-align: center;
+    width: 150px;
+}
+.update-table td:nth-child(4) {
+    text-align: center;
+    width: 200px;
+}
+
+.update-table td:nth-child(5) {
+    width: 180px;
+    text-align: center;
+    padding-right: 40px; 
+}
 .update-table table th {
     font-size: 25px;
     font-weight: 900;
-    padding: 5px 10px;
+    height: 60px;
     color: var(--primary-color);
+}
+.update-table table tr {
+    height: 60px;
+}
+.update-table table tr:hover {
+    background: var(--hover-color);
 }
 
 .update-table table td {
     font-size: 20px;
-    padding: 5px 50px;
     color: var(--text-color);
 }
 
@@ -764,26 +794,48 @@ select {
     display: flex;
     justify-content: center;
     margin-top: 40px;
-    height: 50vh;
+    max-height: 50vh;
     overflow-y: auto;
 }
 
 #table-std {
-    border-spacing: 40px;
     border: 2px solid var(--text-color);
     border-radius: 25px;
+    padding: 15px 0 10px 60px;
+    max-width: 960px;
+}
+
+#table-std td:first-child {
+    width: 300px;
+}
+
+#table-std td:nth-child(2) {
+    text-align: center;
+    width: 150px;
+}
+
+#table-std td:nth-child(3) {
+    text-align: center;
+    width: 150px;
+}
+
+#table-std td:last-child {
+    width: 260px;
+    text-align: center;
 }
 
 #table-std th {
     font-size: 25px;
     font-weight: 900;
-    padding: 5px 50px;
+    height: 70px;
+    padding: 0;
     color: var(--primary-color);
 }
 
 #table-std td {
     font-size: 20px;
-    padding: 5px 50px;
+    padding: 0;
+    height: 70px;
     color: var(--text-color);
 }
 
@@ -798,11 +850,11 @@ select {
     padding: 0 10px;
     font-weight: 900;
 }
-
-.search-input {
+.search-insert-title .search-input {
     display: flex;
     align-items: center;
 }
+
 .search-insert-title input {
     height: 30px;
     width: 350px;
@@ -820,10 +872,13 @@ select {
     border: 0;
     margin-left: 5px;
 }
+.search-insert-title button:hover {
+    opacity: 0.5;
+}
 
 .search-insert-title i {
     display: flex;
-    color: var(--text-color);
+    color: #fff;
     justify-content: center;
     align-items: center;
 }

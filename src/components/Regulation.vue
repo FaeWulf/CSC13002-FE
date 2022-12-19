@@ -18,15 +18,19 @@
     <div class="tag-content" v-if="currentTag === 0">
         <div class="user">
             <div class="select-user">
-                <span>Cấp quyền</span>
+                <span class="title">Cấp quyền</span>
                 <select name="user">
                     <option value="teacher">Giáo viên</option>
                     <option value="manager">Giáo vụ</option>
                 </select>
             </div>
             <div class="btn-group">
-                <button id="remove">Huỷ bỏ cấp quyền</button>
-                <button id="change">Xác nhận cấp quyền</button>
+                <button id="remove">
+                    <i class="bx bx-x"></i><span class="btn-text">Huỷ bỏ cấp quyền</span>
+                </button>
+                <button id="change">
+                    <i class="bx bx-check"></i><span class="btn-text">Xác nhận cấp quyền</span>
+                </button>
             </div>
         </div>
         <div class="info-table">
@@ -76,9 +80,9 @@
             <div class="email-table">
                 <table id="email-std">
                     <thead>
-                        <th>User</th>
-                        <th>Tên</th>
-                        <th>Tài khoản</th>
+                        <th style="text-align: left;">User</th>
+                        <th style="text-align: left;">Tên</th>
+                        <th style="text-align: center;">Tài khoản</th>
                         <th></th>
                     </thead>
                     <tbody>
@@ -108,8 +112,12 @@
         <div class="title-reg">
             <span>Quy định hiện hành</span>
             <div class="btn-group">
-                <button id="remove">Xoá học sinh</button>
-                <button id="change">Hoàn tất sửa đổi</button>
+                <button id="remove">
+                    <i class="bx bx-x"></i><span class="btn-text">Xoá học sinh</span>
+                </button>
+                <button id="change">
+                    <i class="bx bx-check"></i><span class="btn-text">Hoàn tất sửa đổi</span>
+                </button>
             </div>
         </div>
         <div class="notice">
@@ -188,7 +196,7 @@ export default {
 .nav-group a {
     text-decoration: none;
     color: var(--text-color);
-    font-size: 25px;
+    font-size: 1.5rem;
     padding: 10px;
     opacity: 0.75;
     border-radius: 10px;
@@ -205,35 +213,24 @@ export default {
 .user {
     display: flex;
     justify-content: space-evenly;
-    margin: 55px -150px 0 -150px;
+    align-items: center;
+    margin: 55px 0;
 }
-.user span {
+.user .title {
     font-size: 28px;
     color: var(--primary-color);
     font-weight: 900;
     padding: 0 10px;
 }
 .user select {
-    width: 120px;
-    height: 30px;
-    font-size: 20px;
-}
-.btn-group button {
-    max-width: 200px;
     height: 40px;
-    margin: 0 10px;
-    border-radius: 15px;
     font-size: 20px;
-    padding: 5px;
-    cursor: pointer;
-    border: 0;
+    background: var(--body-color);
     color: var(--text-color);
-}
-.btn-group #remove {
-    background-color: var(--remove-btn);
-}
-.btn-group #change {
-    background-color: var(--change-btn);
+    margin-left: 10px;
+    padding: 10px;
+    border: 1px solid var(--text-color);
+    border-radius: 5px;
 }
 .info-table {
     display: flex;
@@ -288,6 +285,12 @@ export default {
     padding: 0 10px;
     font-weight: 900;
 }
+
+.search-email-title .search-input {
+    display: flex;
+    align-items: center;
+}
+
 .search-email-title input {
     height: 30px;
     width: 350px;
@@ -296,6 +299,7 @@ export default {
     padding: 10px;
     border: 0;
 }
+
 .search-email-title button {
     background-color: var(--primary-color);
     height: 30px;
@@ -303,31 +307,63 @@ export default {
     font-size: 20px;
     border-radius: 8px;
     border: 0;
-    margin: 5px;
+    margin-left: 5px;
+}
+
+.search-email-title button:hover {
+    opacity: 0.5;
+}
+
+.search-email-title i {
+    display: flex;
+    color: #fff;
+    justify-content: center;
+    align-items: center;
 }
 .email-table {
     display: flex;
     justify-content: center;
     margin-top: 40px;
-    height: 40vh;
+    max-height: 40vh;
     overflow-y: auto;
 }
 #email-std {
-    border-spacing: 40px;
     border: 2px solid var(--text-color);
     border-radius: 25px;
+    padding: 10px 0 10px 40px;
+    max-width: 1000px;
+}
+
+#email-std td:first-child {
+    width: 300px;
+}
+
+#email-std td:nth-child(2) {
+    width: 300px;
+}
+
+#email-std td:nth-child(3) {
+    text-align: center;
+    width: 180px;
+}
+
+#email-std td:last-child {
+    width: 180px;
+    text-align: center;
 }
 
 #email-std th {
     font-size: 25px;
     font-weight: 900;
-    padding: 5px 50px;
+    height: 70px;
+    padding: 5px 0;
     color: var(--primary-color);
 }
 
 #email-std td {
     font-size: 20px;
-    padding: 5px 40px;
+    height: 70px;
+    padding: 5px 0px;
     color: var(--text-color);
 }
 
@@ -335,12 +371,12 @@ export default {
     max-width: 200px;
     height: 40px;
     margin: 0 10px;
-    border-radius: 15px;
+    border-radius: 20px;
     font-size: 20px;
     padding: 5px;
     cursor: pointer;
-    border: 0;
-    color: var(--text-color);
+    background: var(--body-color);
+    padding: 0 15px;
 }
 
 #email-std td #change {
@@ -362,15 +398,40 @@ export default {
 }
 
 .btn-group button {
-    max-width: 200px;
+    display: inline-flex;
     height: 40px;
     margin: 0 10px;
-    border-radius: 15px;
+    border-radius: 20px;
+    align-items: center;
     font-size: 20px;
     padding: 5px;
     cursor: pointer;
     border: 0;
     color: var(--text-color);
+}
+
+.btn-group .btn-text {
+    color: var(--text-color);
+    font-size: 20px;
+    padding: 0px 15px 0px 0px;
+}
+
+.btn-group i {
+    font-size: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.btn-group #remove {
+    background-color: var(--remove-btn);
+}
+
+.btn-group #change {
+    background-color: var(--change-btn);
+}
+
+.btn-group button:hover {
+    opacity: 0.75;
 }
 
 .title-reg span {
@@ -411,9 +472,9 @@ export default {
     max-width: 200px;
     height: 40px;
     margin: 0 10px;
-    border-radius: 15px;
+    border-radius: 10px;
     font-size: 20px;
-    padding: 5px;
+    padding: 0 10px;
     cursor: pointer;
     border: 2px solid var(--primary-color);
     color: var(--primary-color);
