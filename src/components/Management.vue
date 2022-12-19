@@ -10,18 +10,24 @@
             href="#"
             :class="currentTag === 1 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 1)"
-            ><i class="bx bx-layer"></i><span>Lập danh sách lớp</span></a
+            ><i class="bx bx-layer"></i><span>Cập nhật học sinh</span></a
         >
         <a
             href="#"
             :class="currentTag === 2 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 2)"
-            ><i class="bx bxs-keyboard"></i><span>Nhập bảng điểm</span></a
+            ><i class="bx bxs-keyboard"></i><span>Lập danh sách lớp</span></a
         >
         <a
             href="#"
             :class="currentTag === 3 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 3)"
+            ><i class="bx bxs-file-doc"></i><span>Nhập bảng điểm</span></a
+        >
+        <a
+            href="#"
+            :class="currentTag === 4 ? 'nav-selected' : ''"
+            @click="onTagClicked($event, 4)"
             ><i class="bx bxs-file-doc"></i><span>Lập báo cáo</span></a
         >
     </div>
@@ -30,8 +36,14 @@
         <div class="title">
             <span>Đã chọn</span>
             <div class="btn-group">
-                <button id="remove"><i class='bx bx-x'></i><span class="btn-text">Xoá học sinh</span></button>
-                <button id="change"><i class='bx bx-check'></i><span class="btn-text">Hoàn tất sửa đổi</span></button>
+                <button id="remove">
+                    <i class="bx bx-x"></i
+                    ><span class="btn-text">Xoá học sinh</span>
+                </button>
+                <button id="change">
+                    <i class="bx bx-check"></i
+                    ><span class="btn-text">Hoàn tất sửa đổi</span>
+                </button>
             </div>
         </div>
         <div class="info-table">
@@ -55,8 +67,120 @@
             </table>
         </div>
     </div>
-    <!-- Lâp danh sách lớp -->
+    <!-- Cập nhật học sinh -->
     <div class="tag-content" v-if="currentTag === 1">
+        <div class="update-student" v-if="updateTable === 1">
+            <div class="title">
+                <span>Đã chọn</span>
+                <div class="btn-group">
+                    <button id="remove">
+                        <i class="bx bx-x"></i
+                        ><span class="btn-text">Xoá học sinh</span>
+                    </button>
+                    <button id="change">
+                        <i class="bx bx-check"></i
+                        ><span class="btn-text">Hoàn tất sửa đổi</span>
+                    </button>
+                </div>
+            </div>
+            <div class="info-table">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label>Họ và tên</label
+                                ><input type="text" :value="student.name" />
+                            </td>
+                            <td><label>Email</label><input type="text" :value="student.email"/></td>
+                            <td>
+                                <label>Giới tính</label
+                                ><input type="text" :value="student.gender" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>Lớp</label
+                                ><input type="text" :value="student.grade" />
+                            </td>
+                            <td>
+                                <label>Ngày sinh</label><input type="date" :value="student.birthdate"/>
+                            </td>
+                            <td>
+                                <label>Số điện thoại</label
+                                ><input type="text" :value="student.phone"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <label>Địa chỉ</label
+                                ><textarea id="address" type="text" v-model="student.address" ></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="search-insert">
+            <div class="search-insert-title">
+                <span>Tìm kiếm học sinh</span>
+                <div class="search-input">
+                    <input
+                        id="input-search"
+                        type="text"
+                        placeholder="Nhập tên học sinh ..."
+                    />
+                    <label for="input-search"
+                        ><button @click="printDetails"><i class="bx bx-search"></i></button
+                    ></label>
+                </div>
+            </div>
+            <div class="update-table">
+                <table>
+                    <thead>
+                        <th>Tên</th>
+                        <th>Lớp</th>
+                        <th>Giới tính</th>
+                        <th>Ngày sinh</th>
+                        <th>Điện thoại</th>
+                        <th hidden>Email</th>
+                        <th hidden>Địa chỉ</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <tr @click="showDetails($event, 1)">
+                            <td>ABC</td>
+                            <td>10A1</td>
+                            <td>Nam</td>
+                            <td>2022-11-11</td>
+                            <td>123456789</td>
+                            <td hidden>ABC@gmail.com</td>
+                            <td hidden>TP HCM</td>
+                        </tr>
+                        <tr @click="showDetails($event, 1)">
+                            <td>XYZ</td>
+                            <td>11A1</td>
+                            <td>Nữ</td>
+                            <td>2022-11-11</td>
+                            <td>123456789</td>
+                            <td hidden>XYZ@gmail.com</td>
+                            <td hidden>BD</td>
+                        </tr>
+                        <tr @click="showDetails($event, 1)">
+                            <td>DEF</td>
+                            <td>12A1</td>
+                            <td>Nam</td>
+                            <td>2022-03-02</td>
+                            <td>123456789</td>
+                            <td hidden>DEF@gmail.com</td>
+                            <td hidden>HN</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Lâp danh sách lớp -->
+    <div class="tag-content" v-if="currentTag === 2">
         <div class="class-list">
             <div class="class-select">
                 <span class="class-list-title">Danh sách lớp</span>
@@ -67,8 +191,13 @@
                 </select>
             </div>
             <div class="btn-group">
-                <button id="remove"><i class='bx bx-x'></i><span class="btn-text">Xoá lớp</span></button>
-                <button id="change"><i class='bx bx-x'></i><span class="btn-text">Hoàn tất sửa đổi</span></button>
+                <button id="remove">
+                    <i class="bx bx-x"></i><span class="btn-text">Xoá lớp</span>
+                </button>
+                <button id="change">
+                    <i class="bx bx-x"></i
+                    ><span class="btn-text">Hoàn tất sửa đổi</span>
+                </button>
             </div>
         </div>
         <div class="insert-table">
@@ -206,7 +335,7 @@
         </div>
     </div>
     <!-- Nhập bảng điểm -->
-    <div class="tag-content" v-if="currentTag === 2">
+    <div class="tag-content" v-if="currentTag === 3">
         <div class="mark-title">
             <span>Lựa chọn</span>
         </div>
@@ -238,8 +367,12 @@
         <div class="mark-title-table">
             <span>10A1 - HK1 - Toán</span>
             <div class="btn-group">
-                <button id="remove"><i class='bx bx-x'></i><span class="btn-text">Huỷ</span></button>
-                <button id="change"><i class='bx bx-x'></i><span class="btn-text">Xong</span></button>
+                <button id="remove">
+                    <i class="bx bx-x"></i><span class="btn-text">Huỷ</span>
+                </button>
+                <button id="change">
+                    <i class="bx bx-x"></i><span class="btn-text">Xong</span>
+                </button>
             </div>
         </div>
         <div class="mark-table">
@@ -310,7 +443,7 @@
         </div>
     </div>
     <!-- Lập báo cáo -->
-    <div class="tag-content" v-if="currentTag === 3">
+    <div class="tag-content" v-if="currentTag === 4">
         <div class="report-title">
             <span>Lựa chọn</span>
         </div>
@@ -334,8 +467,13 @@
         <div class="report-title-table">
             <span>Báo cáo tổng kết HK1_21-22 - Toán</span>
             <div class="btn-group">
-                <button id="remove"><i class='bx bx-x'></i><span class="btn-text">Huỷ</span></button>
-                <button id="change"><i class='bx bx-check'></i><span class="btn-text">Xong</span></button>
+                <button id="remove">
+                    <i class="bx bx-x"></i><span class="btn-text">Huỷ</span>
+                </button>
+                <button id="change">
+                    <i class="bx bx-check"></i
+                    ><span class="btn-text">Xong</span>
+                </button>
             </div>
         </div>
         <div class="report-table">
@@ -377,54 +515,6 @@
                         <td>35</td>
                         <td>100</td>
                     </tr>
-                    <tr>
-                        <td>12A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>12A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>10A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>11A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>12A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>12A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>12A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>12A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -436,14 +526,36 @@ export default {
     data() {
         return {
             currentTag: 0,
+            updateTable: 0,
+            student: {
+                name: '',
+                grade: '',
+                gender: '',
+                email: '',
+                birthdate: '',
+                phone: '',
+                address: '',
+            },
         };
     },
     methods: {
         onTagClicked(e, param1) {
             let tagNumber = parseInt(param1);
-            if (tagNumber >= 0 && tagNumber <= 3) {
+            if (tagNumber >= 0 && tagNumber <= 4) {
+                this.updateTable = 0;
                 this.currentTag = tagNumber;
             }
+        },
+        showDetails(e, param1) {
+            this.student.name = e.path[1].childNodes[0].innerText;
+            this.student.grade = e.path[1].childNodes[1].innerText;
+            this.student.gender = e.path[1].childNodes[2].innerText;
+            this.student.email = e.path[1].childNodes[3].innerText;
+            this.student.birthdate = e.path[1].childNodes[4].innerText;
+            this.student.phone = e.path[1].childNodes[5].innerText;
+            this.student.address = e.path[1].childNodes[6].innerText;
+            console.log(this.student.birthdate);
+            this.updateTable = param1;
         },
     },
 };
@@ -570,6 +682,57 @@ export default {
     padding: 10px;
     border: 0;
 }
+
+/* CSS for update students tab  */
+.update-table {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    height: 50vh;
+    overflow-y: auto;
+}
+
+.update-table table {
+    border-spacing: 30px;
+    border: 2px solid var(--text-color);
+    border-radius: 25px;
+}
+
+.update-table table th {
+    font-size: 25px;
+    font-weight: 900;
+    padding: 5px 10px;
+    color: var(--primary-color);
+}
+
+.update-table table td {
+    font-size: 20px;
+    padding: 5px 50px;
+    color: var(--text-color);
+}
+
+.update-table table td #remove {
+    border: 2px solid var(--remove-btn);
+    color: var(--remove-btn);
+}
+
+.update-table table td #remove:hover {
+    background-color: var(--remove-btn);
+    transition: var(--tran-03);
+    color: var(--text-color);
+}
+
+.update-table table td #change {
+    border: 2px solid var(--change-btn);
+    color: var(--change-btn);
+}
+
+.update-table table td #change:hover {
+    background-color: var(--change-btn);
+    transition: var(--tran-03);
+    color: var(--text-color);
+}
+
 
 /* CSS for Create classes tab */
 .class-list {
@@ -869,5 +1032,4 @@ select {
     padding: 5px 50px;
     color: var(--text-color);
 }
-
 </style>

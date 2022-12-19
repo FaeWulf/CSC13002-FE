@@ -274,6 +274,7 @@ export default {
     margin-left: auto;
     margin-right: auto;
     width: 15rem;
+    color: var(--text-color);
 }
 /* CSS title search email  */
 .search-email-title {

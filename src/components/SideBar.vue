@@ -88,7 +88,7 @@
                     <li class="reset">
                         <label @click="onResetPassword">
                             <i class="bx bx-lock-open icon"></i>
-                            <span class="text nav-text">Quên mật khẩu</span>
+                            <span class="text nav-text">Đổi mật khẩu</span>
                         </label>
                     </li>
                 </router-link>

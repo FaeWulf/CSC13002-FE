@@ -6,7 +6,7 @@
                     <div class="card-3d-wrapper">
                         <div class="card-front">
                             <div class="center-wrap">
-                                <h4 class="heading">Quên mật khẩu</h4>
+                                <h4 class="heading">Đổi mật khẩu</h4>
                                 <div class="form-group">
                                     <input
                                         :value="oldPassword"
@@ -76,7 +76,7 @@ export default {
         onPasswordInput(e) {
             this.passwordInput = e.target.value;
             if (
-                /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/.test(
+                /^.{6,}$/.test(
                     this.passwordInput
                 )
             )
@@ -86,7 +86,7 @@ export default {
         onPasswordReInput(e) {
             this.passwordReInput = e.target.value;
             if (
-                /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/.test(
+                /^.{6,}$/.test(
                     this.passwordReInput
                 )
             )
