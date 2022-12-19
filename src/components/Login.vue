@@ -17,12 +17,9 @@
                                     <i class="input-icon material-icons">alternate_email</i>
                                 </div>
                                 <div class="form-group">
-                                    <input :value="passwordInput" @input="onPasswordInput" type="password"
+                                    <input :value="passwordInput" @keyup.enter="onLogin" @input="onPasswordInput" type="password"
                                         class="form-style" placeholder="Mật khẩu" />
                                     <i class="input-icon material-icons">lock</i>
-                                </div>
-                                <div class="form-warning">
-                                    {{ warningText }}
                                 </div>
                                 <button href="#" class="btn" @click="onLogin">
                                     Xong
@@ -51,9 +48,6 @@
                                         class="form-style" placeholder="Mật khẩu" />
                                     <i class="input-icon material-icons">lock</i>
                                 </div>
-                                <div class="form-warning">
-                                    {{ warningText }}
-                                </div>
                                 <button href="#" class="btn" @click="onSignup">
                                     Xong
                                 </button>
@@ -67,76 +61,143 @@
 </template>
 
 <script scoped>
+
+import { app } from '../main';
+
 export default {
     name: 'Login-Register',
     // data: variables
     data() {
         return {
             isBack: false,
-
             nameInput: '',
             emailInput: '',
             passwordInput: '',
-
-            warningText: '',
+            accounts: {
+                "abc": {
+                    "type": 0,
+                    "pass": "Aabc...." 
+                },
+                "xyz": {
+                    "type": 0,
+                    "pass": "Xxyz...." 
+                },
+                "gvi1": {
+                    "type": 1,
+                    "pass": "Gvi1...." 
+                },
+                "gvi2": {
+                    "type": 1,
+                    "pass": "Gvi2...." 
+                },
+                "gvi3": {
+                    "type": 1,
+                    "pass": "Gvi3...." 
+                },
+                "gvu1": {
+                    "type": 2,
+                    "pass": "Gvu1...." 
+                },
+                "gvu2": {
+                    "type": 2,
+                    "pass": "Gvu2...." 
+                },
+                "gvu3": {
+                    "type": 2,
+                    "pass": "Gvu3...." 
+                },
+                "qly1": {
+                    "type": 0,
+                    "pass": "Qly1...." 
+                },
+                "qly2": {
+                    "type": 0,
+                    "pass": "Qly2...." 
+                }
+            },
         };
     },
     // methods: functions
     methods: {
         onEmailInput(e) {
             this.emailInput = e.target.value;
-            if (
-                /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(
-                    this.emailInput
-                )
-            ) {
-                this.warningText = '';
-            } else {
-                this.warningText = 'Invalid Email';
-            }
+            // if (
+            //     /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(
+            //         this.emailInput
+            //     )
+            // ) {
+            //     this.warningText = '';
+            // } else {
+            //     this.warningText = 'Invalid Email';
+            // }
         },
 
         onPasswordInput(e) {
             this.passwordInput = e.target.value;
-            if (
-                /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/.test(
-                    this.passwordInput
-                )
-            ) {
-                if (this.warningText != 'Invalid Email') {
-                    this.warningText = '';
-                }
-            } else {
-                if (this.warningText != 'Invalid Email') {
-                    this.warningText = 'Invalid Password';
-                }
-            }
+            // if (
+            //     /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/.test(
+            //         this.passwordInput
+            //     )
+            // ) {
+            //     if (this.warningText != 'Invalid Email') {
+            //         this.warningText = '';
+            //     }
+            // } else {
+            //     if (this.warningText != 'Invalid Email') {
+            //         this.warningText = 'Invalid Password';
+            //     }
+            // }
         },
 
         onLogin() {
-            console.log('Login...');
-            if (this == true) {
-                console.log(this.emailInput, this.passwordInput);
+            let email = this.emailInput;
+            let pass = this.passwordInput;
+            if (email in this.accounts && pass) {
+                let userInfo = this.accounts[email]
+                let loginStatus = pass.localeCompare(userInfo["pass"])
+                if (loginStatus === 0) {
+                    alert("Login successs!");
+                    app.config.globalProperties.gUserName = email;
+                    app.config.globalProperties.gUserType = userInfo["type"];
+                    this.$router.push('/home');
+                }
+                else {
+                    alert("Password incorrect!");
+                }
+            } else {
+                alert("Account is not exist")
             }
         },
 
         onFlip() {
-            // this.nameInput = '';
-            // this.emailInput = '';
-            // this.passwordInput = '';
-            // this.warningText = '';
-            // this.isBack = !this.isBack;
+            this.nameInput = '';
+            this.emailInput = '';
+            this.passwordInput = '';
         },
 
         onNameInput() { },
 
         onSignup() {
-            console.log('Sign Up...');
-            if (this === true) {
-                window.location.href = 'index.html';
+            let email = this.emailInput;
+            let pass = this.passwordInput;
+            if (!pass || !email) {
+                alert("Email and Password must be filled");
+            } else if (email in this.accounts) {
+                alert("Account already exists");
+            } else {
+                this.accounts[email] = {
+                    "type": 1,
+                    "pass": pass
+                }
+                this.nameInput = '';
+                this.emailInput = '';
+                this.passwordInput = '';
+                alert('Account created!')
+                this.$route.push('/login')
             }
         },
     },
+
 };
 </script>
 
@@ -341,11 +402,6 @@ export default {
 
 .container-fluid .form-group input:focus::placeholder {
     opacity: 0;
-}
-
-.container-fluid .form-warning {
-    color: var(--login-warning-color);
-    font-size: 12px;
 }
 
 /* Button Login SignUp */

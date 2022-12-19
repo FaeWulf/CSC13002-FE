@@ -20,10 +20,10 @@
             <div class="menu">
                 <!-- Home -->
                 <ul class="menu-links">
-                    <router-link to="/home">
+                    <router-link :to="userType != 0 ? '/home' : '/'">
                         <li class="nav-link">
                             <label
-                                @click="onTagClicked($event, 0)"
+                                @click="onTagClicked($event, userType != 0, 0)"
                                 :class="currentTab === 0 ? 'current-nav' : ''"
                             >
                                 <i class="bx bx-home-alt icon"></i>
@@ -32,10 +32,10 @@
                         </li>
                     </router-link>
                     <!-- Tra cứu -->
-                    <router-link to="/search">
+                    <router-link :to="userType >= 1 ? '/search' : '/'">
                         <li class="nav-link">
                             <label
-                                @click="onTagClicked($event, 1)"
+                                @click="onTagClicked($event, userType >= 1, 1)"
                                 :class="currentTab === 1 ? 'current-nav' : ''"
                             >
                                 <i class="bx bx-search-alt icon"></i>
@@ -44,10 +44,10 @@
                         </li>
                     </router-link>
                     <!-- Giáo vụ -->
-                    <router-link to="/management">
+                    <router-link :to="userType >= 2 ? '/management' : (userType >= 1 ? '/home' : '/')">
                         <li class="nav-link">
                             <label
-                                @click="onTagClicked($event, 2)"
+                                @click="onTagClicked($event, userType >= 2, 2)"
                                 :class="currentTab === 2 ? 'current-nav' : ''"
                             >
                                 <i class="bx bx-edit icon"></i>
@@ -56,10 +56,10 @@
                         </li>
                     </router-link>
                     <!-- Quy định -->
-                    <router-link to="/regulation">
+                    <router-link :to="userType >= 3 ? '/regulation' : (userType >= 1 ? '/home' : '/')">
                         <li class="nav-link">
                             <label
-                                @click="onTagClicked($event, 3)"
+                                @click="onTagClicked($event, userType >= 3, 3)"
                                 :class="currentTab === 3 ? 'current-nav' : ''"
                             >
                                 <i class="bx bx-key icon"></i>
@@ -68,10 +68,10 @@
                         </li>
                     </router-link>
                     <!-- Thông tin -->
-                    <router-link to="/about">
+                    <router-link :to="userType != 0 ? '/about' : '/'">
                         <li class="nav-link">
                             <label
-                                @click="onTagClicked($event, 4)"
+                                @click="onTagClicked($event, userType != 0, 4)"
                                 :class="currentTab === 4 ? 'current-nav' : ''"
                             >
                                 <i class="bx bx-info-circle icon"></i>
@@ -84,7 +84,7 @@
 
             <div class="bottom-content">
                 <!-- Quên mật khẩu -->
-                <router-link style="text-decoration: none" to="/resetpassword">
+                <router-link style="text-decoration: none" :to="userType != 0 ? '/resetpassword' : '/'">
                     <li class="reset">
                         <label @click="onResetPassword">
                             <i class="bx bx-lock-open icon"></i>
@@ -93,14 +93,12 @@
                     </li>
                 </router-link>
                 <!-- Đăng xuất -->
-                <router-link style="text-decoration: none" to="/login">
-                    <li class="signout">
-                        <label @click="onLogOut">
-                            <i class="bx bx-log-out icon"></i>
-                            <span class="text nav-text">Đăng xuất</span>
-                        </label>
-                    </li>
-                </router-link>
+                <li class="signout">
+                    <label @click="onLogOut">
+                        <i class="bx bx-log-out icon"></i>
+                        <span class="text nav-text">Đăng xuất</span>
+                    </label>
+                </li>
                 <!-- Dark/Light mode -->
                 <li class="mode">
                     <div class="sun-moon">
@@ -120,21 +118,19 @@
 </template>
 
 <script>
+
+import { app } from '../main';
 const body = document.querySelector('body');
-let g_userName = 'Phong Luu';
-let g_userType = 2; // 0: chưa cấp quyền, 1: giáo viên, 2: giáo vụ, 3: quản trị viên.
-let g_isDarkMode = true;
-let g_isNavClose = false;
 
 export default {
     name: 'SideBar',
     props: ['tabname'],
     data() {
         return {
-            userName: g_userName,
-            userType: g_userType,
-            isDarkMode: g_isDarkMode,
-            isNavClose: g_isNavClose,
+            userName: '',
+            userType: 0,
+            isDarkMode: false,
+            isNavClose: false,
             currentTab: 0,
         };
     },
@@ -143,31 +139,34 @@ export default {
             return 0;
         },
     },
+    beforeMount () {
+        this.changeMode();
+    },
     methods: {
         changeMode() {
-            g_isDarkMode = !g_isDarkMode;
-            this.isDarkMode = g_isDarkMode;
+            this.isDarkMode = !this.isDarkMode;
             body.classList.toggle('dark');
         },
         closeNav() {
-            g_isNavClose = true;
-            this.isNavClose = g_isNavClose;
+            this.isNavClose = true;
             document.getElementById('main').className = 'main-content close';
         },
         openNav() {
-            if (g_isNavClose) {
-                g_isNavClose = false;
-                this.isNavClose = g_isNavClose;
+            if (this.isNavClose) {
+                this.isNavClose = false;
                 document.getElementById('main').className = 'main-content';
             }
         },
         onLogOut() {
-            // g_userName = '';
-            // g_isDarkMode = true;
-            // g_isNavClose = false;
-            // this.$tabName = 'Login';
-            // alert('You are signed out');
-            // window.location.href = 'login.html';
+            let text = 'Are you sure want to Log out?';
+            if (confirm(text) == true) {
+                this.currentTab = 0;
+                app.config.globalProperties.gUserName = '';
+                app.config.globalProperties.gUserType = 0;
+                this.userName = '';
+                this.userType = 0;
+                this.$router.push('/login');
+            }
         },
         onResetPassword() {
             // g_userName = '';
@@ -177,19 +176,34 @@ export default {
             // alert('You are signed out');
             // window.location.href = 'login.html';
         },
-        onTagClicked(e, param1) {
-            let tagNumber = parseInt(param1);
-            if (tagNumber >= 0 && tagNumber <= 4) {
-                this.currentTab = tagNumber;
-            }
-            if (this.isNavClose) {
-                console.log(this.isNavClose);
-                document.getElementById('main').className =
-                    'main-content close';
+        onTagClicked(e, enable, param1) {
+            this.userName = this.gUserName;
+            this.userType = this.gUserType;
+            if (enable) {
+                let tagNumber = parseInt(param1);
+                if (tagNumber >= 0 && tagNumber <= 4) {
+                    this.currentTab = tagNumber;
+                }
+                if (this.isNavClose) {
+                    document.getElementById('main').className = 'main-content close';
+                } else {
+                    document.getElementById('main').className = 'main-content';
+                }
             } else {
-                document.getElementById('main').className = 'main-content';
+                this.currentTab = 0;
+                
+                if (this.isNavClose) {
+                    document.getElementById('main').className = 'main-content close';
+                } else {
+                    document.getElementById('main').className = 'main-content';
+                }
             }
         },
+        changeUser(param) {
+            console.log("param: ",param[0], param[1])
+            // this.userName = param[0];
+            // this.userType = param[1];
+        }
     },
 };
 </script>
