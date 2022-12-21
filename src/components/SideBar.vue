@@ -20,78 +20,78 @@
             <div class="menu">
                 <!-- Home -->
                 <ul class="menu-links">
-                    <router-link :to="userType != 0 ? '/home' : '/'">
+                    <!-- <router-link> -->
                         <li class="nav-link">
                             <label
-                                @click="onTagClicked($event, userType != 0, 0)"
+                                @click="onTagClicked($event, 0)"
                                 :class="currentTab === 0 ? 'current-nav' : ''"
                             >
                                 <i class="bx bx-home-alt icon"></i>
                                 <span class="text nav-text">Trang chủ</span>
                             </label>
                         </li>
-                    </router-link>
+                    <!-- </router-link> -->
                     <!-- Tra cứu -->
-                    <router-link :to="userType >= 1 ? '/search' : '/'">
+                    <!-- <router-link> -->
                         <li class="nav-link">
                             <label
-                                @click="onTagClicked($event, userType >= 1, 1)"
+                                @click="onTagClicked($event, 1)"
                                 :class="currentTab === 1 ? 'current-nav' : ''"
                             >
                                 <i class="bx bx-search-alt icon"></i>
                                 <span class="text nav-text">Tra cứu</span>
                             </label>
                         </li>
-                    </router-link>
+                    <!-- </router-link> -->
                     <!-- Giáo vụ -->
-                    <router-link :to="userType >= 2 ? '/management' : (userType >= 1 ? '/home' : '/')">
+                    <!-- <router-link> -->
                         <li class="nav-link">
                             <label
-                                @click="onTagClicked($event, userType >= 2, 2)"
+                                @click="onTagClicked($event, 2)"
                                 :class="currentTab === 2 ? 'current-nav' : ''"
                             >
                                 <i class="bx bx-edit icon"></i>
                                 <span class="text nav-text">Quản lý</span>
                             </label>
                         </li>
-                    </router-link>
+                    <!-- </router-link> -->
                     <!-- Quy định -->
-                    <router-link :to="userType >= 3 ? '/regulation' : (userType >= 1 ? '/home' : '/')">
+                    <!-- <router-link> -->
                         <li class="nav-link">
                             <label
-                                @click="onTagClicked($event, userType >= 3, 3)"
+                                @click="onTagClicked($event, 3)"
                                 :class="currentTab === 3 ? 'current-nav' : ''"
                             >
                                 <i class="bx bx-key icon"></i>
                                 <span class="text nav-text">Quy định</span>
                             </label>
                         </li>
-                    </router-link>
+                    <!-- </router-link> -->
                     <!-- Thông tin -->
-                    <router-link :to="userType != 0 ? '/about' : '/'">
+                    <!-- <router-link> -->
                         <li class="nav-link">
                             <label
-                                @click="onTagClicked($event, userType != 0, 4)"
+                                @click="onTagClicked($event, 4)"
                                 :class="currentTab === 4 ? 'current-nav' : ''"
                             >
                                 <i class="bx bx-info-circle icon"></i>
                                 <span class="text nav-text">Thông tin</span>
                             </label>
                         </li>
-                    </router-link>
+                    <!-- </router-link> -->
                 </ul>
             </div>
 
             <div class="bottom-content">
                 <!-- Quên mật khẩu -->
-                <router-link style="text-decoration: none" :to="userType != 0 ? '/resetpassword' : '/'">
+                <!-- <router-link style="text-decoration: none"> -->
                     <li class="reset">
-                        <label @click="onResetPassword">
+                        <label @click="onTagClicked($event, 5)" :class="currentTab === 5 ? 'current-nav' : ''">
                             <i class="bx bx-lock-open icon"></i>
                             <span class="text nav-text">Đổi mật khẩu</span>
                         </label>
                     </li>
-                </router-link>
+                <!-- </router-link> -->
                 <!-- Đăng xuất -->
                 <li class="signout">
                     <label @click="onLogOut">
@@ -127,19 +127,14 @@ export default {
     props: ['tabname'],
     data() {
         return {
-            userName: '',
-            userType: 0,
+            userName: this.gUserName,
+            userType: this.gUserType,
             isDarkMode: false,
             isNavClose: false,
             currentTab: 0,
         };
     },
-    computed: {
-        getTabName() {
-            return 0;
-        },
-    },
-    beforeMount () {
+    beforeMount() {
         this.changeMode();
     },
     methods: {
@@ -158,49 +153,103 @@ export default {
             }
         },
         onLogOut() {
-            let text = 'Are you sure want to Log out?';
+            if (!this.getHomePermission()) {
+                return;
+            }
+            let text = 'Bạn có chắc chắn muốn đăng xuất?';
             if (confirm(text) == true) {
                 this.currentTab = 0;
                 app.config.globalProperties.gUserName = '';
-                app.config.globalProperties.gUserType = 0;
-                this.userName = '';
-                this.userType = 0;
+                app.config.globalProperties.gUserType = -1;
+                this.userName = this.gUserName;
+                this.userType = this.gUserType;
                 this.$router.push('/login');
             }
         },
-        onResetPassword() {
-            // g_userName = '';
-            // g_isDarkMode = true;
-            // g_isNavClose = false;
-            // this.$tabName = 'Login';
-            // alert('You are signed out');
-            // window.location.href = 'login.html';
-        },
-        onTagClicked(e, enable, param1) {
-            this.userName = this.gUserName;
-            this.userType = this.gUserType;
-            if (enable) {
-                let tagNumber = parseInt(param1);
-                if (tagNumber >= 0 && tagNumber <= 4) {
-                    this.currentTab = tagNumber;
-                }
-                if (this.isNavClose) {
-                    document.getElementById('main').className = 'main-content close';
-                } else {
-                    document.getElementById('main').className = 'main-content';
-                }
+        onTagClicked(e, tabId) {
+            this.fetchInfo();
+            console.log(`gName: ${this.gUserName ? this.gUserName : "null"}, gType: ${this.gUserType}`);
+            console.log(`lName: ${this.userName ? this.userName : "null"}, lType: ${this.userType}`);
+
+            let tabNum = parseInt(tabId);
+            this.currentTab = 0;
+            switch (tabNum) {
+                case 0:
+                    if (this.getHomePermission()) {
+                        this.currentTab = tabNum;
+                        this.$router.push('/home');
+                    } else {
+                        this.$router.push('/');
+                    }
+                    break;
+                case 1:
+                    if (this.getSearchPermission()) {
+                        this.currentTab = tabNum;
+                        this.$router.push('/search');
+                    } else if (this.getHomePermission()) {
+                        this.$router.push('/home');
+                    } else {
+                        this.$router.push('/');
+                    }
+                    break;
+                case 2:
+                    if (this.getManagementPermission()) {
+                        this.currentTab = tabNum;
+                        this.$router.push('/management');
+                    } else if (this.getHomePermission()) {
+                        this.$router.push('/home');
+                    } else {
+                        this.$router.push('/');
+                    }
+                    break;
+                case 3:
+                    if (this.getRegulationPermission()) {
+                        this.currentTab = tabNum;
+                        this.$router.push('/regulation');
+                    } else if (this.getHomePermission()) {
+                        this.$router.push('/home');
+                    } else {
+                        this.$router.push('/');
+                    }
+                    break;
+                case 4:
+                    if (this.getHomePermission()) {
+                        this.currentTab = tabNum;
+                        this.$router.push('/about');
+                    } else {
+                        this.$router.push('/');
+                    }
+                    break;
+                case 5:
+                    if (this.getHomePermission()) {
+                        this.currentTab = tabNum;
+                        this.$router.push('/resetpassword');
+                    } else {
+                        this.$router.push('/');
+                    }
+                    break;
+            }
+            if (this.isNavClose) {
+                document.getElementById('main').className = 'main-content close';
             } else {
-                this.currentTab = 0;
-                
-                if (this.isNavClose) {
-                    document.getElementById('main').className = 'main-content close';
-                } else {
-                    document.getElementById('main').className = 'main-content';
-                }
+                document.getElementById('main').className = 'main-content';
             }
         },
+        fetchInfo() {
+            this.userName = this.gUserName;
+            this.userType = parseInt(this.gUserType);
+        },
+        // userType: 0, 1, 2, 3 | Tab 0 + 4 + 5
+        getHomePermission() { return (this.userType >= 0 && this.userType <= 3) },
+        // userType: 1, 2, 3 | Tab 1
+        getSearchPermission() { return (this.userType >= 1 && this.userType <= 3) },
+        // userType: 2, 3 | Tab 2
+        getManagementPermission() { return (this.userType === 2 || this.userType === 3) },
+        // userType: 3 | Tab 3
+        getRegulationPermission() { return this.userType === 3 },
+
         changeUser(param) {
-            console.log("param: ",param[0], param[1])
+            console.log("param: ", param[0], param[1])
             // this.userName = param[0];
             // this.userType = param[1];
         }
@@ -385,7 +434,7 @@ body.dark .sidebar header .toggle {
 
 .sidebar li label:hover .icon,
 .sidebar li label:hover .text {
-    color: var(--sidebar-color);
+    color: var(--text-color);
 }
 
 body.dark .sidebar li label:hover .icon,

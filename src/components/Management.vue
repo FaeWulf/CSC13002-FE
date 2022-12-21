@@ -4,31 +4,31 @@
             href="#"
             :class="currentTag === 0 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 0)"
-            ><i class="bx bx-user-circle"></i><span>Tiếp nhận học sinh</span></a
+            ><i class="bx bx-add-to-queue"></i><span>Tiếp nhận học sinh</span></a
         >
         <a
             href="#"
             :class="currentTag === 1 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 1)"
-            ><i class="bx bx-layer"></i><span>Cập nhật học sinh</span></a
+            ><i class="bx bx-user-pin"></i><span>Cập nhật học sinh</span></a
         >
         <a
             href="#"
             :class="currentTag === 2 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 2)"
-            ><i class="bx bxs-keyboard"></i><span>Lập danh sách lớp</span></a
+            ><i class="bx bx-notepad"></i><span>Lập danh sách lớp</span></a
         >
         <a
             href="#"
             :class="currentTag === 3 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 3)"
-            ><i class="bx bxs-file-doc"></i><span>Nhập bảng điểm</span></a
+            ><i class="bx bx-columns"></i><span>Nhập bảng điểm</span></a
         >
         <a
             href="#"
             :class="currentTag === 4 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 4)"
-            ><i class="bx bxs-file-doc"></i><span>Lập báo cáo</span></a
+            ><i class="bx bx-bar-chart-alt-2"></i><span>Lập báo cáo</span></a
         >
     </div>
     <!-- Tiếp nhận học sinh -->
@@ -137,11 +137,11 @@
             <div class="update-table">
                 <table>
                     <thead>
-                        <th style="text-align: left; padding-left: 40px;">Tên</th>
+                        <th>Tên</th>
                         <th>Lớp</th>
                         <th>Giới tính</th>
-                        <th>Ngày sinh</th>
-                        <th style="padding-right: 40px;">Điện thoại</th>
+                        <th>Ngày sinh</th> 
+                        <th style="padding-right: 40px" >Điện thoại</th>
                         <th hidden>Email</th>
                         <th hidden>Địa chỉ</th>
                     </thead>
@@ -377,7 +377,7 @@
         <div class="mark-table">
             <table>
                 <thead>
-                    <th>Tên</th>
+                    <th style="text-align: left;">Tên</th>
                     <th>Điểm 15'</th>
                     <th>Điểm 1 tiết</th>
                     <th>Điểm học kì</th>
@@ -698,10 +698,11 @@ export default {
     max-width: 1060px;
 }
 
-.update-table td:first-child {
+.update-table td:first-child, 
+.update-table th:first-child {
     padding-left: 40px;
     text-align: left;
-    width: 300px;
+    width: 340px;
 }
 
 .update-table td:nth-child(2) {
@@ -719,7 +720,7 @@ export default {
 }
 
 .update-table td:nth-child(5) {
-    width: 180px;
+    width: 200px;
     text-align: center;
     padding-right: 40px; 
 }
@@ -801,12 +802,14 @@ select {
 #table-std {
     border: 2px solid var(--text-color);
     border-radius: 25px;
-    padding: 15px 0 10px 60px;
+    padding: 10px 0;
     max-width: 960px;
 }
 
-#table-std td:first-child {
-    width: 300px;
+#table-std td:first-child, 
+#table-std th:first-child {
+    width: 360px;
+    padding-left: 60px;
 }
 
 #table-std td:nth-child(2) {
@@ -819,8 +822,8 @@ select {
     width: 150px;
 }
 
-#table-std td:last-child {
-    width: 260px;
+#table-std td:nth-child(4) {
+    width: 280px;
     text-align: center;
 }
 
@@ -828,7 +831,6 @@ select {
     font-size: 25px;
     font-weight: 900;
     height: 70px;
-    padding: 0;
     color: var(--primary-color);
 }
 
@@ -969,14 +971,44 @@ select {
     display: flex;
     justify-content: center;
     margin-top: 40px;
-    height: 50vh;
+    max-height: 50vh;
     overflow-y: auto;
 }
 
 .mark-table table {
-    border-spacing: 40px;
     border: 2px solid var(--text-color);
     border-radius: 25px;
+    padding: 10px 0;
+    max-width: 960px;
+}
+
+.mark-table th:first-child,
+.mark-table td:first-child {
+    width: 340px;
+    padding-left: 40px;
+}
+
+.mark-table td:nth-child(2) {
+    width: 200px;
+    text-align: center;
+}
+.mark-table td:nth-child(3) {
+    width: 200px;
+    text-align: center;
+}
+.mark-table td:nth-child(4) {
+    width: 200px;
+    text-align: center;
+}
+
+.mark-table th {
+    height: 60px;
+    font-size: 27px;
+    color: var(--primary-color);
+}
+
+.mark-table td {
+    height: 60px;
 }
 
 .mark-table table label {
@@ -984,14 +1016,9 @@ select {
     font-size: 23px;
 }
 
-.mark-table th {
-    font-size: 27px;
-    color: var(--primary-color);
-}
-
 .mark-table table input {
     height: 30px;
-    max-width: 250px;
+    max-width: 120px;
     width: 100%;
     font-size: 20px;
     border-radius: 8px;

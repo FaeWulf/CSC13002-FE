@@ -11,14 +11,15 @@
 
 :root {
     /* ===== Colors ===== */
-    --body-color: #d3d4cd;
-    --sidebar-color: #e8eae3;
-    --primary-color: #fa2742;
+    --body-color: #e0e0e0;
+    --sidebar-color: #d0d0d0;
+    --primary-color: #096dd9;
     --hover-color: #80808080;
-    --selected-hover-color: #f8546a;
+    --selected-hover-color: #3da0fc;
     --text-color: #373833;
     --change-btn: #1dd75b;
     --remove-btn: #f22128;
+    --warning-color: #dc3545;
 
     /* ====== Transition ====== */
     --tran-03: all 0.2s ease;

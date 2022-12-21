@@ -5,7 +5,7 @@ import './assets/css/style.css'
 
 const app = createApp(App);
 app.config.globalProperties.gUserName = '';
-app.config.globalProperties.gUserType = 0;
+app.config.globalProperties.gUserType = -1;
 app.use(router);
 app.mount('#app');
 

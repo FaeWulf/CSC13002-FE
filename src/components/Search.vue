@@ -27,7 +27,7 @@
                 <table id="table-std">
                     <thead>
                         <th class="text">STT</th>
-                        <th class="text">Tên</th>
+                        <th class="text" style="text-align: left;">Tên</th>
                         <th class="text">Lớp</th>
                         <th class="text">Học kì 1</th>
                         <th class="text">Học kì 2</th>
@@ -165,35 +165,63 @@ h3 {
     margin-left: 100px;
 }
 
-table,
-td,
-th {
-    border: 2px solid var(--text-color);
-}
-
-table {
-    margin-top: 20px;
-    border-collapse: collapse;
-    width: 100%;
-    max-width: 80%;
-    border-radius: 1em;
-}
 .table-content {
     margin-top: 50px;
     display: flex;
     justify-content: center;
 }
-table {
-    border-collapse: collapse;
-    border-radius: 15px;
-    border-style: hidden; /* hide standard table (collapsed) border */
-    box-shadow: 0 0 0 2px var(--text-color); /* this draws the table border  */
+
+#table-std {
+    border-spacing: 0;
+    border-collapse: separate;
+    border: 2px solid var(--text-color);
+    border-radius: 15px; 
 }
+
+#table-std .text {
+    padding: 0;
+}
+
+#table-std th:first-child {
+    text-align: center;
+    width: 120px;
+}
+
+#table-std th:nth-child(2),
+#table-std td:nth-child(2) {
+    text-align: left;
+    width: 400px;
+    padding-left: 20px;
+}
+
+#table-std td:nth-child(3) {
+    text-align: center;
+    width: 200px;
+}
+#table-std td:nth-child(4) {
+    text-align: center;
+    width: 200px;
+}
+#table-std td:nth-child(5) {
+    text-align: center;
+    width: 200px;
+}
+
+
 td, th {
-    border: 1px solid var(--text-color);
+    height: 60px;
+}
+
+th:not(:last-child), td:not(:last-child) {
+    border-right: 1px solid var(--text-color);
+}
+
+tr:not(:last-child)>td {
+    border-bottom: 1px solid var(--text-color);
 }
 
 #table-std th {
     color: var(--primary-color);
+    border-bottom: 2px solid var(--text-color);
 }
 </style>

@@ -19,6 +19,7 @@
                                         >lock_open</span
                                     >
                                 </div>
+                                <div class="form-warning">{{ oldpassWarning }}</div>
                                 <div class="form-group">
                                     <input
                                         :value="passwordInput"
@@ -31,10 +32,11 @@
                                         >lock</i
                                     >
                                 </div>
+                                <div class="form-warning">{{ passwordWarning }}</div>
                                 <div class="form-group">
                                     <input
-                                        :value="passwordReInput"
-                                        @input="onPasswordReInput"
+                                        :value="passwordReinput"
+                                        @input="onPasswordReinput"
                                         type="password"
                                         class="form-style"
                                         placeholder="Nhập lại mật khẩu"
@@ -43,9 +45,7 @@
                                         >lock</i
                                     >
                                 </div>
-                                <div class="form-warning">
-                                    {{ warningText }}
-                                </div>
+                                <div class="form-warning">{{ rePasswordWarning }}</div>
                                 <button href="#" class="btn" @click="onChange">
                                     Xong
                                 </button>
@@ -59,6 +59,9 @@
 </template>
 
 <script>
+
+import { app } from '../main';
+
 export default {
     name: 'ResetPassword',
     // data: variables
@@ -66,47 +69,73 @@ export default {
         return {
             oldPassword: '',
             passwordInput: '',
-            passwordReInput: '',
+            passwordReinput: '',
 
-            warningText: '',
+            oldpassWarning: '',
+            passwordWarning: '',
+            rePasswordWarning: '',
+
+            isOldpassOk: false,
+            isPasswordOk: false,
+            isRepasswordOk: false,
         };
     },
     // methods: functions
     methods: {
-        onPasswordInput(e) {
-            this.passwordInput = e.target.value;
-            if (
-                /^.{6,}$/.test(
-                    this.passwordInput
-                )
-            )
-                this.warningText = '';
-            else this.warningText = 'Invalid Password';
-        },
-        onPasswordReInput(e) {
-            this.passwordReInput = e.target.value;
-            if (
-                /^.{6,}$/.test(
-                    this.passwordReInput
-                )
-            )
-                this.warningText = '';
-            else this.warningText = 'Invalid Password';
-        },
         onGetPassword(e) {
             this.oldPassword = e.target.value;
+            if (!/^.{6,}$/.test(this.oldPassword)) {
+                this.oldpassWarning = '⚠ Mật khẩu không hợp lệ';
+                this.isOldpassOk = false;
+            } else {
+                this.oldpassWarning = '';
+                this.isOldpassOk = true;
+            }
+        },
+        onPasswordInput(e) {
+            this.passwordInput = e.target.value;
+            if (!/^.{6,}$/.test(this.passwordInput)) {
+                this.passwordWarning = '⚠ Mật khẩu không hợp lệ';
+                this.isPasswordOk = false;
+            } else {
+                this.passwordWarning = '';
+                this.isPasswordOk = true;
+            }
+
+            if (this.passwordReinput.localeCompare(this.passwordInput) != 0) {
+                this.rePasswordWarning = '⚠ Mật khẩu không khớp';
+                this.isRepasswordOk = false;
+            } else {
+                this.rePasswordWarning = '';
+                this.isRepasswordOk = true;
+            }
         },
 
+        onPasswordReinput(e) {
+            this.passwordReinput = e.target.value;
+            if (this.passwordReinput.localeCompare(this.passwordInput) != 0) {
+                this.rePasswordWarning = '⚠ Mật khẩu không khớp';
+                this.isRepasswordOk = false;
+            } else {
+                this.rePasswordWarning = '';
+                this.isRepasswordOk = true;
+            }
+        }, 
+
         onChange() {
-            if (this.passwordInput != this.passwordReInput) {
-                this.warningText = "Passwords don't match";
+            if (this.isOldpassOk && this.isPasswordOk && this.isRepasswordOk) {
+                alert("Đổi mật khẩu thành công!");
+                this.currentTab = 0;
+                app.config.globalProperties.gUserName = '';
+                app.config.globalProperties.gUserType = 0;
+                this.$router.push('/login');
             }
         },
     },
 };
 </script>
 
-<style>
+<style scoped>
 * {
     margin: 0;
     padding: 0;
@@ -114,8 +143,7 @@ export default {
 }
 
 :root {
-    --login-bg-color-2: #06060a;
-    --login-warning-color: crimson;
+    --warning-color: crimson;
 }
 
 .container-fluid {
@@ -308,8 +336,10 @@ export default {
 }
 
 .container-fluid .form-warning {
-    color: var(--login-warning-color);
+    color: var(--warning-color);
     font-size: 12px;
+    font-weight: 700;
+    padding-bottom: 10px;
 }
 
 /* Button Login SignUp */
@@ -333,8 +363,7 @@ export default {
 }
 
 .container-fluid .btn:hover {
-    background: var(--hover-color);
-    color: var(--primary-color);
+    background: var(--selected-hover-color);
     box-shadow: 0 8px 24px 0 rgba(138, 140, 146, 0.2);
 }
 

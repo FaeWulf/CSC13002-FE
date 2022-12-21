@@ -190,24 +190,36 @@ export default {
     margin-top: 40px;
 }
 .nav-group .nav-selected {
+    color: #fff;
     background-color: var(--primary-color);
     opacity: 1;
 }
 .nav-group a {
+    display: flex;
+    align-items: center;
+    height: 50px;
     text-decoration: none;
     color: var(--text-color);
-    font-size: 1.5rem;
-    padding: 10px;
+    font-size: 1.25rem;
+    padding: 0 25px 0 20px;
     opacity: 0.75;
-    border-radius: 10px;
+    border-radius: 6px;
     transition: var(--tran-03);
-    margin: 0 20px;
+    margin: 0 10px;
+}
+.nav-group .nav-selected:hover {
+    color: #fff;
+    background-color: var(--selected-hover-color);
+    opacity: 1;
 }
 .nav-group a:hover {
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    border-radius: 10px;
+    background-color: var(--hover-color);
+    border-radius: 6px;
     opacity: 1;
+}
+
+.nav-group i {
+    padding-right: 10px;
 }
 /* CSS for User permission tab */
 .user {
@@ -327,6 +339,7 @@ export default {
     max-height: 40vh;
     overflow-y: auto;
 }
+
 #email-std {
     border: 2px solid var(--text-color);
     border-radius: 25px;

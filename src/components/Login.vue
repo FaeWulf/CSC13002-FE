@@ -3,7 +3,7 @@
         <div class="form">
             <div class="text-center">
                 <h6><span>Đăng nhập</span> <span>Đăng ký</span></h6>
-                <input v-model="isBack" @click="onFlip" type="checkbox" class="checkbox" id="reg-log" />
+                <input @click="onFlip" type="checkbox" class="checkbox" id="reg-log" />
                 <label for="reg-log"></label>
                 <div class="card-3d-wrap">
                     <div class="card-3d-wrapper">
@@ -12,15 +12,17 @@
                             <div class="center-wrap">
                                 <h4 class="heading">Đăng nhập</h4>
                                 <div class="form-group">
-                                    <input :value="emailInput" @input="onEmailInput" type="email" class="form-style"
-                                        placeholder="Email" />
-                                    <i class="input-icon material-icons">alternate_email</i>
+                                    <input :value="userNameInput" @input="onUserNameInput" type="text" class="form-style"
+                                        placeholder="Tên đăng nhập" />
+                                    <i class="input-icon material-icons">person</i>
                                 </div>
+                                <div class="form-warning">{{ userNameWarning }}</div>
                                 <div class="form-group">
                                     <input :value="passwordInput" @keyup.enter="onLogin" @input="onPasswordInput" type="password"
                                         class="form-style" placeholder="Mật khẩu" />
                                     <i class="input-icon material-icons">lock</i>
                                 </div>
+                                <div class="form-warning">{{ passwordWarning }}</div>
                                 <button href="#" class="btn" @click="onLogin">
                                     Xong
                                 </button>
@@ -34,20 +36,23 @@
                             <div class="center-wrap">
                                 <h4 class="heading">Đăng ký</h4>
                                 <div class="form-group">
-                                    <input :value="nameInput" @input="onNameInput" type="text" class="form-style"
-                                        placeholder="Tên đầy đủ" />
-                                    <i class="input-icon material-icons">perm_identity</i>
+                                    <input :value="userNameInput" @input="onUserNameInput" type="text" class="form-style"
+                                        placeholder="Tên đăng nhập" />
+                                    <i class="input-icon material-icons">person</i>
                                 </div>
-                                <div class="form-group">
-                                    <input :value="emailInput" @input="onEmailInput" type="email" class="form-style"
-                                        placeholder="Email" />
-                                    <i class="input-icon material-icons">alternate_email</i>
-                                </div>
+                                <div class="form-warning">{{ userNameWarning }}</div>
                                 <div class="form-group">
                                     <input :value="passwordInput" @input="onPasswordInput" type="password"
                                         class="form-style" placeholder="Mật khẩu" />
                                     <i class="input-icon material-icons">lock</i>
                                 </div>
+                                <div class="form-warning">{{ passwordWarning }}</div>
+                                <div class="form-group">
+                                    <input :value="passwordReinput" @input="onPasswordReinput" type="password"
+                                        class="form-style" placeholder="Nhập lại mật khẩu" />
+                                    <i class="input-icon material-icons">lock</i>
+                                </div>
+                                <div class="form-warning">{{ rePasswordWarning }}</div>
                                 <button href="#" class="btn" @click="onSignup">
                                     Xong
                                 </button>
@@ -69,18 +74,26 @@ export default {
     // data: variables
     data() {
         return {
-            isBack: false,
-            nameInput: '',
-            emailInput: '',
+            userNameInput: '',
             passwordInput: '',
+            passwordReinput: '',
+
+            userNameWarning: '',
+            passwordWarning: '',
+            rePasswordWarning: '',
+
+            isUserNameOk: false,
+            isPasswordOk: false,
+            isRepasswordOk: false,
+
             accounts: {
-                "abc": {
+                "abcd": {
                     "type": 0,
-                    "pass": "Aabc...." 
+                    "pass": "Abcd...." 
                 },
-                "xyz": {
+                "xyzt": {
                     "type": 0,
-                    "pass": "Xxyz...." 
+                    "pass": "Xyzt...." 
                 },
                 "gvi1": {
                     "type": 1,
@@ -119,100 +132,116 @@ export default {
     },
     // methods: functions
     methods: {
-        onEmailInput(e) {
-            this.emailInput = e.target.value;
-            // if (
-            //     /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/.test(
-            //         this.emailInput
-            //     )
-            // ) {
-            //     this.warningText = '';
-            // } else {
-            //     this.warningText = 'Invalid Email';
-            // }
+        onUserNameInput(e) {
+            this.userNameInput = e.target.value;
+            if (!/^[A-Za-z]\w{3,14}$/.test(this.userNameInput)) {
+                this.userNameWarning = '⚠ Tên đăng nhập không hợp lệ';
+                this.isUserNameOk = false;
+            } else {
+                this.userNameWarning = '';
+                this.isUserNameOk = true;
+            }
         },
 
         onPasswordInput(e) {
             this.passwordInput = e.target.value;
-            // if (
-            //     /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/.test(
-            //         this.passwordInput
-            //     )
-            // ) {
-            //     if (this.warningText != 'Invalid Email') {
-            //         this.warningText = '';
-            //     }
-            // } else {
-            //     if (this.warningText != 'Invalid Email') {
-            //         this.warningText = 'Invalid Password';
-            //     }
-            // }
+            if (!/^.{6,}$/.test(this.passwordInput)) {
+                this.passwordWarning = '⚠ Mật khẩu không hợp lệ';
+                this.isPasswordOk = false;
+            } else {
+                this.passwordWarning = '';
+                this.isPasswordOk = true;
+            }
+
+            if (this.passwordReinput.localeCompare(this.passwordInput) != 0) {
+                this.rePasswordWarning = '⚠ Mật khẩu không khớp';
+                this.isRepasswordOk = false;
+            } else {
+                this.rePasswordWarning = '';
+                this.isRepasswordOk = true;
+            }
+        },
+
+        onPasswordReinput(e) {
+            this.passwordReinput = e.target.value;
+            if (this.passwordReinput.localeCompare(this.passwordInput) != 0) {
+                this.rePasswordWarning = '⚠ Mật khẩu không khớp';
+                this.isRepasswordOk = false;
+            } else {
+                this.rePasswordWarning = '';
+                this.isRepasswordOk = true;
+            }
+        }, 
+
+        onFlip() {
+            this.userNameInput = '';
+            this.passwordInput = '';
+            this.passwordReinput = '';
+            
+            this.userNameWarning = '';
+            this.passwordWarning = '';
+            this.rePasswordWarning = '';
+            
+            this.isUserNameOk = false;
+            this.isPasswordOk = false;
+            this.isRepasswordOk = false;
         },
 
         onLogin() {
-            let email = this.emailInput;
-            let pass = this.passwordInput;
-            if (email in this.accounts && pass) {
-                let userInfo = this.accounts[email]
-                let loginStatus = pass.localeCompare(userInfo["pass"])
-                if (loginStatus === 0) {
-                    alert("Login successs!");
-                    app.config.globalProperties.gUserName = email;
-                    app.config.globalProperties.gUserType = userInfo["type"];
-                    this.$router.push('/home');
+            // console.log(this.isUserNameOk, this.isPasswordOk);
+            if (this.isUserNameOk && this.isPasswordOk) {
+                let userName = this.userNameInput;
+                let pass = this.passwordInput;
+                if (userName in this.accounts && pass) {
+                    let userInfo = this.accounts[userName]
+                    let loginStatus = pass.localeCompare(userInfo["pass"])
+                    if (loginStatus === 0) {
+                        app.config.globalProperties.gUserName = userName;
+                        app.config.globalProperties.gUserType = parseInt(userInfo["type"]);
+                        this.onFlip();
+                        alert("Đăng nhập thành công!");
+                        this.$router.push('/home');
+                    }
+                    else { 
+                        alert("Mật khẩu không chính xác!");
+                    }
+                } else {
+                    alert("Tài khoản chưa tồn tại!")
                 }
-                else {
-                    alert("Password incorrect!");
-                }
-            } else {
-                alert("Account is not exist")
             }
         },
 
-        onFlip() {
-            this.nameInput = '';
-            this.emailInput = '';
-            this.passwordInput = '';
-        },
-
-        onNameInput() { },
-
         onSignup() {
-            let email = this.emailInput;
-            let pass = this.passwordInput;
-            if (!pass || !email) {
-                alert("Email and Password must be filled");
-            } else if (email in this.accounts) {
-                alert("Account already exists");
-            } else {
-                this.accounts[email] = {
-                    "type": 1,
-                    "pass": pass
+            // console.log(this.isUserNameOk, this.isPasswordOk, this.isRepasswordOk);
+            if (this.isUserNameOk && this.isPasswordOk && this.isRepasswordOk) {
+                let userName = this.userNameInput;
+                let pass = this.passwordInput;
+                if (!pass || !userName) {
+                    alert("Tên đăng nhập và Mật khẩu không được trống!");
+                } else if (userName in this.accounts) { 
+                    alert("Tài khoản này đã tồn tại!");
+                } else { 
+                    this.accounts[userName] = {
+                        "type": 0,
+                        "pass": pass
+                    }
+                    this.onFlip();
+                    alert('Tài khoản đã được tạo thành công!')
+                    this.$router.push('/login')
                 }
-                this.nameInput = '';
-                this.emailInput = '';
-                this.passwordInput = '';
-                alert('Account created!')
-                this.$route.push('/login')
             }
         },
     },
-
 };
 </script>
 
-<style>
+<style scoped>
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-:root {
-    --login-bg-color-2: #06060a;
-    --login-warning-color: crimson;
 }
 
 .container-fluid {
@@ -359,6 +388,13 @@ export default {
     margin-bottom: 12px;
 }
 
+.container-fluid .form-warning {
+    color: var(--warning-color);
+    font-size: 12px;
+    font-weight: 700;
+    padding-bottom: 10px;
+}
+
 .container-fluid .form-style {
     padding-left: 55px;
     height: 48px;
@@ -404,7 +440,6 @@ export default {
     opacity: 0;
 }
 
-/* Button Login SignUp */
 .container-fluid .btn {
     height: 44px;
     border-radius: 4px;
@@ -425,8 +460,7 @@ export default {
 }
 
 .container-fluid .btn:hover {
-    background: var(--hover-color);
-    color: var(--primary-color);
+    background: var(--selected-hover-color);
     box-shadow: 0 8px 24px 0 rgba(138, 140, 146, 0.2);
 }
 
