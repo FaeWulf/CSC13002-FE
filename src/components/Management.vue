@@ -34,7 +34,7 @@
     <!-- Tiếp nhận học sinh -->
     <div class="tag-content" v-if="currentTag === 0">
         <div class="title">
-            <span>Đã chọn</span>
+            <span>Thêm học sinh</span>
             <div class="btn-group">
                 <button id="remove">
                     <i class="bx bx-x"></i
@@ -538,8 +538,8 @@ export default {
         };
     },
     methods: {
-        onTagClicked(e, param1) {
-            let tagNumber = parseInt(param1);
+        onTagClicked(e, tagId) {
+            let tagNumber = parseInt(tagId);
             if (tagNumber >= 0 && tagNumber <= 4) {
                 this.updateTable = 0;
                 this.currentTag = tagNumber;

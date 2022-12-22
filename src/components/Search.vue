@@ -12,6 +12,8 @@
                 <div class="search-container">
                     <div class="input-box">
                         <input
+                            v-model="keyword"
+                            v-on:keyup.enter="onSearch"
                             type="text"
                             placeholder="Tên học sinh..."
                         />
@@ -19,7 +21,7 @@
                             <i class="bx bx-search search-icon"></i>
                         </span>
                     </div>
-                    <button id="btn-search">Tìm kiếm</button>
+                    <button @click="onSearch" id="btn-search">Tìm kiếm</button>
                 </div>
             <!-- </form> -->
 
@@ -33,26 +35,12 @@
                         <th class="text">Học kì 2</th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text">1</td>
-                            <td class="text">ABC</td>
-                            <td class="text">10A1</td>
-                            <td class="text">5.5</td>
-                            <td class="text">7.5</td>
-                        </tr>
-                        <tr>
-                            <td class="text">1</td>
-                            <td class="text">ABC</td>
-                            <td class="text">10A1</td>
-                            <td class="text">5.5</td>
-                            <td class="text">7.5</td>
-                        </tr>
-                        <tr>
-                            <td class="text">1</td>
-                            <td class="text">ABC</td>
-                            <td class="text">10A1</td>
-                            <td class="text">5.5</td>
-                            <td class="text">7.5</td>
+                        <tr v-for="(student, index) in students" :key="student.id">
+                            <td class="text">{{ index + 1 }}</td>
+                            <td class="text">{{ student.name }}</td>
+                            <td class="text">{{ student.class }}</td>
+                            <td class="text">{{ student.semester_1 }}</td>
+                            <td class="text">{{ student.semester_2 }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -61,8 +49,52 @@
 </template>
 
 <script>
+
+import students from '../assets/data/students.json';
+
 export default {
     name: 'SearchComponent',
+
+    data() {
+        return {
+            students: students,
+            keyword: '',
+        };
+    },
+    
+    created() {
+        this.students = students;
+    },
+    
+    methods: {
+        onSearch() {
+            this.students = [{
+                "id": '000',
+                "name": 'Loading...',
+                "class": "_",
+                "semester_1": "_",
+                "semester_2": "_",
+            }];
+            setTimeout(() => {
+                console.log('Not found')
+                console.log("Delayed for 1 second.");
+                this.students = students.filter((student) => {
+                    return student.name.toLowerCase().includes(this.keyword.toLowerCase());
+                });
+                if (Object.keys(this.students).length === 0) {
+                    this.students = [{
+                        "id": '000',
+                        "name": 'Không tìm thấy',
+                        "class": "_",
+                        "semester_1": "_",
+                        "semester_2": "_",
+                    }];
+                    console.log('Not found')
+                }
+            }, "2000");
+            console.log(this.keyword);
+        }
+    }
 };
 </script>
 <style scoped>
@@ -194,19 +226,22 @@ h3 {
     padding-left: 20px;
 }
 
-#table-std td:nth-child(3) {
+#table-std th:nth-child(3) {
     text-align: center;
     width: 200px;
 }
-#table-std td:nth-child(4) {
+#table-std th:nth-child(4) {
     text-align: center;
     width: 200px;
 }
-#table-std td:nth-child(5) {
+#table-std th:nth-child(5) {
     text-align: center;
     width: 200px;
 }
 
+#table-std th {
+    color: var(--primary-color);
+}
 
 td, th {
     height: 60px;
@@ -220,8 +255,8 @@ tr:not(:last-child)>td {
     border-bottom: 1px solid var(--text-color);
 }
 
-#table-std th {
-    color: var(--primary-color);
-    border-bottom: 2px solid var(--text-color);
+tr:first-child>td{
+    border-top: 1px solid var(--text-color);
 }
+
 </style>
