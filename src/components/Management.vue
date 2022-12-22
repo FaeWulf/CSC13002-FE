@@ -4,7 +4,8 @@
             href="#"
             :class="currentTag === 0 ? 'nav-selected' : ''"
             @click="onTagClicked($event, 0)"
-            ><i class="bx bx-add-to-queue"></i><span>Tiếp nhận học sinh</span></a
+            ><i class="bx bx-add-to-queue"></i
+            ><span>Tiếp nhận học sinh</span></a
         >
         <a
             href="#"
@@ -37,8 +38,7 @@
             <span>Thêm học sinh</span>
             <div class="btn-group">
                 <button id="remove">
-                    <i class="bx bx-x"></i
-                    ><span class="btn-text">Hủy bỏ</span>
+                    <i class="bx bx-x"></i><span class="btn-text">Hủy bỏ</span>
                 </button>
                 <button id="change">
                     <i class="bx bx-check"></i
@@ -89,31 +89,54 @@
                         <tr>
                             <td>
                                 <label>Họ và tên</label
-                                ><input type="text" :value="student.name" />
+                                ><input type="text" :value="std_details.name" />
                             </td>
-                            <td><label>Email</label><input type="text" :value="student.email"/></td>
+                            <td>
+                                <label>Email</label
+                                ><input
+                                    type="text"
+                                    :value="std_details.email"
+                                />
+                            </td>
                             <td>
                                 <label>Giới tính</label
-                                ><input type="text" :value="student.gender" />
+                                ><input
+                                    type="text"
+                                    :value="std_details.gender"
+                                />
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <label>Lớp</label
-                                ><input type="text" :value="student.grade" />
+                                ><input
+                                    type="text"
+                                    :value="std_details.grade"
+                                />
                             </td>
                             <td>
-                                <label>Ngày sinh</label><input type="date" :value="student.birthdate"/>
+                                <label>Ngày sinh</label
+                                ><input
+                                    type="date"
+                                    :value="std_details.birthdate"
+                                />
                             </td>
                             <td>
                                 <label>Số điện thoại</label
-                                ><input type="text" :value="student.phone"/>
+                                ><input
+                                    type="text"
+                                    :value="std_details.phone"
+                                />
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3">
                                 <label>Địa chỉ</label
-                                ><textarea id="address" type="text" v-model="student.address" ></textarea>
+                                ><textarea
+                                    id="address"
+                                    type="text"
+                                    v-model="std_details.address"
+                                ></textarea>
                             </td>
                         </tr>
                     </tbody>
@@ -130,7 +153,8 @@
                         placeholder="Nhập tên học sinh ..."
                     />
                     <label for="input-search"
-                        ><button @click="printDetails"><i class="bx bx-search"></i></button
+                        ><button @click="printDetails">
+                            <i class="bx bx-search"></i></button
                     ></label>
                 </div>
             </div>
@@ -140,38 +164,24 @@
                         <th>Tên</th>
                         <th>Lớp</th>
                         <th>Giới tính</th>
-                        <th>Ngày sinh</th> 
-                        <th style="padding-right: 40px" >Điện thoại</th>
+                        <th>Ngày sinh</th>
+                        <th style="padding-right: 40px">Điện thoại</th>
                         <th hidden>Email</th>
                         <th hidden>Địa chỉ</th>
                     </thead>
                     <tbody>
-                        <tr @click="showDetails($event, 1)">
-                            <td>ABC</td>
-                            <td>10A1</td>
-                            <td>Nam</td>
-                            <td>2022-11-11</td>
-                            <td>123456789</td>
-                            <td hidden>ABC@gmail.com</td>
-                            <td hidden>TP HCM</td>
-                        </tr>
-                        <tr @click="showDetails($event, 1)">
-                            <td>XYZ</td>
-                            <td>11A1</td>
-                            <td>Nữ</td>
-                            <td>2022-11-11</td>
-                            <td>123456789</td>
-                            <td hidden>XYZ@gmail.com</td>
-                            <td hidden>BD</td>
-                        </tr>
-                        <tr @click="showDetails($event, 1)">
-                            <td>DEF</td>
-                            <td>12A1</td>
-                            <td>Nam</td>
-                            <td>2022-03-02</td>
-                            <td>123456789</td>
-                            <td hidden>DEF@gmail.com</td>
-                            <td hidden>HN</td>
+                        <tr
+                            @click="showDetails($event, 1)"
+                            v-for="std in student"
+                            :key="std.id"
+                        >
+                            <td>{{ std.name }}</td>
+                            <td>{{ std.class }}</td>
+                            <td>{{ std.gender }}</td>
+                            <td>{{ std.birthday }}</td>
+                            <td>{{ std.phonenumber }}</td>
+                            <td hidden>{{ std.email }}</td>
+                            <td hidden>{{ std.address }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -202,7 +212,7 @@
         <div class="insert-table">
             <table id="table-std">
                 <thead>
-                    <th style="text-align: left;">Tên</th>
+                    <th style="text-align: left">Tên</th>
                     <th>Lớp</th>
                     <th>Giới tính</th>
                     <th></th>
@@ -282,7 +292,7 @@
             <div class="insert-table">
                 <table id="table-std">
                     <thead>
-                        <th style="text-align: left;">Tên</th>
+                        <th style="text-align: left">Tên</th>
                         <th>Lớp</th>
                         <th>Giới tính</th>
                         <th></th>
@@ -366,76 +376,46 @@
         <div class="mark-title-table">
             <span>10A1 - HK1 - Toán</span>
             <div class="btn-group">
-                <button id="remove">
+                <button @click="showSTD" id="remove">
                     <i class="bx bx-x"></i><span class="btn-text">Huỷ</span>
                 </button>
                 <button id="change">
-                    <i class="bx bx-check"></i><span class="btn-text">Xong</span>
+                    <i class="bx bx-check"></i
+                    ><span class="btn-text">Xong</span>
                 </button>
             </div>
         </div>
         <div class="mark-table">
             <table>
                 <thead>
-                    <th style="text-align: left;">Tên</th>
+                    <th style="text-align: left">Tên</th>
                     <th>Điểm 15'</th>
                     <th>Điểm 1 tiết</th>
                     <th>Điểm học kì</th>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><label for="">ABC</label></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td><label for="">ABC</label></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td><label for="">ABC</label></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td><label for="">ABC</label></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td><label for="">ABC</label></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td><label for="">ABC</label></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td><label for="">ABC</label></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td><label for="">ABC</label></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                    </tr>
-                    <tr>
-                        <td><label for="">ABC</label></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
-                        <td><input type="text" /></td>
+                    <tr v-for="(std, index) in student" :key="std.id">
+                        <td>
+                            <label for="">{{ std.name }}</label>
+                        </td>
+                        <td>
+                            <input
+                                v-model="mark_std[index].exam_1"
+                                type="text"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                v-model="mark_std[index].exam_2"
+                                type="text"
+                            />
+                        </td>
+                        <td>
+                            <input
+                                v-model="mark_std[index].exam_3"
+                                type="text"
+                            />
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -520,22 +500,29 @@
     </div>
 </template>
 <script>
+import students from '../assets/data/students.json';
+
 export default {
     name: 'ManagementComponent',
     data() {
         return {
             currentTag: 0,
             updateTable: 0,
-            student: {
-                name: '',
-                grade: '',
-                gender: '',
-                email: '',
-                birthdate: '',
-                phone: '',
-                address: '',
-            },
+            student: students,
+            std_details: {},
+            mark_std: [],
         };
+    },
+    beforeMount() {
+        for (let i = 0; i < this.student.length; i++) {
+            let new_mark = {
+                id: this.student[i].id,
+                exam_1: null,
+                exam_2: null,
+                exam_3: null,
+            };
+            this.mark_std.push(new_mark);
+        }
     },
     methods: {
         onTagClicked(e, tagId) {
@@ -546,15 +533,37 @@ export default {
             }
         },
         showDetails(e, param1) {
-            this.student.name = e.path[1].childNodes[0].innerText;
-            this.student.grade = e.path[1].childNodes[1].innerText;
-            this.student.gender = e.path[1].childNodes[2].innerText;
-            this.student.email = e.path[1].childNodes[3].innerText;
-            this.student.birthdate = e.path[1].childNodes[4].innerText;
-            this.student.phone = e.path[1].childNodes[5].innerText;
-            this.student.address = e.path[1].childNodes[6].innerText;
-            console.log(this.student.birthdate);
+            this.std_details.name = e.path[1].childNodes[0].innerText;
+            this.std_details.grade = e.path[1].childNodes[1].innerText;
+            this.std_details.gender = e.path[1].childNodes[2].innerText;
+            this.std_details.birthdate = e.path[1].childNodes[3].innerText;
+            this.std_details.phone = e.path[1].childNodes[4].innerText;
+            this.std_details.email = e.path[1].childNodes[5].innerText;
+            this.std_details.address = e.path[1].childNodes[6].innerText;
             this.updateTable = param1;
+        },
+        showSTD() {
+            for (let i = 0; i < this.mark_std.length; i++) {
+                this.mark_std[i].exam_1 = parseFloat(this.mark_std[i].exam_1);
+                this.mark_std[i].exam_2 = parseFloat(this.mark_std[i].exam_2);
+                this.mark_std[i].exam_3 = parseFloat(this.mark_std[i].exam_3);
+
+                if (
+                    isNaN(this.mark_std[i].exam_1) ||
+                    this.mark_std[i].exam_1 < 0.0
+                )
+                    this.mark_std[i].exam_1 = null;
+                if (
+                    isNaN(this.mark_std[i].exam_2) ||
+                    this.mark_std[i].exam_2 < 0.0
+                )
+                    this.mark_std[i].exam_2 = null;
+                if (
+                    isNaN(this.mark_std[i].exam_3) ||
+                    this.mark_std[i].exam_3 < 0.0
+                )
+                    this.mark_std[i].exam_3 = null;
+            }
         },
     },
 };
@@ -698,7 +707,7 @@ export default {
     max-width: 1060px;
 }
 
-.update-table td:first-child, 
+.update-table td:first-child,
 .update-table th:first-child {
     padding-left: 40px;
     text-align: left;
@@ -722,7 +731,7 @@ export default {
 .update-table td:nth-child(5) {
     width: 200px;
     text-align: center;
-    padding-right: 40px; 
+    padding-right: 40px;
 }
 .update-table table th {
     font-size: 25px;
@@ -763,7 +772,6 @@ export default {
     transition: var(--tran-03);
     color: var(--text-color);
 }
-
 
 /* CSS for Create classes tab */
 .class-list {
@@ -806,7 +814,7 @@ select {
     max-width: 960px;
 }
 
-#table-std td:first-child, 
+#table-std td:first-child,
 #table-std th:first-child {
     width: 360px;
     padding-left: 60px;
@@ -982,21 +990,24 @@ select {
     max-width: 960px;
 }
 
-.mark-table th:first-child,
-.mark-table td:first-child {
+.mark-table td:first-child,
+.mark-table th:first-child {
     width: 340px;
     padding-left: 40px;
 }
 
-.mark-table td:nth-child(2) {
+.mark-table td:nth-child(2),
+.mark-table th:nth-child(2) {
     width: 200px;
     text-align: center;
 }
-.mark-table td:nth-child(3) {
+.mark-table td:nth-child(3),
+.mark-table th:nth-child(3) {
     width: 200px;
     text-align: center;
 }
-.mark-table td:nth-child(4) {
+.mark-table td:nth-child(4),
+.mark-table th:nth-child(4) {
     width: 200px;
     text-align: center;
 }
