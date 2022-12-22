@@ -3,52 +3,16 @@
     <section id="hometab" class="home">
         <div class="left-panel">
             <div class="title">
-                <h1 class="text-center">Xin chào,</h1>
+                <h1 class="text-center">Xin chào, <span>{{ userName }}</span> !</h1>
                 <p>Các chức năng bạn có thể thực hiện</p>
             </div>
-            <div class="card">
+            <div v-for="item in items" :key="item.title" class="card">
                 <div class="card-body" style="font-size: 20px">
                     <h1 class="card-title">
-                        Tra cứu thông tin học sinh
+                        {{ item.title }}
                     </h1>
                     <p class="card-text text-muted">
-                        Tra cứu điểm TB học kì 1 và học kì 2 của học
-                        sinh
-                    </p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body" style="font-size: 20px">
-                    <h1 class="card-title">Tiếp nhận học sinh</h1>
-                    <p class="card-text text-muted">
-                        Tiếp nhận học sinh mới theo quy định của nhà
-                        trường
-                    </p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body" style="font-size: 20px">
-                    <h1 class="card-title">Lập danh sách lớp</h1>
-                    <p class="card-text text-muted">
-                        Lập danh sách lớp phù hợp với quy định của nhà
-                        trường
-                    </p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body" style="font-size: 20px">
-                    <h1 class="card-title">Nhập bảng điểm môn học</h1>
-                    <p class="card-text text-muted">
-                        Nhập điểm 15', 1 tiết và cuối HK của học sinh
-                        theo lớp, môn học và học kì
-                    </p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body" style="font-size: 20px">
-                    <h1 class="card-title">Lập báo cáo tổng kết</h1>
-                    <p class="card-text text-muted">
-                        Lập báo cáo tổng kết theo môn học, học kì
+                        {{ item.content }}
                     </p>
                 </div>
             </div>
@@ -56,22 +20,22 @@
         <div class="right-panel">
             <div class="avatar">
                 <h1>Thông tin tài khoản</h1>
-                <h3>Giáo vụ</h3>
+                <h3>{{ getDuty }}</h3>
                 <div class="avt-img">
-                    <img src="img/logo_small.png" alt="Avatar" />
+                    <img id="show-img" src="img/favicon.png" alt="Avatar" />
                 </div>
                 <div class="img-btn">
                     <label for="myFile" id="change"><i class='bx bx-check'></i><span>Sửa</span></label>
-                    <input type="file" id="myFile" name="Sửa" hidden/>
-                    <label for="myRemove" id="remove"><i class='bx bx-x'></i><span>Xoá</span></label>
+                    <input type="file" id="myFile" @change="loadFile($event)" hidden/>
+                    <label for="myRemove" id="remove" @click="removeImg"><i class='bx bx-x'></i><span>Xoá</span></label>
                     <input type="button" id="myRemove" value="Gỡ" hidden>
                 </div>
                 <div class="input-container">
                     <div class="input-group">
-                        <label for="email">Email</label>
-                        <input id="email" name="email" type="email" disabled />
+                        <label for="username">Tên đăng nhập</label>
+                        <input v-model="userName" id="username" name="username" disabled />
 
-                        <label for="name">Tên</label>
+                        <label for="name">Tên đầy đủ</label>
                         <input id="name" type="text" />
 
                         <label for="phone">Số điện thoại</label>
@@ -85,13 +49,47 @@
 </template>
 
 <script>
+
+import myFunctions from '../assets/data/functions.json';
+
 export default {
     name: 'HomeComponent',
+    data() {
+        return {
+            userName : '',
+            userType: -1,
+            items: null
+        }
+    },
+    beforeMount() {
+        this.userName = this.gUserName;
+        this.userType = parseInt(this.gUserType);
+        this.items = myFunctions[this.userType];
+    },
+    computed: {
+        getDuty() {
+            if (this.userType === 0) {
+                return 'Chưa được cấp quyền';
+            } else if (this.userType === 1) {
+                return 'Giáo viên';
+            } else if (this.userType === 2) {
+                return 'Giáo vụ';
+            } else if (this.userType === 3) {
+                return 'Quản lý';
+            } else {
+                return '';
+            }
+        }
+    },
     methods: {
-        onSearch() {
-            this.$tabName = 'Search';
-            console.log(this.$tabName);
+        removeImg() {
+            let image = document.getElementById('show-img');
+            image.src = 'img/favicon.png';
         },
+        loadFile(e) {
+            let image = document.getElementById('show-img');
+            image.src = URL.createObjectURL(e.target.files[0]);
+        }
     },
 };
 </script>
@@ -129,23 +127,49 @@ export default {
     margin-bottom: 30px;
 }
 
+.left-panel .text-center {
+    font-size: 30px;
+}
+.left-panel .text-center span {
+    color: var(--primary-color);
+}
+.left-panel .title p {
+    font-size: 20px;
+    padding-top: 10px;
+}
+
 .card {
     text-align: left;
     background-color: var(--body-color);
     transition: var(--tran-05);
     padding: 30px;
-    margin: 20px 0px;
+    margin: 30px 0px;
     margin-left: auto;
     margin-right: auto;
     border: 2px solid var(--text-color);
     border-radius: 25px;
     height: 150px;
-    max-width: 65%;
+    width: 450px;
 }
 
-.avatar h1,
-h3 {
+.card-body p {
+    padding: 10px 0;
+    text-align: justify;
+    line-height: 1.5;
+}
+
+.avatar h1 {
+    font-size: 30px;
     text-align: center;
+}
+.avatar h3 {
+    margin: auto;
+    width: 100px;
+    padding: 10px 0px;
+    font-size: 20px;
+    color: var(--primary-color);
+    text-align: center;
+    border-bottom: 2px solid var(--text-color);
 }
 
 .input-container {
@@ -184,7 +208,7 @@ h3 {
     height: 40px;
     background-color: var(--remove-btn);
     color: #fff;
-    border-radius: 20px 20px;
+    border-radius: 20px;
     border-width: 0;
     display: flex;
     align-items: center;
@@ -201,7 +225,7 @@ h3 {
     height: 40px;
     background-color: var(--change-btn);
     color: #fff;
-    border-radius: 20px 20px;
+    border-radius: 20px;
     border-width: 0;
     display: flex;
     align-items: center;
@@ -217,18 +241,24 @@ h3 {
     width: 5px;
 }
 
+#username {
+    pointer-events: none;
+    /* color: var(--hover-color);
+    border-color: var(--hover-color); */
+    opacity: 0.5;
+}
+
+#name, #phone {
+    background: var(--sidebar-color);
+}
+
 .avt-img {
     text-align: center;
     margin: 10px;
 }
-
-#email {
-    pointer-events: none;
-}
-
 .avatar img {
     width: 15rem;
-    height: inherit;
+    height: 15rem;
     margin: auto;
     border-radius: 50%;
 }
