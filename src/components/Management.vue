@@ -37,10 +37,10 @@
         <div class="title">
             <span>Thêm học sinh</span>
             <div class="btn-group">
-                <button id="remove">
+                <button id="remove" @click="add_cancel">
                     <i class="bx bx-x"></i><span class="btn-text">Hủy bỏ</span>
                 </button>
-                <button id="change">
+                <button id="change" @click="add_done">
                     <i class="bx bx-check"></i
                     ><span class="btn-text">Thêm học sinh</span>
                 </button>
@@ -49,19 +49,19 @@
         <div class="info-table">
             <table>
                 <tr>
-                    <td><label>Họ và tên</label><input type="text" /></td>
-                    <td><label>Email</label><input type="text" /></td>
-                    <td><label>Giới tính</label><input type="text" /></td>
+                    <td><label>Họ và tên</label><input type="text" v-model="add_stdDetail.name" /></td>
+                    <td><label>Email</label><input type="text" v-model="add_stdDetail.email" /></td>
+                    <td><label>Giới tính</label><input type="text" v-model="add_stdDetail.gender" /></td>
                 </tr>
                 <tr>
-                    <td><label>Lớp</label><input type="text" /></td>
-                    <td><label>Ngày sinh</label><input type="date" /></td>
-                    <td><label>Số điện thoại</label><input type="text" /></td>
+                    <td><label>Lớp</label><input type="text" v-model="add_stdDetail.grade" /></td>
+                    <td><label>Ngày sinh</label><input type="date" v-model="add_stdDetail.birthdate" /></td>
+                    <td><label>Số điện thoại</label><input type="text" v-model="add_stdDetail.phone" /></td>
                 </tr>
                 <tr>
                     <td colspan="3">
                         <label>Địa chỉ</label
-                        ><textarea id="address" type="text"></textarea>
+                        ><textarea id="address" type="text" v-model="add_stdDetail.address"></textarea>
                     </td>
                 </tr>
             </table>
@@ -69,15 +69,19 @@
     </div>
     <!-- Cập nhật học sinh -->
     <div class="tag-content" v-if="currentTag === 1">
-        <div class="update-student" v-if="updateTable === 1">
+        <div class="update-student" v-if="edit_updateTable === 1">
             <div class="title">
                 <span>Đã chọn</span>
                 <div class="btn-group">
-                    <button id="remove">
+                    <button id="cancel" @click="edit_cancel">
+                        <i class="bx bx-undo"></i
+                        ><span class="btn-text">Hủy chọn</span>
+                    </button>
+                    <button id="remove" @click="edit_remove">
                         <i class="bx bx-x"></i
                         ><span class="btn-text">Xoá học sinh</span>
                     </button>
-                    <button id="change">
+                    <button id="change" @click="edit_done">
                         <i class="bx bx-check"></i
                         ><span class="btn-text">Hoàn tất sửa đổi</span>
                     </button>
@@ -89,20 +93,20 @@
                         <tr>
                             <td>
                                 <label>Họ và tên</label
-                                ><input type="text" :value="std_details.name" />
+                                ><input type="text" v-model="edit_stdDetail.name" />
                             </td>
                             <td>
                                 <label>Email</label
                                 ><input
                                     type="text"
-                                    :value="std_details.email"
+                                    v-model="edit_stdDetail.email"
                                 />
                             </td>
                             <td>
                                 <label>Giới tính</label
                                 ><input
                                     type="text"
-                                    :value="std_details.gender"
+                                    v-model="edit_stdDetail.gender"
                                 />
                             </td>
                         </tr>
@@ -111,21 +115,21 @@
                                 <label>Lớp</label
                                 ><input
                                     type="text"
-                                    :value="std_details.grade"
+                                    v-model="edit_stdDetail.grade"
                                 />
                             </td>
                             <td>
                                 <label>Ngày sinh</label
                                 ><input
                                     type="date"
-                                    :value="std_details.birthdate"
+                                    v-model="edit_stdDetail.birthdate"
                                 />
                             </td>
                             <td>
                                 <label>Số điện thoại</label
                                 ><input
                                     type="text"
-                                    :value="std_details.phone"
+                                    v-model="edit_stdDetail.phone"
                                 />
                             </td>
                         </tr>
@@ -135,7 +139,7 @@
                                 ><textarea
                                     id="address"
                                     type="text"
-                                    v-model="std_details.address"
+                                    v-model="edit_stdDetail.address"
                                 ></textarea>
                             </td>
                         </tr>
@@ -151,9 +155,11 @@
                         id="input-search"
                         type="text"
                         placeholder="Nhập tên học sinh ..."
+                        v-model="edit_schKeyword"
+                        v-on:keyup.enter="edit_onSearch"
                     />
                     <label for="input-search"
-                        ><button @click="printDetails">
+                        ><button @click="edit_onSearch">
                             <i class="bx bx-search"></i></button
                     ></label>
                 </div>
@@ -171,8 +177,8 @@
                     </thead>
                     <tbody>
                         <tr
-                            @click="showDetails($event, 1)"
-                            v-for="std in student"
+                            @click="edit_showDetails($event, std.id)"
+                            v-for="std in studentShow"
                             :key="std.id"
                         >
                             <td>{{ std.name }}</td>
@@ -193,19 +199,22 @@
         <div class="class-list">
             <div class="class-select">
                 <span class="class-list-title">Danh sách lớp</span>
-                <select name="class">
-                    <option value="10A1">10A1</option>
-                    <option value="11A2">11A2</option>
-                    <option value="12A3">12A3</option>
+                <select name="class" v-model="class_classSelected" @change="class_selectClass">
+                    <option v-for="_class in public_classList" :value="_class.id" :key="_class.id">
+                        {{ _class.name }}
+                    </option>
                 </select>
             </div>
             <div class="btn-group">
-                <button id="remove">
-                    <i class="bx bx-x"></i><span class="btn-text">Xoá lớp</span>
+                <button id="cancel" @click="class_cancel">
+                    <i class="bx bx-undo"></i><span class="btn-text">Hủy thay đổi</span>
+                </button>
+                <button id="remove" @click="class_removeAll">
+                    <i class="bx bx-x"></i><span class="btn-text">Xoá toàn bộ HS</span>
                 </button>
                 <button id="change">
                     <i class="bx bx-check"></i
-                    ><span class="btn-text">Hoàn tất sửa đổi</span>
+                    ><span class="btn-text" @click="class_done">Hoàn tất sửa đổi</span>
                 </button>
             </div>
         </div>
@@ -218,59 +227,13 @@
                     <th></th>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>ABC</td>
-                        <td>10A1</td>
-                        <td>Nam</td>
-                        <td><button id="remove">Xoá khỏi lớp</button></td>
-                    </tr>
-                    <tr>
-                        <td>XYZ</td>
-                        <td>11A1</td>
-                        <td>Nữ</td>
-                        <td><button id="remove">Xoá khỏi lớp</button></td>
-                    </tr>
-                    <tr>
-                        <td>DEF</td>
-                        <td>12A1</td>
-                        <td>Nam</td>
-                        <td><button id="remove">Xoá khỏi lớp</button></td>
-                    </tr>
-                    <tr>
-                        <td>ABC</td>
-                        <td>10A1</td>
-                        <td>Nam</td>
-                        <td><button id="remove">Xoá khỏi lớp</button></td>
-                    </tr>
-                    <tr>
-                        <td>XYZ</td>
-                        <td>11A1</td>
-                        <td>Nữ</td>
-                        <td><button id="remove">Xoá khỏi lớp</button></td>
-                    </tr>
-                    <tr>
-                        <td>DEF</td>
-                        <td>12A1</td>
-                        <td>Nam</td>
-                        <td><button id="remove">Xoá khỏi lớp</button></td>
-                    </tr>
-                    <tr>
-                        <td>ABC</td>
-                        <td>10A1</td>
-                        <td>Nam</td>
-                        <td><button id="remove">Xoá khỏi lớp</button></td>
-                    </tr>
-                    <tr>
-                        <td>XYZ</td>
-                        <td>11A1</td>
-                        <td>Nữ</td>
-                        <td><button id="remove">Xoá khỏi lớp</button></td>
-                    </tr>
-                    <tr>
-                        <td>DEF</td>
-                        <td>12A1</td>
-                        <td>Nam</td>
-                        <td><button id="remove">Xoá khỏi lớp</button></td>
+                    <tr v-for="(std) in class_stdInClass" :key="std.id">
+                        <td>{{ std.name }}</td>
+                        <td>{{ std.class }}</td>
+                        <td>{{ std.gender }}</td>
+                        <td><button id="remove" @click="class_removeStudent($event, std.id)">
+                            Xoá khỏi lớp
+                        </button></td>
                     </tr>
                 </tbody>
             </table>
@@ -283,9 +246,11 @@
                         id="input-search"
                         type="text"
                         placeholder="Nhập tên học sinh ..."
+                        v-model="class_schKeyword"
+                        v-on:keyup.enter="class_onSearch"
                     />
                     <label for="input-search"
-                        ><button><i class="bx bx-search"></i></button
+                        ><button @click="class_onSearch"><i class="bx bx-search"></i></button
                     ></label>
                 </div>
             </div>
@@ -298,45 +263,13 @@
                         <th></th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>ABC</td>
-                            <td>10A1</td>
-                            <td>Nam</td>
-                            <td>
-                                <button id="change">Thêm vào lớp</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>XYZ</td>
-                            <td>11A1</td>
-                            <td>Nữ</td>
-                            <td>
-                                <button id="change">Thêm vào lớp</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>DEF</td>
-                            <td>12A1</td>
-                            <td>Nam</td>
-                            <td>
-                                <button id="change">Thêm vào lớp</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>ABC</td>
-                            <td>10A1</td>
-                            <td>Nam</td>
-                            <td>
-                                <button id="change">Thêm vào lớp</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>XYZ</td>
-                            <td>11A1</td>
-                            <td>Nữ</td>
-                            <td>
-                                <button id="change">Thêm vào lớp</button>
-                            </td>
+                        <tr v-for="(std) in studentShow" :key="std.id">
+                            <td>{{ std.name }}</td>
+                            <td>{{ std.class }}</td>
+                            <td>{{ std.gender }}</td>
+                            <td><button id="change" @click="class_addStudent($event, std.id)">
+                                Thêm vào lớp
+                            </button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -351,35 +284,36 @@
         <div class="mark-select">
             <div class="select-group">
                 <label for="class">Lớp</label>
-                <select name="class" id="class">
-                    <option value="10A1">10A1</option>
-                    <option value="10A1">10A1</option>
-                    <option value="10A1">10A1</option>
+                <select name="class" id="class" v-model="mark_classSel" @change="mark_selectContext">
+                    <option v-for="_class in public_classList" :value="_class.id" :key="_class.id">
+                        {{ _class.name }}
+                    </option>
                 </select>
             </div>
             <div class="select-group">
                 <label for="term">Học kì</label>
-                <select name="term2" id="term2">
-                    <option value="HK1">HK1</option>
-                    <option value="HK2">HK2</option>
+                <select name="term2" id="term2" v-model="mark_semesterSel" @change="mark_selectContext">
+                    <option v-for="semester in public_semesterList" :value="semester.id" :key="semester.id">
+                        {{ semester.name }}
+                    </option>
                 </select>
             </div>
             <div class="select-group">
                 <label for="subject">Môn</label>
-                <select name="subject" id="subject">
-                    <option value="Math">Toán</option>
-                    <option value="English">Tiếng Anh</option>
-                    <option value="English">GDCD</option>
+                <select name="subject" id="subject" v-model="mark_subjectSel" @change="mark_selectContext">
+                    <option v-for="subject in public_subjectList" :value="subject.id" :key="subject.id">
+                        {{ subject.name }}
+                    </option>
                 </select>
             </div>
         </div>
         <div class="mark-title-table">
-            <span>10A1 - HK1 - Toán</span>
-            <div class="btn-group">
-                <button @click="showSTD" id="remove">
+            <span>{{ mark_context }}</span>
+            <div class="btn-group" @click="mark_cancel">
+                <button id="remove">
                     <i class="bx bx-x"></i><span class="btn-text">Huỷ</span>
                 </button>
-                <button id="change">
+                <button id="change" @click="mark_done">
                     <i class="bx bx-check"></i
                     ><span class="btn-text">Xong</span>
                 </button>
@@ -394,25 +328,25 @@
                     <th>Điểm học kì</th>
                 </thead>
                 <tbody>
-                    <tr v-for="(std, index) in student" :key="std.id">
+                    <tr v-for="(std, index) in studentShow" :key="std.id">
                         <td>
                             <label for="">{{ std.name }}</label>
                         </td>
                         <td>
                             <input
-                                v-model="mark_std[index].exam_1"
+                                v-model="mark_inputMark[index].exam_1"
                                 type="text"
                             />
                         </td>
                         <td>
                             <input
-                                v-model="mark_std[index].exam_2"
+                                v-model="mark_inputMark[index].exam_2"
                                 type="text"
                             />
                         </td>
                         <td>
                             <input
-                                v-model="mark_std[index].exam_3"
+                                v-model="mark_inputMark[index].exam_3"
                                 type="text"
                             />
                         </td>
@@ -500,71 +434,511 @@
     </div>
 </template>
 <script>
-import students from '../assets/data/students.json';
+import studentAll from '../assets/data/students.json';
 
 export default {
     name: 'ManagementComponent',
     data() {
         return {
             currentTag: 0,
-            updateTable: 0,
-            student: students,
-            std_details: {},
-            mark_std: [],
+            studentShow: studentAll,
+            public_classList: [], // danh sách các lớp
+            public_semesterList: [], // danh sách các lớp
+            public_subjectList: [], // danh sách các lớp
+
+            // dữ liệu phần tiếp nhận học sinh
+            add_stdDetail: {}, // chứa thông tin của 1 học sinh khi thêm 
+
+            // dữ liệu phần cập nhật học sinh
+            edit_updateTable: 0, // trạng thái đóng mở của bảng thông tin chi tiết
+            edit_stdDetail: {}, // thông tin chi tiết của học sinh khi chỉnh sửa
+            edit_schKeyword: '', // từ khóa search
+            edit_selectedID: '', // từ khóa search
+
+            // dữ liệu phần lập danh sách lớp
+            class_classSelected: '', // lớp được chọn
+            class_stdInClass: {}, // danh sách các học sinh trong lớp
+            class_stdNoClass: {}, // danh sách các học sinh không thuộc lớp nào
+            class_stdWantRm: [], // danh sách mã học sinh muốn xóa khỏi lớp
+            class_stdWantAdd: [], // danh sách mã học sinh muốn thêm vào lớp
+            class_schKeyword: '', // từ khóa search
+
+            // dữ liệu phần nhập bảng điểm
+            mark_classSel: '',
+            mark_semesterSel: '',
+            mark_subjectSel: '',
+            mark_context: '',
+            mark_inputMark: [], // dữ liệu học sinh khi nhập điểm
+
+            // dữ liệu phần báo cáo
         };
     },
     beforeMount() {
-        for (let i = 0; i < this.student.length; i++) {
-            let new_mark = {
-                id: this.student[i].id,
-                exam_1: null,
-                exam_2: null,
-                exam_3: null,
-            };
-            this.mark_std.push(new_mark);
-        }
+        // public
+        this.public_classList = [
+            {
+                id: '10A1',
+                name: '10A1',
+            },
+            {
+                id: '10A2',
+                name: '10A2',
+            }
+        ]
+
+        this.public_semesterList = [
+            {
+                id: 'HK1-21-22',
+                name: 'HK1 21-22',
+            },
+            {
+                id: 'HK2-21-22',
+                name: 'HK2 21-22',
+            },
+        ]
+
+        this.public_subjectList = [
+            {
+                id: 'MH00',
+                name: 'All',
+            },
+            {
+                id: 'MH01',
+                name: 'Toán',
+            },
+            {
+                id: 'MH02',
+                name: 'Tiếng Việt',
+            },
+            {
+                id: 'MH03',
+                name: 'Tiếng Anh',
+            },
+        ]
+
+        // Thêm học sinh
+        this.add_stdDetail = {
+            name: '',
+            grade: '',
+            gender: '',
+            birthdate: '',
+            phone: '',
+            email: '',
+            address: '',
+        };
+        
+        // Cập nhật học sinh
+        this.edit_stdDetail = {
+            name: '',
+            grade: '',
+            gender: '',
+            birthdate: '',
+            phone: '',
+            email: '',
+            address: '',
+        };
+
+
+        // this.class_classSelected = this.public_classList[0].id;
     },
     methods: {
+        // ================ Xử lý chung ===================================
+        /**
+         * Xử lý chuyển Tag
+         * 
+         * @param {object} e Event khi gọi hàm
+         * @param {number} tagId Id của tag, 0 -> 4
+         */
         onTagClicked(e, tagId) {
             let tagNumber = parseInt(tagId);
             if (tagNumber >= 0 && tagNumber <= 4) {
-                this.updateTable = 0;
+                this.edit_updateTable = 0;
                 this.currentTag = tagNumber;
             }
-        },
-        showDetails(e, param1) {
-            this.std_details.name = e.path[1].childNodes[0].innerText;
-            this.std_details.grade = e.path[1].childNodes[1].innerText;
-            this.std_details.gender = e.path[1].childNodes[2].innerText;
-            this.std_details.birthdate = e.path[1].childNodes[3].innerText;
-            this.std_details.phone = e.path[1].childNodes[4].innerText;
-            this.std_details.email = e.path[1].childNodes[5].innerText;
-            this.std_details.address = e.path[1].childNodes[6].innerText;
-            this.updateTable = param1;
-        },
-        showSTD() {
-            for (let i = 0; i < this.mark_std.length; i++) {
-                this.mark_std[i].exam_1 = parseFloat(this.mark_std[i].exam_1);
-                this.mark_std[i].exam_2 = parseFloat(this.mark_std[i].exam_2);
-                this.mark_std[i].exam_3 = parseFloat(this.mark_std[i].exam_3);
-
-                if (
-                    isNaN(this.mark_std[i].exam_1) ||
-                    this.mark_std[i].exam_1 < 0.0
-                )
-                    this.mark_std[i].exam_1 = null;
-                if (
-                    isNaN(this.mark_std[i].exam_2) ||
-                    this.mark_std[i].exam_2 < 0.0
-                )
-                    this.mark_std[i].exam_2 = null;
-                if (
-                    isNaN(this.mark_std[i].exam_3) ||
-                    this.mark_std[i].exam_3 < 0.0
-                )
-                    this.mark_std[i].exam_3 = null;
+            switch (tagNumber) {
+                case 0:
+                    break;
+                case 1:
+                    this.studentShow = studentAll;
+                    break;
+                case 2:
+                    this.studentShow = [];
+                    break;
+                case 3:
+                    this.studentShow = [];
+                    break;
+                case 4:
+                    break;
             }
         },
+
+        /**
+         * Lọc ra học sinh có tên chứa từ khóa trong studentAll
+         *  
+         * @param {array} stdArr danh sách học sinh cần tra cứu
+         * @param {string} keyword Từ khóa tìm kiếm học sinh
+         * 
+         * @return {array} Danh sách học sinh sau khi lọc
+         */
+        searchStudent(stdArr, keyword) {
+            return stdArr.filter((student) => {
+                return student.name.toLowerCase().includes(keyword.toLowerCase());
+            });
+        },
+
+        /**
+         * Tìm học sinh theo giá trị thuộc tính
+         *  
+         * @param {array} stdArr danh sách học cần tìm
+         * @param {string} attr thuộc tính tìm
+         * @param {string} value giá trị muốn tìm
+         * 
+         * @return {object} Học sinh cần tìm
+         */
+        findStdByAttrValue(stdArr, attr, value) {
+            let std = stdArr.find(student => student[attr] === value);
+            return Object.assign({}, std);
+        },
+
+        /**
+         * Lọc ra học sinh theo giá trị thuộc tính
+         *  
+         * @param {array} stdArr danh sách học cần lọc
+         * @param {string} attr thuộc tính lọc
+         * @param {string} value giá trị muốn lọc
+         * 
+         * @return {array} Danh sách học sinh sau khi lọc
+         */
+        filterStdByAttrValue(stdArr, attr, value) {
+            const returnArr = [];
+            for (let i = 0; i < stdArr.length; i++) {
+                if (stdArr[i][attr] === value) {
+                    let stdCpy = Object.assign({}, stdArr[i]);
+                    returnArr.push(stdCpy);
+                }
+            }
+            return returnArr;
+        },
+
+        /**
+         * Xóa học sinh có thuộc tính attr bằng value
+         *  
+         * @param {array} stdArr danh sách học sinh cần xóa
+         * @param {string} attr thuộc tính so sánh
+         * @param {string} value giá trị muốn xóa
+         * 
+         * @return {array} danh sách học sinh sau khi xóa
+         * 
+         */
+        removeStdByAttr(stdArr, attr, value) {
+            var i = stdArr.length;
+            while (i--) {
+                if (stdArr[i]
+                    && (arguments.length > 2 && stdArr[i][attr] === value)) {
+                    stdArr.splice(i, 1);
+                }
+            }
+            return stdArr;
+        },
+
+        // ================ Tiếp nhận học sinh ============================
+        /**
+         * Hủy thêm học sinh: Xóa toàn bộ thông tin vừa nhập
+         * 
+         */
+        add_cancel() {
+            this.add_stdDetail = {
+                name: '',
+                grade: '',
+                gender: '',
+                birthdate: '',
+                phone: '',
+                email: '',
+                address: '',
+            };
+            // console.log(this.add_stdDetail);
+        },
+
+        /**
+         * Hoàn tất thêm học sinh: Kiểm tra và thêm thông tin học sinh
+         *
+         */
+        add_done() {
+            console.log(this.add_stdDetail);
+        },
+
+        // ================ Cập nhật học sinh =============================
+        /**
+         * Hiển thị thông tin chi tiết của học sinh trên thẻ cập nhật
+         * 
+         * @param {object} e Event khi gọi hàm
+         * @param {string} stdId Mã số học sinh
+         */
+        edit_showDetails(e, stdId) {
+            this.edit_selectedID = stdId;
+            let selectedStd = this.findStdByAttrValue(this.studentShow, 'id', stdId);
+            
+            this.edit_stdDetail.name = selectedStd.name
+            this.edit_stdDetail.grade = selectedStd.class
+            this.edit_stdDetail.gender = selectedStd.gender
+            this.edit_stdDetail.birthdate = selectedStd.birthday
+            this.edit_stdDetail.phone = selectedStd.phonenumber
+            this.edit_stdDetail.email = selectedStd.email
+            this.edit_stdDetail.address = selectedStd.address
+            this.edit_updateTable = 1;
+            // console.log(this.edit_selectedID);
+            // console.log(selectedStd);
+        },
+        /**
+         * Tìm kiếm học sinh
+         * 
+         */
+        edit_onSearch() {
+            // console.log(this.edit_schKeyword);
+            this.studentShow = this.searchStudent(studentAll, this.edit_schKeyword);
+        },
+
+        /**
+         * Hủy chọn: Xóa toàn bộ thông tin vừa nhập, hủy chọn HS
+         * 
+         */
+        edit_cancel() {
+            this.edit_stdDetail = {
+                name: '',
+                grade: '',
+                gender: '',
+                birthdate: '',
+                phone: '',
+                email: '',
+                address: '',
+            };
+            this.edit_selectedID = '';
+            this.edit_updateTable = 0;
+        },
+
+        /**
+         * Xóa học sinh: Xóa thông tin học sinh
+         *
+         */
+        edit_remove() { 
+            this.edit_stdDetail = {
+                name: '',
+                grade: '',
+                gender: '',
+                birthdate: '',
+                phone: '',
+                email: '',
+                address: '',
+            };
+            console.log('Remove ', this.edit_selectedID);
+            this.edit_selectedID = '';
+            this.edit_updateTable = 0;
+        },
+
+        /**
+         * Hoàn tất chỉnh sửa: Cập nhật lại thông tin học sinh
+         *
+         */
+        edit_done() { 
+            console.log('Update ', this.edit_selectedID);
+            console.log(this.edit_stdDetail);
+        },
+
+        // ================ Lập danh sách lớp ==============================
+        /**
+         * Chọn lớp: Lọc danh sách học sinh thuộc lớp đã chọn
+         * 
+         */
+        class_selectClass() {
+            // console.log(this.class_classSelected);
+            this.class_stdInClass = this.filterStdByAttrValue(studentAll, 'class', this.class_classSelected);
+            this.class_stdNoClass = this.filterStdByAttrValue(studentAll, 'class', null);
+            this.studentShow = this.class_stdNoClass;
+
+            // console.log(this.class_stdInClass);
+            // console.log(this.class_stdNoClass);
+        },
+
+        /**
+         * Thêm học sinh vào lớp
+         * 
+         * @param {object} e Event khi gọi hàm
+         * @param {string} stdId Mã học sinh cần thêm
+         */
+        class_addStudent(e, stdId) {
+            // console.log(stdId);
+            this.class_stdWantAdd.push(stdId);
+            let addStd = this.findStdByAttrValue(studentAll, 'id', stdId);
+            addStd.class = this.class_classSelected;
+
+            this.class_stdInClass.unshift(addStd);     
+            this.removeStdByAttr(this.class_stdNoClass, 'id', stdId);
+            this.studentShow = this.class_stdNoClass;
+            // console.log(addStd);
+        },
+
+        /**
+         * Xóa học sinh khỏi lớp
+         * 
+         * @param {object} e Event khi gọi hàm
+         * @param {string} stdId Mã học sinh cần thêm
+         */
+        class_removeStudent(e, stdId) {
+            // console.log(stdId);
+            this.class_stdWantRm.push(stdId);
+            let removeStd = this.findStdByAttrValue(studentAll, 'id', stdId);
+            removeStd.class = null;
+            this.class_stdNoClass.unshift(removeStd);
+            this.removeStdByAttr(this.class_stdInClass, 'id', stdId);
+            this.studentShow = this.class_stdNoClass;
+            // console.log(addStd);
+        },
+
+        /**
+         * Tìm kiếm học sinh
+         * 
+         */
+        class_onSearch() {
+            // console.log(this.class_schKeyword);
+            this.studentShow = this.searchStudent(this.class_stdNoClass, this.class_schKeyword);
+        },
+
+        /**
+         * Hủy bỏ thay đổi
+         * 
+         */
+        class_cancel() {
+            // console.log(studentAll);
+            this.class_classSelected = '';
+            this.class_stdInClass = [];
+            this.class_stdNoClass = [];
+            this.studentShow = [];
+        },
+
+        /**
+         * Xóa toàn bộ học sinh khỏi lớp
+         * 
+         */
+        class_removeAll() {
+            this.class_stdInClass.forEach(student => {
+                this.class_stdWantRm.push(student.id);
+                student.class = null;
+                this.class_stdNoClass.unshift(student);
+            });
+            this.class_stdInClass = [];
+            // console.log(this.class_stdWantRm);
+        },
+
+        /**
+         * Hoàn tất sửa đổi lớp, cập nhật dữ liệu
+         * 
+         */
+        class_done() {
+            console.log('Add ', this.class_stdWantAdd);
+            console.log('Remove ', this.class_stdWantRm);
+        },
+
+        // ================ Nhập bảng điểm =================================
+        /**
+         * Chọn Lớp, Học kì và Môn học cần nhập điểm
+         * 
+         */
+        mark_selectContext() {
+            if (this.mark_classSel && this.mark_semesterSel && this.mark_subjectSel) {
+                this.mark_context = this.mark_classSel + this.mark_semesterSel + this.mark_subjectSel;
+                console.log('Get Data....');
+                this.studentShow = this.filterStdByAttrValue(studentAll, 'gender', 'Nam')
+
+                for (let i = 0; i < this.studentShow.length; i++) {
+                    let new_mark = {
+                        id: this.studentShow[i].id,
+                        exam_1: null,
+                        exam_2: null,
+                        exam_3: null,
+                    };
+                    this.mark_inputMark.push(new_mark);
+                }
+            }
+        },
+
+        /**
+         * Xóa điểm đã nhập, giữ nguyên dữ liệu học sinh
+         * 
+         * @param {object} e Event khi gọi hàm
+         */
+        mark_cancel() {
+            console.log('Get Data....');
+            for (let i = 0; i < this.studentShow.length; i++) {
+                let new_mark = {
+                    id: this.studentShow[i].id,
+                    exam_1: null,
+                    exam_2: null,
+                    exam_3: null,
+                };
+                this.mark_inputMark.push(new_mark);
+            }
+            this.studentShow = this.filterStdByAttrValue(studentAll, 'gender', 'Nam')
+        },
+
+        /**
+         * Hoàn tất nhập điểm, cập nhật dữ liệu
+         * 
+         */
+        mark_done() {
+            for (let i = 0; i < this.mark_inputMark.length; i++) {
+                this.mark_inputMark[i].exam_1 = parseFloat(this.mark_inputMark[i].exam_1);
+                this.mark_inputMark[i].exam_2 = parseFloat(this.mark_inputMark[i].exam_2);
+                this.mark_inputMark[i].exam_3 = parseFloat(this.mark_inputMark[i].exam_3);
+
+                if (
+                    isNaN(this.mark_inputMark[i].exam_1) ||
+                    this.mark_inputMark[i].exam_1 < 0.0
+                )
+                    this.mark_inputMark[i].exam_1 = null;
+                if (
+                    isNaN(this.mark_inputMark[i].exam_2) ||
+                    this.mark_inputMark[i].exam_2 < 0.0
+                )
+                    this.mark_inputMark[i].exam_2 = null;
+                if (
+                    isNaN(this.mark_inputMark[i].exam_3) ||
+                    this.mark_inputMark[i].exam_3 < 0.0
+                )
+                    this.mark_inputMark[i].exam_3 = null;
+            }
+
+            console.log(this.mark_inputMark);
+        },
+
+        // ================ Lập báo cáo ====================================
+        /**
+         * Chọn Học kì và Môn học cần lập báo cáo
+         * 
+         * @param {object} e Event khi gọi hàm
+         */
+        report_selectContext() {
+            if (this.mark_classSel && this.mark_semesterSel && this.mark_subjectSel) {
+                this.mark_context = this.mark_classSel + this.mark_semesterSel + this.mark_subjectSel;
+                console.log('Get Data....');
+                this.studentShow = this.filterStdByAttrValue(studentAll, 'gender', 'Nam')
+
+                for (let i = 0; i < this.studentShow.length; i++) {
+                    let new_mark = {
+                        id: this.studentShow[i].id,
+                        exam_1: null,
+                        exam_2: null,
+                        exam_3: null,
+                    };
+                    this.mark_inputMark.push(new_mark);
+                }
+            }
+        },
+
+        /**
+         * Lập báo cáo theo yêu cầu đã chọn
+         * 
+         */
+        report_done() {}
     },
 };
 </script>
@@ -643,6 +1017,10 @@ export default {
     padding-left: 5px;
     padding-right: 5px;
 }
+.btn-group #cancel {
+    background-color: #777;
+}
+
 .btn-group #remove {
     background-color: var(--remove-btn);
 }
@@ -705,6 +1083,7 @@ export default {
     border-radius: 25px;
     padding: 10px 0;
     max-width: 1060px;
+    text-align: center;
 }
 
 .update-table td:first-child,
@@ -714,23 +1093,20 @@ export default {
     width: 340px;
 }
 
-.update-table td:nth-child(2) {
-    text-align: center;
+.update-table th:nth-child(2) {
     width: 150px;
 }
 
-.update-table td:nth-child(3) {
-    text-align: center;
+.update-table th:nth-child(3) {
     width: 150px;
 }
-.update-table td:nth-child(4) {
-    text-align: center;
+.update-table th:nth-child(4) {
     width: 200px;
 }
 
+.update-table th:nth-child(5),
 .update-table td:nth-child(5) {
     width: 200px;
-    text-align: center;
     padding-right: 40px;
 }
 .update-table table th {
@@ -812,25 +1188,27 @@ select {
     border-radius: 25px;
     padding: 10px 0;
     max-width: 960px;
+    text-align: center;
 }
 
 #table-std td:first-child,
 #table-std th:first-child {
+    text-align: left;
     width: 360px;
     padding-left: 60px;
 }
 
-#table-std td:nth-child(2) {
+#table-std th:nth-child(2) {
     text-align: center;
     width: 150px;
 }
 
-#table-std td:nth-child(3) {
+#table-std th:nth-child(3) {
     text-align: center;
     width: 150px;
 }
 
-#table-std td:nth-child(4) {
+#table-std th:nth-child(4) {
     width: 280px;
     text-align: center;
 }
