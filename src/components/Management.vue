@@ -363,29 +363,34 @@
         <div class="report-select">
             <div class="select-group">
                 <label for="term1">Học kì</label>
-                <select name="term" id="term1">
-                    <option value="HK1">HK1_21-22</option>
-                    <option value="HK2">HK2_21-22</option>
+                <select name="term" id="term1" v-model="hk">
+                    <option
+                        v-for="hk in hocki"
+                        :key="hk.mahk"
+                        :value="hk.tenhk"
+                    >
+                        {{ hk.tenhk }}
+                    </option>
                 </select>
             </div>
             <div class="select-group">
                 <label for="subject">Môn</label>
-                <select name="subject" id="subject">
-                    <option value="Math">Toán</option>
-                    <option value="English">Tiếng Anh</option>
-                    <option value="English">GDCD</option>
+                <select name="subject" id="subject" v-model="mon">
+                    <option
+                        v-for="mon in monhoc"
+                        :key="mon.mamh"
+                        :value="mon.tenmh"
+                    >
+                        {{ mon.tenmh }}
+                    </option>
                 </select>
             </div>
         </div>
         <div class="report-title-table">
-            <span>Báo cáo tổng kết HK1_21-22 - Toán</span>
-            <div class="btn-group">
-                <button id="remove">
-                    <i class="bx bx-x"></i><span class="btn-text">Huỷ</span>
-                </button>
-                <button id="change">
-                    <i class="bx bx-check"></i
-                    ><span class="btn-text">Xong</span>
+            <span>Báo cáo tổng kết {{ hk }} - {{ mon }}</span>
+            <div class="btn-group-report">
+                <button id="remove"><i class="bx bx-x"></i><i>Huỷ</i></button>
+                <button id="change"><i class="bx bx-check"></i><i>Xong</i>
                 </button>
             </div>
         </div>
@@ -400,30 +405,6 @@
                 <tbody>
                     <tr>
                         <td>10A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>11A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>12A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>12A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
-                    </tr>
-                    <tr>
-                        <td>12A1</td>
                         <td>35</td>
                         <td>35</td>
                         <td>100</td>
@@ -1349,10 +1330,46 @@ select {
 }
 
 .mark-title-table span {
+    position: absolute;
+    left: 300px;
     font-size: 28px;
     color: var(--text-color);
     padding: 10px;
 }
+
+.btn-group-mark button {
+    display: inline-flex;
+    position: relative;
+    right: -350px;
+    height: 40px;
+    margin: 0 10px;
+    border-radius: 20px;
+    align-items: center;
+    font-size: 20px;
+    padding: 5px;
+    cursor: pointer;
+    border: 0;
+    color: var(--text-color);
+}
+.btn-group-mark .btn-text {
+    font-size: 20px;
+    padding: 0px 15px 0px 0px;
+}
+.btn-group-mark i {
+    font-size: 20px;
+    padding-right: 5px;
+    font-style: normal;
+}
+.btn-group-mark #remove {
+    background-color: var(--remove-btn);
+}
+.btn-group-mark #change {
+    background-color: var(--change-btn);
+}
+.btn-group-mark button:hover {
+    opacity: 0.75;
+}
+
 .mark-table {
     display: flex;
     justify-content: center;
@@ -1452,6 +1469,7 @@ select {
 .select-group #subject {
     width: 100px;
 }
+
 .report-title-table {
     display: flex;
     justify-content: space-evenly;
@@ -1459,10 +1477,46 @@ select {
 }
 
 .report-title-table span {
+    position: absolute;
+    left: 300px;
     font-size: 28px;
     color: var(--text-color);
     padding: 10px;
 }
+
+.btn-group-report button {
+    display: inline-flex;
+    position: relative;
+    right: -300px;
+    height: 40px;
+    margin: 0 10px;
+    border-radius: 20px;
+    align-items: center;
+    font-size: 20px;
+    padding: 5px;
+    cursor: pointer;
+    border: 0;
+    color: var(--text-color);
+}
+.btn-group-report .btn-text {
+    font-size: 20px;
+    padding: 0px 15px 0px 0px;
+}
+.btn-group-report i {
+    font-size: 20px;
+    padding-right: 5px;
+    font-style: normal;
+}
+.btn-group-report #remove {
+    background-color: var(--remove-btn);
+}
+.btn-group-report #change {
+    background-color: var(--change-btn);
+}
+.btn-group-report button:hover {
+    opacity: 0.75;
+}
+
 .report-table {
     display: flex;
     justify-content: center;

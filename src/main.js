@@ -1,4 +1,4 @@
-import * as Vue from 'vue'; // in Vue 3
+import * as Vue from 'vue';
 import App from './App.vue';
 import router from '../src/routers/index';
 import './assets/css/style.css';
@@ -6,6 +6,7 @@ import './assets/css/style.css';
 const app = Vue.createApp(App);
 app.config.globalProperties.gUserName = '';
 app.config.globalProperties.gUserType = -1;
+app.config.globalProperties.base_url = 'http://127.0.0.1:3000';
 app.use(router);
 app.mount('#app');
 
