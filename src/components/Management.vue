@@ -49,19 +49,41 @@
         <div class="info-table">
             <table>
                 <tr>
-                    <td><label>Họ và tên</label><input type="text" v-model="add_stdDetail.name" /></td>
-                    <td><label>Email</label><input type="text" v-model="add_stdDetail.email" /></td>
-                    <td><label>Giới tính</label><input type="text" v-model="add_stdDetail.gender" /></td>
+                    <td>
+                        <label>Họ và tên</label
+                        ><input type="text" v-model="add_stdDetail.name" />
+                    </td>
+                    <td>
+                        <label>Email</label
+                        ><input type="text" v-model="add_stdDetail.email" />
+                    </td>
+                    <td>
+                        <label>Giới tính</label
+                        ><input type="text" v-model="add_stdDetail.gender" />
+                    </td>
                 </tr>
                 <tr>
-                    <td><label>Lớp</label><input type="text" v-model="add_stdDetail.grade" /></td>
-                    <td><label>Ngày sinh</label><input type="date" v-model="add_stdDetail.birthdate" /></td>
-                    <td><label>Số điện thoại</label><input type="text" v-model="add_stdDetail.phone" /></td>
+                    <td>
+                        <label>Lớp</label
+                        ><input type="text" v-model="add_stdDetail.grade" />
+                    </td>
+                    <td>
+                        <label>Ngày sinh</label
+                        ><input type="date" v-model="add_stdDetail.birthdate" />
+                    </td>
+                    <td>
+                        <label>Số điện thoại</label
+                        ><input type="text" v-model="add_stdDetail.phone" />
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="3">
                         <label>Địa chỉ</label
-                        ><textarea id="address" type="text" v-model="add_stdDetail.address"></textarea>
+                        ><textarea
+                            id="address"
+                            type="text"
+                            v-model="add_stdDetail.address"
+                        ></textarea>
                     </td>
                 </tr>
             </table>
@@ -93,7 +115,10 @@
                         <tr>
                             <td>
                                 <label>Họ và tên</label
-                                ><input type="text" v-model="edit_stdDetail.name" />
+                                ><input
+                                    type="text"
+                                    v-model="edit_stdDetail.name"
+                                />
                             </td>
                             <td>
                                 <label>Email</label
@@ -177,17 +202,17 @@
                     </thead>
                     <tbody>
                         <tr
-                            @click="edit_showDetails($event, std.id)"
+                            @click="edit_showDetails($event, std.mahs)"
                             v-for="std in studentShow"
-                            :key="std.id"
+                            :key="std.mahs"
                         >
-                            <td>{{ std.name }}</td>
-                            <td>{{ std.class }}</td>
-                            <td>{{ std.gender }}</td>
-                            <td>{{ std.birthday }}</td>
-                            <td>{{ std.phonenumber }}</td>
+                            <td>{{ std.hoten }}</td>
+                            <td>{{ std.tenlop }}</td>
+                            <td>{{ std.gioitinh }}</td>
+                            <td>{{ std.ngaysinh }}</td>
+                            <td>---</td>
                             <td hidden>{{ std.email }}</td>
-                            <td hidden>{{ std.address }}</td>
+                            <td hidden>{{ std.diachi }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -199,22 +224,31 @@
         <div class="class-list">
             <div class="class-select">
                 <span class="class-list-title">Danh sách lớp</span>
-                <select name="class" v-model="class_classSelected" @change="class_selectClass">
-                    <option v-for="_class in public_classList" :value="_class.id" :key="_class.id">
-                        {{ _class.name }}
+                <select
+                    name="class"
+                    v-model="class_classSelected"
+                    @change="class_selectClass"
+                >
+                    <option
+                        v-for="_class in public_classList"
+                        :value="_class.malop"
+                        :key="_class.malop"
+                    >
+                        {{ _class.tenlop }}
                     </option>
                 </select>
             </div>
             <div class="btn-group">
                 <button id="cancel" @click="class_cancel">
-                    <i class="bx bx-undo"></i><span class="btn-text">Hủy thay đổi</span>
+                    <i class="bx bx-undo"></i><span class="btn-text">Hủy</span>
                 </button>
                 <button id="remove" @click="class_removeAll">
-                    <i class="bx bx-x"></i><span class="btn-text">Xoá toàn bộ HS</span>
+                    <i class="bx bx-x"></i
+                    ><span class="btn-text">Xoá toàn bộ HS</span>
                 </button>
                 <button id="change">
                     <i class="bx bx-check"></i
-                    ><span class="btn-text" @click="class_done">Hoàn tất sửa đổi</span>
+                    ><span class="btn-text" @click="class_done">Xong</span>
                 </button>
             </div>
         </div>
@@ -227,13 +261,18 @@
                     <th></th>
                 </thead>
                 <tbody>
-                    <tr v-for="(std) in class_stdInClass" :key="std.id">
-                        <td>{{ std.name }}</td>
-                        <td>{{ std.class }}</td>
-                        <td>{{ std.gender }}</td>
-                        <td><button id="remove" @click="class_removeStudent($event, std.id)">
-                            Xoá khỏi lớp
-                        </button></td>
+                    <tr v-for="std in class_stdInClass" :key="std.mahs">
+                        <td>{{ std.hoten }}</td>
+                        <td>{{ std.tenlop }}</td>
+                        <td>{{ std.gioitinh }}</td>
+                        <td>
+                            <button
+                                id="remove"
+                                @click="class_removeStudent($event, std.mahs)"
+                            >
+                                Xoá khỏi lớp
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -250,7 +289,8 @@
                         v-on:keyup.enter="class_onSearch"
                     />
                     <label for="input-search"
-                        ><button @click="class_onSearch"><i class="bx bx-search"></i></button
+                        ><button @click="class_onSearch">
+                            <i class="bx bx-search"></i></button
                     ></label>
                 </div>
             </div>
@@ -263,13 +303,18 @@
                         <th></th>
                     </thead>
                     <tbody>
-                        <tr v-for="(std) in studentShow" :key="std.id">
-                            <td>{{ std.name }}</td>
-                            <td>{{ std.class }}</td>
-                            <td>{{ std.gender }}</td>
-                            <td><button id="change" @click="class_addStudent($event, std.id)">
-                                Thêm vào lớp
-                            </button></td>
+                        <tr v-for="std in studentShow" :key="std.mahs">
+                            <td>{{ std.hoten }}</td>
+                            <td>{{ std.tenlop }}</td>
+                            <td>{{ std.gioitinh }}</td>
+                            <td>
+                                <button
+                                    id="change"
+                                    @click="class_addStudent($event, std.mahs)"
+                                >
+                                    Thêm vào lớp
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -284,38 +329,62 @@
         <div class="mark-select">
             <div class="select-group">
                 <label for="class">Lớp</label>
-                <select name="class" id="class" v-model="mark_classSel" @change="mark_selectContext">
-                    <option v-for="_class in public_classList" :value="_class.id" :key="_class.id">
-                        {{ _class.name }}
+                <select
+                    name="class"
+                    id="class"
+                    v-model="mark_classSel"
+                    @change="mark_selectContext"
+                >
+                    <option
+                        v-for="_class in public_classList"
+                        :value="_class.tenlop"
+                        :key="_class.malop"
+                    >
+                        {{ _class.tenlop }}
                     </option>
                 </select>
             </div>
             <div class="select-group">
                 <label for="term">Học kì</label>
-                <select name="term2" id="term2" v-model="mark_semesterSel" @change="mark_selectContext">
-                    <option v-for="semester in public_semesterList" :value="semester.id" :key="semester.id">
-                        {{ semester.name }}
+                <select
+                    name="term2"
+                    id="term2"
+                    v-model="mark_semesterSel"
+                    @change="mark_selectContext"
+                >
+                    <option
+                        v-for="semester in public_semesterList"
+                        :value="semester.tenhk"
+                        :key="semester.mahk"
+                    >
+                        {{ semester.tenhk }}
                     </option>
                 </select>
             </div>
             <div class="select-group">
                 <label for="subject">Môn</label>
-                <select name="subject" id="subject" v-model="mark_subjectSel" @change="mark_selectContext">
-                    <option v-for="subject in public_subjectList" :value="subject.id" :key="subject.id">
-                        {{ subject.name }}
+                <select
+                    name="subject"
+                    id="subject"
+                    v-model="mark_subjectSel"
+                    @change="mark_selectContext"
+                >
+                    <option
+                        v-for="subject in public_subjectList"
+                        :value="subject.tenmh"
+                        :key="subject.mamh"
+                    >
+                        {{ subject.tenmh }}
                     </option>
                 </select>
             </div>
         </div>
         <div class="mark-title-table">
-            <span>{{ mark_context }}</span>
-            <div class="btn-group" @click="mark_cancel">
-                <button id="remove">
-                    <i class="bx bx-x"></i><span class="btn-text">Huỷ</span>
-                </button>
+            <span>{{ mark_classSel }} - {{ mark_semesterSel }} - {{ mark_subjectSel }}</span>
+            <div class="btn-group-mark" @click="mark_cancel">
+                <button id="remove"><i class="bx bx-x"></i><i>Huỷ</i></button>
                 <button id="change" @click="mark_done">
-                    <i class="bx bx-check"></i
-                    ><span class="btn-text">Xong</span>
+                    <i class="bx bx-check"></i><i>Xong</i>
                 </button>
             </div>
         </div>
@@ -363,34 +432,35 @@
         <div class="report-select">
             <div class="select-group">
                 <label for="term1">Học kì</label>
-                <select name="term" id="term1" v-model="hk">
+                <select name="term" id="term1" v-model="mark_semesterSel">
                     <option
-                        v-for="hk in hocki"
-                        :key="hk.mahk"
-                        :value="hk.tenhk"
+                        v-for="semester in public_semesterList"
+                        :value="semester.tenhk"
+                        :key="semester.mahk"
                     >
-                        {{ hk.tenhk }}
+                        {{ semester.tenhk }}
                     </option>
                 </select>
             </div>
             <div class="select-group">
                 <label for="subject">Môn</label>
-                <select name="subject" id="subject" v-model="mon">
+                <select name="subject" id="subject" v-model="mark_subjectSel">
                     <option
-                        v-for="mon in monhoc"
-                        :key="mon.mamh"
-                        :value="mon.tenmh"
+                        v-for="subject in public_subjectList"
+                        :value="subject.tenmh"
+                        :key="subject.mamh"
                     >
-                        {{ mon.tenmh }}
+                        {{ subject.tenmh }}
                     </option>
                 </select>
             </div>
         </div>
         <div class="report-title-table">
-            <span>Báo cáo tổng kết {{ hk }} - {{ mon }}</span>
+            <span>Báo cáo tổng kết {{ mark_semesterSel }} - {{ mark_subjectSel }}</span>
             <div class="btn-group-report">
                 <button id="remove"><i class="bx bx-x"></i><i>Huỷ</i></button>
-                <button id="change"><i class="bx bx-check"></i><i>Xong</i>
+                <button id="change">
+                    <i class="bx bx-check"></i><i>Xong</i>
                 </button>
             </div>
         </div>
@@ -422,13 +492,14 @@ export default {
     data() {
         return {
             currentTag: 0,
-            studentShow: studentAll,
+            studentShow: [],
             public_classList: [], // danh sách các lớp
             public_semesterList: [], // danh sách các lớp
-            public_subjectList: [], // danh sách các lớp
+            public_subjectList: [], // danh sách các môn học
+            public_studentList: [], // danh sách học sinh
 
             // dữ liệu phần tiếp nhận học sinh
-            add_stdDetail: {}, // chứa thông tin của 1 học sinh khi thêm 
+            add_stdDetail: {}, // chứa thông tin của 1 học sinh khi thêm
 
             // dữ liệu phần cập nhật học sinh
             edit_updateTable: 0, // trạng thái đóng mở của bảng thông tin chi tiết
@@ -455,47 +526,10 @@ export default {
         };
     },
     beforeMount() {
-        // public
-        this.public_classList = [
-            {
-                id: '10A1',
-                name: '10A1',
-            },
-            {
-                id: '10A2',
-                name: '10A2',
-            }
-        ]
-
-        this.public_semesterList = [
-            {
-                id: 'HK1-21-22',
-                name: 'HK1 21-22',
-            },
-            {
-                id: 'HK2-21-22',
-                name: 'HK2 21-22',
-            },
-        ]
-
-        this.public_subjectList = [
-            {
-                id: 'MH00',
-                name: 'All',
-            },
-            {
-                id: 'MH01',
-                name: 'Toán',
-            },
-            {
-                id: 'MH02',
-                name: 'Tiếng Việt',
-            },
-            {
-                id: 'MH03',
-                name: 'Tiếng Anh',
-            },
-        ]
+        this.getStudentAll();
+        this.getClassAll();
+        this.getSemesterAll();
+        this.getSubjectAll();
 
         // Thêm học sinh
         this.add_stdDetail = {
@@ -507,7 +541,7 @@ export default {
             email: '',
             address: '',
         };
-        
+
         // Cập nhật học sinh
         this.edit_stdDetail = {
             name: '',
@@ -519,14 +553,13 @@ export default {
             address: '',
         };
 
-
         // this.class_classSelected = this.public_classList[0].id;
     },
     methods: {
         // ================ Xử lý chung ===================================
         /**
          * Xử lý chuyển Tag
-         * 
+         *
          * @param {object} e Event khi gọi hàm
          * @param {number} tagId Id của tag, 0 -> 4
          */
@@ -540,7 +573,7 @@ export default {
                 case 0:
                     break;
                 case 1:
-                    this.studentShow = studentAll;
+                    this.studentShow = this.public_studentList;
                     break;
                 case 2:
                     this.studentShow = [];
@@ -553,41 +586,97 @@ export default {
             }
         },
 
+        getStudentAll() {
+            this.public_studentList = [];
+            fetch(this.base_url + '/hocsinh/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    for (let i = 0; i < api.data.length; i++) {
+                        let element = api.data[i];
+                        let tenlop;
+                        if (element.malop === null) {
+                            tenlop = '-';
+                        } else tenlop = String(element.malop).substring(1, 5);
+                        let ngaysinh = String(element.ngaysinh).substring(
+                            0,
+                            10
+                        );
+                        let std = {
+                            mahs: element.mahs,
+                            hoten: element.hoten,
+                            gioitinh: element.gioitinh,
+                            ngaysinh,
+                            diachi: element.diachi,
+                            email: element.email,
+                            malop: element.malop,
+                            tenlop,
+                        };
+                        this.public_studentList.push(std);
+                    }
+                });
+        },
+
+        getClassAll() {
+            fetch(this.base_url + '/lop/all')
+                .then((res) => res.json())
+                .then(
+                    (api) => (this.public_classList = api.data.map((x) => x))
+                );
+        },
+
+        getSemesterAll() {
+            fetch(this.base_url + '/hocki/all')
+                .then((res) => res.json())
+                .then(
+                    (api) => (this.public_semesterList = api.data.map((x) => x))
+                );
+        },
+
+        getSubjectAll() {
+            fetch(this.base_url + '/monhoc/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.public_subjectList = api.data.map((std) => std);
+                });
+        },
+
         /**
          * Lọc ra học sinh có tên chứa từ khóa trong studentAll
-         *  
+         *
          * @param {array} stdArr danh sách học sinh cần tra cứu
          * @param {string} keyword Từ khóa tìm kiếm học sinh
-         * 
+         *
          * @return {array} Danh sách học sinh sau khi lọc
          */
         searchStudent(stdArr, keyword) {
             return stdArr.filter((student) => {
-                return student.name.toLowerCase().includes(keyword.toLowerCase());
+                return student.hoten
+                    .toLowerCase()
+                    .includes(keyword.toLowerCase());
             });
         },
 
         /**
          * Tìm học sinh theo giá trị thuộc tính
-         *  
+         *
          * @param {array} stdArr danh sách học cần tìm
          * @param {string} attr thuộc tính tìm
          * @param {string} value giá trị muốn tìm
-         * 
+         *
          * @return {object} Học sinh cần tìm
          */
         findStdByAttrValue(stdArr, attr, value) {
-            let std = stdArr.find(student => student[attr] === value);
+            let std = stdArr.find((student) => student[attr] === value);
             return Object.assign({}, std);
         },
 
         /**
          * Lọc ra học sinh theo giá trị thuộc tính
-         *  
+         *
          * @param {array} stdArr danh sách học cần lọc
          * @param {string} attr thuộc tính lọc
          * @param {string} value giá trị muốn lọc
-         * 
+         *
          * @return {array} Danh sách học sinh sau khi lọc
          */
         filterStdByAttrValue(stdArr, attr, value) {
@@ -603,19 +692,22 @@ export default {
 
         /**
          * Xóa học sinh có thuộc tính attr bằng value
-         *  
+         *
          * @param {array} stdArr danh sách học sinh cần xóa
          * @param {string} attr thuộc tính so sánh
          * @param {string} value giá trị muốn xóa
-         * 
+         *
          * @return {array} danh sách học sinh sau khi xóa
-         * 
+         *
          */
         removeStdByAttr(stdArr, attr, value) {
             var i = stdArr.length;
             while (i--) {
-                if (stdArr[i]
-                    && (arguments.length > 2 && stdArr[i][attr] === value)) {
+                if (
+                    stdArr[i] &&
+                    arguments.length > 2 &&
+                    stdArr[i][attr] === value
+                ) {
                     stdArr.splice(i, 1);
                 }
             }
@@ -625,7 +717,7 @@ export default {
         // ================ Tiếp nhận học sinh ============================
         /**
          * Hủy thêm học sinh: Xóa toàn bộ thông tin vừa nhập
-         * 
+         *
          */
         add_cancel() {
             this.add_stdDetail = {
@@ -644,44 +736,80 @@ export default {
          * Hoàn tất thêm học sinh: Kiểm tra và thêm thông tin học sinh
          *
          */
-        add_done() {
-            console.log(this.add_stdDetail);
+        async add_done() {
+            let len = this.public_studentList.length;
+            let last_id = this.public_studentList[len - 1].mahs;
+            last_id = String(last_id).substring(2, 5);
+            last_id = parseInt(last_id) + 1;
+            if (last_id < 10) last_id = '00' + String(last_id);
+            else if (last_id >= 10 && last_id <= 99)
+                last_id = '0' + String(last_id);
+            else last_id = String(last_id);
+
+            const found = this.public_classList.some(
+                (el) => el.tenlop === this.add_stdDetail.grade
+            );
+            if (!found) {
+                this.add_stdDetail.grade = null;
+            } else {
+                this.add_stdDetail.grade = 'L' + this.add_stdDetail.grade;
+            }
+            const new_student = {
+                MAHS: 'HS' + last_id,
+                HOTEN: this.add_stdDetail.name,
+                GIOITINH: this.add_stdDetail.gender,
+                NGAYSINH: this.add_stdDetail.birthdate,
+                DIACHI: this.add_stdDetail.address,
+                EMAIL: this.add_stdDetail.email,
+                MALOP: this.add_stdDetail.grade,
+            };
+            const new_data = JSON.stringify(new_student);
+            const res = await fetch(
+                this.base_url + `/hocsinh/create?data=${new_data}`
+            );
+            const data = res.json();
+            console.log(data);
+            this.getStudentAll();
         },
 
         // ================ Cập nhật học sinh =============================
         /**
          * Hiển thị thông tin chi tiết của học sinh trên thẻ cập nhật
-         * 
+         *
          * @param {object} e Event khi gọi hàm
          * @param {string} stdId Mã số học sinh
          */
         edit_showDetails(e, stdId) {
             this.edit_selectedID = stdId;
-            let selectedStd = this.findStdByAttrValue(this.studentShow, 'id', stdId);
-            
-            this.edit_stdDetail.name = selectedStd.name
-            this.edit_stdDetail.grade = selectedStd.class
-            this.edit_stdDetail.gender = selectedStd.gender
-            this.edit_stdDetail.birthdate = selectedStd.birthday
-            this.edit_stdDetail.phone = selectedStd.phonenumber
-            this.edit_stdDetail.email = selectedStd.email
-            this.edit_stdDetail.address = selectedStd.address
+            let selectedStd = this.findStdByAttrValue(
+                this.studentShow,
+                'mahs',
+                stdId
+            );
+            this.edit_stdDetail.name = selectedStd.hoten;
+            this.edit_stdDetail.grade = selectedStd.tenlop;
+            this.edit_stdDetail.gender = selectedStd.gioitinh;
+            this.edit_stdDetail.birthdate = selectedStd.ngaysinh;
+            this.edit_stdDetail.phone = '';
+            this.edit_stdDetail.email = selectedStd.email;
+            this.edit_stdDetail.address = selectedStd.diachi;
             this.edit_updateTable = 1;
-            // console.log(this.edit_selectedID);
-            // console.log(selectedStd);
         },
         /**
          * Tìm kiếm học sinh
-         * 
+         *
          */
         edit_onSearch() {
             // console.log(this.edit_schKeyword);
-            this.studentShow = this.searchStudent(studentAll, this.edit_schKeyword);
+            this.studentShow = this.searchStudent(
+                this.public_studentList,
+                this.edit_schKeyword
+            );
         },
 
         /**
          * Hủy chọn: Xóa toàn bộ thông tin vừa nhập, hủy chọn HS
-         * 
+         *
          */
         edit_cancel() {
             this.edit_stdDetail = {
@@ -701,7 +829,7 @@ export default {
          * Xóa học sinh: Xóa thông tin học sinh
          *
          */
-        edit_remove() { 
+        async edit_remove() {
             this.edit_stdDetail = {
                 name: '',
                 grade: '',
@@ -711,7 +839,14 @@ export default {
                 email: '',
                 address: '',
             };
-            console.log('Remove ', this.edit_selectedID);
+            // console.log('Remove ', this.edit_selectedID);
+            const res = await fetch(
+                this.base_url + `/hocsinh/delete?id=${this.edit_selectedID}`
+            );
+            const data = res.json();
+            console.log(data);
+            this.getStudentAll();
+            this.studentShow = this.public_studentList;
             this.edit_selectedID = '';
             this.edit_updateTable = 0;
         },
@@ -720,73 +855,118 @@ export default {
          * Hoàn tất chỉnh sửa: Cập nhật lại thông tin học sinh
          *
          */
-        edit_done() { 
-            console.log('Update ', this.edit_selectedID);
-            console.log(this.edit_stdDetail);
+        async edit_done() {
+            const found = this.public_classList.some(
+                (el) => el.tenlop === this.edit_stdDetail.grade
+            );
+            if (!found) {
+                this.edit_stdDetail.grade = null;
+            } else {
+                this.edit_stdDetail.grade = 'L' + this.edit_stdDetail.grade;
+            }
+            const new_student = {
+                MAHS: this.edit_selectedID,
+                HOTEN: this.edit_stdDetail.name,
+                GIOITINH: this.edit_stdDetail.gender,
+                NGAYSINH: this.edit_stdDetail.birthdate,
+                DIACHI: this.edit_stdDetail.address,
+                EMAIL: this.edit_stdDetail.email,
+                MALOP: this.edit_stdDetail.grade,
+            };
+            console.log(new_student);
+            const new_data = JSON.stringify(new_student);
+            const res = await fetch(
+                this.base_url + `/hocsinh/update?data=${new_data}`
+            );
+            const data = await res.json();
+            console.log(data);
+            this.getStudentAll();
+            this.studentShow = this.public_studentList;
         },
 
         // ================ Lập danh sách lớp ==============================
         /**
          * Chọn lớp: Lọc danh sách học sinh thuộc lớp đã chọn
-         * 
+         *
          */
         class_selectClass() {
             // console.log(this.class_classSelected);
-            this.class_stdInClass = this.filterStdByAttrValue(studentAll, 'class', this.class_classSelected);
-            this.class_stdNoClass = this.filterStdByAttrValue(studentAll, 'class', null);
+            // this.getStudentAll();
+            this.class_stdInClass = this.filterStdByAttrValue(
+                this.public_studentList,
+                'malop',
+                this.class_classSelected
+            );
+            this.class_stdNoClass = this.filterStdByAttrValue(
+                this.public_studentList,
+                'malop',
+                null
+            );
             this.studentShow = this.class_stdNoClass;
-
-            // console.log(this.class_stdInClass);
-            // console.log(this.class_stdNoClass);
+            this.class_stdWantAdd = [];
+            this.class_stdWantRm = [];
         },
 
         /**
          * Thêm học sinh vào lớp
-         * 
+         *
          * @param {object} e Event khi gọi hàm
          * @param {string} stdId Mã học sinh cần thêm
          */
         class_addStudent(e, stdId) {
             // console.log(stdId);
             this.class_stdWantAdd.push(stdId);
-            let addStd = this.findStdByAttrValue(studentAll, 'id', stdId);
-            addStd.class = this.class_classSelected;
+            let addStd = this.findStdByAttrValue(
+                this.public_studentList,
+                'mahs',
+                stdId
+            );
+            addStd.malop = this.class_classSelected;
+            addStd.tenlop = String(this.class_classSelected).substring(1, 5);
 
-            this.class_stdInClass.unshift(addStd);     
-            this.removeStdByAttr(this.class_stdNoClass, 'id', stdId);
+            this.class_stdInClass.unshift(addStd);
+            this.removeStdByAttr(this.class_stdNoClass, 'mahs', stdId);
             this.studentShow = this.class_stdNoClass;
-            // console.log(addStd);
+            console.log(addStd);
         },
 
         /**
          * Xóa học sinh khỏi lớp
-         * 
+         *
          * @param {object} e Event khi gọi hàm
          * @param {string} stdId Mã học sinh cần thêm
          */
         class_removeStudent(e, stdId) {
             // console.log(stdId);
             this.class_stdWantRm.push(stdId);
-            let removeStd = this.findStdByAttrValue(studentAll, 'id', stdId);
-            removeStd.class = null;
+            let removeStd = this.findStdByAttrValue(
+                this.public_studentList,
+                'mahs',
+                stdId
+            );
+            removeStd.malop = null;
+            removeStd.tenlop = '-';
             this.class_stdNoClass.unshift(removeStd);
-            this.removeStdByAttr(this.class_stdInClass, 'id', stdId);
+            this.removeStdByAttr(this.class_stdInClass, 'mahs', stdId);
             this.studentShow = this.class_stdNoClass;
             // console.log(addStd);
         },
 
         /**
          * Tìm kiếm học sinh
-         * 
+         *
          */
         class_onSearch() {
             // console.log(this.class_schKeyword);
-            this.studentShow = this.searchStudent(this.class_stdNoClass, this.class_schKeyword);
+            this.studentShow = this.searchStudent(
+                this.class_stdNoClass,
+                this.class_schKeyword
+            );
         },
 
         /**
          * Hủy bỏ thay đổi
-         * 
+         *
          */
         class_cancel() {
             // console.log(studentAll);
@@ -794,14 +974,16 @@ export default {
             this.class_stdInClass = [];
             this.class_stdNoClass = [];
             this.studentShow = [];
+            this.class_stdWantAdd = [];
+            this.class_stdWantRm = [];
         },
 
         /**
          * Xóa toàn bộ học sinh khỏi lớp
-         * 
+         *
          */
         class_removeAll() {
-            this.class_stdInClass.forEach(student => {
+            this.class_stdInClass.forEach((student) => {
                 this.class_stdWantRm.push(student.id);
                 student.class = null;
                 this.class_stdNoClass.unshift(student);
@@ -812,23 +994,72 @@ export default {
 
         /**
          * Hoàn tất sửa đổi lớp, cập nhật dữ liệu
-         * 
+         *
          */
-        class_done() {
-            console.log('Add ', this.class_stdWantAdd);
-            console.log('Remove ', this.class_stdWantRm);
+        async class_done() {
+            // console.log('Add ', this.class_stdInClass);
+            for (let i = 0; i < this.class_stdInClass.length; i++) {
+                const element = this.class_stdInClass[i];
+                const new_student = {
+                    MAHS: element.mahs,
+                    HOTEN: element.hoten,
+                    GIOITINH: element.gioitinh,
+                    NGAYSINH: element.ngaysinh,
+                    DIACHI: element.diachi,
+                    EMAIL: element.email,
+                    MALOP: element.malop,
+                };
+                const new_data = JSON.stringify(new_student);
+                const res = await fetch(
+                    this.base_url + `/hocsinh/update?data=${new_data}`
+                );
+                const data = await res.json();
+                console.log(data);
+            }
+            // console.log('Remove ', this.class_stdNoClass);
+            for (let i = 0; i < this.class_stdNoClass.length; i++) {
+                const element = this.class_stdNoClass[i];
+                let temp = null;
+                const new_student = {
+                    MAHS: element.mahs,
+                    HOTEN: element.hoten,
+                    GIOITINH: element.gioitinh,
+                    NGAYSINH: element.ngaysinh,
+                    DIACHI: element.diachi,
+                    EMAIL: element.email,
+                    MALOP: temp,
+                };
+                const new_data = JSON.stringify(new_student);
+                const res = await fetch(
+                    this.base_url + `/hocsinh/update?data=${new_data}`
+                );
+                const data = await res.json();
+                console.log(data);
+            }
+            this.getStudentAll();
         },
 
         // ================ Nhập bảng điểm =================================
         /**
          * Chọn Lớp, Học kì và Môn học cần nhập điểm
-         * 
+         *
          */
         mark_selectContext() {
-            if (this.mark_classSel && this.mark_semesterSel && this.mark_subjectSel) {
-                this.mark_context = this.mark_classSel + this.mark_semesterSel + this.mark_subjectSel;
+            if (
+                this.mark_classSel &&
+                this.mark_semesterSel &&
+                this.mark_subjectSel
+            ) {
+                this.mark_context =
+                    this.mark_classSel +
+                    this.mark_semesterSel +
+                    this.mark_subjectSel;
                 console.log('Get Data....');
-                this.studentShow = this.filterStdByAttrValue(studentAll, 'gender', 'Nam')
+                this.studentShow = this.filterStdByAttrValue(
+                    this.public_studentList,
+                    'gender',
+                    'Nam'
+                );
 
                 for (let i = 0; i < this.studentShow.length; i++) {
                     let new_mark = {
@@ -844,7 +1075,7 @@ export default {
 
         /**
          * Xóa điểm đã nhập, giữ nguyên dữ liệu học sinh
-         * 
+         *
          * @param {object} e Event khi gọi hàm
          */
         mark_cancel() {
@@ -858,18 +1089,28 @@ export default {
                 };
                 this.mark_inputMark.push(new_mark);
             }
-            this.studentShow = this.filterStdByAttrValue(studentAll, 'gender', 'Nam')
+            this.studentShow = this.filterStdByAttrValue(
+                studentAll,
+                'gender',
+                'Nam'
+            );
         },
 
         /**
          * Hoàn tất nhập điểm, cập nhật dữ liệu
-         * 
+         *
          */
         mark_done() {
             for (let i = 0; i < this.mark_inputMark.length; i++) {
-                this.mark_inputMark[i].exam_1 = parseFloat(this.mark_inputMark[i].exam_1);
-                this.mark_inputMark[i].exam_2 = parseFloat(this.mark_inputMark[i].exam_2);
-                this.mark_inputMark[i].exam_3 = parseFloat(this.mark_inputMark[i].exam_3);
+                this.mark_inputMark[i].exam_1 = parseFloat(
+                    this.mark_inputMark[i].exam_1
+                );
+                this.mark_inputMark[i].exam_2 = parseFloat(
+                    this.mark_inputMark[i].exam_2
+                );
+                this.mark_inputMark[i].exam_3 = parseFloat(
+                    this.mark_inputMark[i].exam_3
+                );
 
                 if (
                     isNaN(this.mark_inputMark[i].exam_1) ||
@@ -894,14 +1135,25 @@ export default {
         // ================ Lập báo cáo ====================================
         /**
          * Chọn Học kì và Môn học cần lập báo cáo
-         * 
+         *
          * @param {object} e Event khi gọi hàm
          */
         report_selectContext() {
-            if (this.mark_classSel && this.mark_semesterSel && this.mark_subjectSel) {
-                this.mark_context = this.mark_classSel + this.mark_semesterSel + this.mark_subjectSel;
+            if (
+                this.mark_classSel &&
+                this.mark_semesterSel &&
+                this.mark_subjectSel
+            ) {
+                this.mark_context =
+                    this.mark_classSel +
+                    this.mark_semesterSel +
+                    this.mark_subjectSel;
                 console.log('Get Data....');
-                this.studentShow = this.filterStdByAttrValue(studentAll, 'gender', 'Nam')
+                this.studentShow = this.filterStdByAttrValue(
+                    studentAll,
+                    'gender',
+                    'Nam'
+                );
 
                 for (let i = 0; i < this.studentShow.length; i++) {
                     let new_mark = {
@@ -917,9 +1169,9 @@ export default {
 
         /**
          * Lập báo cáo theo yêu cầu đã chọn
-         * 
+         *
          */
-        report_done() {}
+        report_done() {},
     },
 };
 </script>

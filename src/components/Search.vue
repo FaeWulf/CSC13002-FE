@@ -35,10 +35,10 @@
                     <th class="text">Học kì 2</th>
                 </thead>
                 <tbody>
-                    <tr v-for="(student, index) in students" :key="student.id">
+                    <tr v-for="(student, index) in students" :key="student.mahs">
                         <td class="text">{{ index + 1 }}</td>
-                        <td class="text">{{ student.name }}</td>
-                        <td class="text">{{ student.class }}</td>
+                        <td class="text">{{ student.hoten }}</td>
+                        <td class="text">{{ student.lop }}</td>
                         <td class="text">{{ student.semester_1 }}</td>
                         <td class="text">{{ student.semester_2 }}</td>
                     </tr>
@@ -49,55 +49,30 @@
 </template>
 
 <script>
-import students from '../assets/data/students.json';
 export default {
     name: 'SearchComponent',
 
     data() {
         return {
-            students: students,
+            students: [],
             keyword: '',
+            root_students: [],
         };
     },
-
-    created() {
-        this.students = students;
+    beforeMount() {
+        fetch(this.base_url + '/hocsinh/all')
+            .then((res) => res.json())
+            .then((api) => (this.root_students = api.data.map((x) => x)));
     },
-
     methods: {
         onSearch() {
-            this.students = [
-                {
-                    id: '000',
-                    name: 'Loading...',
-                    class: '_',
-                    semester_1: '_',
-                    semester_2: '_',
-                },
-            ];
-            setTimeout(() => {
-                console.log('Not found');
-                console.log('Delayed for 1 second.');
-                this.students = students.filter((student) => {
-                    return student.name
-                        .toLowerCase()
-                        .includes(this.keyword.toLowerCase());
-                });
-                if (Object.keys(this.students).length === 0) {
-                    this.students = [
-                        {
-                            id: '000',
-                            name: 'Không tìm thấy',
-                            class: '_',
-                            semester_1: '_',
-                            semester_2: '_',
-                        },
-                    ];
-                    console.log('Not found');
-                }
-            }, '2000');
-            console.log(this.keyword);
+            this.students = this.root_students.filter((student) => {
+                return student.hoten
+                    .toLowerCase()
+                    .includes(this.keyword.toLowerCase());
+            });
         },
+        
     },
 };
 </script>
