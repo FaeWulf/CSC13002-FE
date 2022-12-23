@@ -1,57 +1,55 @@
 <template>
     <!-- Search Tab -->
-        <section id="searchtab" class="search">
-            <div class="text">
-                <h1>Tra cứu thông tin học sinh</h1>
-                <h3>
-                    Nhập vào tên học sinh hoặc mã số học sinh. Bạn có thể chọn
-                    lớp ở nút phía dưới
-                </h3>
+    <section id="searchtab" class="search">
+        <div class="text">
+            <h1>Tra cứu thông tin học sinh</h1>
+            <h3>
+                Nhập vào tên học sinh hoặc mã số học sinh. Bạn có thể chọn lớp ở
+                nút phía dưới
+            </h3>
+        </div>
+        <!-- <form action="" method=""> -->
+        <div class="search-container">
+            <div class="input-box">
+                <input
+                    v-model="keyword"
+                    v-on:keyup.enter="onSearch"
+                    type="text"
+                    placeholder="Tên học sinh..."
+                />
+                <span class="icon">
+                    <i class="bx bx-search search-icon"></i>
+                </span>
             </div>
-            <!-- <form action="" method=""> -->
-                <div class="search-container">
-                    <div class="input-box">
-                        <input
-                            v-model="keyword"
-                            v-on:keyup.enter="onSearch"
-                            type="text"
-                            placeholder="Tên học sinh..."
-                        />
-                        <span class="icon">
-                            <i class="bx bx-search search-icon"></i>
-                        </span>
-                    </div>
-                    <button @click="onSearch" id="btn-search">Tìm kiếm</button>
-                </div>
-            <!-- </form> -->
+            <button @click="onSearch" id="btn-search">Tìm kiếm</button>
+        </div>
+        <!-- </form> -->
 
-            <div class="table-content">
-                <table id="table-std">
-                    <thead>
-                        <th class="text">STT</th>
-                        <th class="text" style="text-align: left;">Tên</th>
-                        <th class="text">Lớp</th>
-                        <th class="text">Học kì 1</th>
-                        <th class="text">Học kì 2</th>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(student, index) in students" :key="student.id">
-                            <td class="text">{{ index + 1 }}</td>
-                            <td class="text">{{ student.name }}</td>
-                            <td class="text">{{ student.class }}</td>
-                            <td class="text">{{ student.semester_1 }}</td>
-                            <td class="text">{{ student.semester_2 }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        <div class="table-content">
+            <table id="table-std">
+                <thead>
+                    <th class="text">STT</th>
+                    <th class="text" style="text-align: left">Tên</th>
+                    <th class="text">Lớp</th>
+                    <th class="text">Học kì 1</th>
+                    <th class="text">Học kì 2</th>
+                </thead>
+                <tbody>
+                    <tr v-for="(student, index) in students" :key="student.id">
+                        <td class="text">{{ index + 1 }}</td>
+                        <td class="text">{{ student.name }}</td>
+                        <td class="text">{{ student.class }}</td>
+                        <td class="text">{{ student.semester_1 }}</td>
+                        <td class="text">{{ student.semester_2 }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
 </template>
 
 <script>
-
 import students from '../assets/data/students.json';
-
 export default {
     name: 'SearchComponent',
 
@@ -61,40 +59,46 @@ export default {
             keyword: '',
         };
     },
-    
+
     created() {
         this.students = students;
     },
-    
+
     methods: {
         onSearch() {
-            this.students = [{
-                "id": '000',
-                "name": 'Loading...',
-                "class": "_",
-                "semester_1": "_",
-                "semester_2": "_",
-            }];
+            this.students = [
+                {
+                    id: '000',
+                    name: 'Loading...',
+                    class: '_',
+                    semester_1: '_',
+                    semester_2: '_',
+                },
+            ];
             setTimeout(() => {
-                console.log('Not found')
-                console.log("Delayed for 1 second.");
+                console.log('Not found');
+                console.log('Delayed for 1 second.');
                 this.students = students.filter((student) => {
-                    return student.name.toLowerCase().includes(this.keyword.toLowerCase());
+                    return student.name
+                        .toLowerCase()
+                        .includes(this.keyword.toLowerCase());
                 });
                 if (Object.keys(this.students).length === 0) {
-                    this.students = [{
-                        "id": '000',
-                        "name": 'Không tìm thấy',
-                        "class": "_",
-                        "semester_1": "_",
-                        "semester_2": "_",
-                    }];
-                    console.log('Not found')
+                    this.students = [
+                        {
+                            id: '000',
+                            name: 'Không tìm thấy',
+                            class: '_',
+                            semester_1: '_',
+                            semester_2: '_',
+                        },
+                    ];
+                    console.log('Not found');
                 }
-            }, "2000");
+            }, '2000');
             console.log(this.keyword);
-        }
-    }
+        },
+    },
 };
 </script>
 <style scoped>
@@ -207,7 +211,7 @@ h3 {
     border-spacing: 0;
     border-collapse: separate;
     border: 2px solid var(--text-color);
-    border-radius: 15px; 
+    border-radius: 15px;
 }
 
 #table-std .text {
@@ -243,20 +247,21 @@ h3 {
     color: var(--primary-color);
 }
 
-td, th {
+td,
+th {
     height: 60px;
 }
 
-th:not(:last-child), td:not(:last-child) {
+th:not(:last-child),
+td:not(:last-child) {
     border-right: 1px solid var(--text-color);
 }
 
-tr:not(:last-child)>td {
+tr:not(:last-child) > td {
     border-bottom: 1px solid var(--text-color);
 }
 
-tr:first-child>td{
+tr:first-child > td {
     border-top: 1px solid var(--text-color);
 }
-
 </style>
