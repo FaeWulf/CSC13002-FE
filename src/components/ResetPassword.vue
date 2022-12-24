@@ -19,7 +19,9 @@
                                         >lock_open</span
                                     >
                                 </div>
-                                <div class="form-warning">{{ oldpassWarning }}</div>
+                                <div class="form-warning">
+                                    {{ oldpassWarning }}
+                                </div>
                                 <div class="form-group">
                                     <input
                                         :value="passwordInput"
@@ -32,7 +34,9 @@
                                         >lock</i
                                     >
                                 </div>
-                                <div class="form-warning">{{ passwordWarning }}</div>
+                                <div class="form-warning">
+                                    {{ passwordWarning }}
+                                </div>
                                 <div class="form-group">
                                     <input
                                         :value="passwordReinput"
@@ -45,7 +49,9 @@
                                         >lock</i
                                     >
                                 </div>
-                                <div class="form-warning">{{ rePasswordWarning }}</div>
+                                <div class="form-warning">
+                                    {{ rePasswordWarning }}
+                                </div>
                                 <button href="#" class="btn" @click="onChange">
                                     Xong
                                 </button>
@@ -59,9 +65,8 @@
 </template>
 
 <script>
-
 import { app } from '../main';
-
+const bcryptjs = require('bcryptjs');
 export default {
     name: 'ResetPassword',
     // data: variables
@@ -78,7 +83,12 @@ export default {
             isOldpassOk: false,
             isPasswordOk: false,
             isRepasswordOk: false,
+
+            public_accountList: [],
         };
+    },
+    beforeMount() {
+        this.getAccountAll();
     },
     // methods: functions
     methods: {
@@ -120,15 +130,61 @@ export default {
                 this.rePasswordWarning = '';
                 this.isRepasswordOk = true;
             }
-        }, 
+        },
 
-        onChange() {
+        getAccountAll() {
+            fetch(this.base_url + '/taikhoan/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.public_accountList = api.data.map((std) => std);
+                });
+        },
+
+        async onChange() {
             if (this.isOldpassOk && this.isPasswordOk && this.isRepasswordOk) {
-                alert("Đổi mật khẩu thành công!");
-                this.currentTab = 0;
-                app.config.globalProperties.gUserName = '';
-                app.config.globalProperties.gUserType = 0;
-                this.$router.push('/login');
+                let accounts = this.public_accountList.find((acc) => {
+                    return (
+                        acc.tendangnhap ===
+                        app.config.globalProperties.gUserName
+                    );
+                });
+                const thisClone = this;
+                const appClone = app;
+                bcryptjs.compare(
+                    thisClone.oldPassword,
+                    accounts.matkhau,
+                    async (err, res) => {
+                        if (res) {
+                            const salt = bcryptjs.genSaltSync(10);
+                            let hash = bcryptjs.hashSync(
+                                thisClone.passwordInput,
+                                salt
+                            );
+                            const user = {
+                                MATK: accounts.matk,
+                                TENDANGNHAP: accounts.tendangnhap,
+                                MATKHAU: hash,
+                                LOAITK: accounts.loaitk,
+                            };
+                            const new_user = JSON.stringify(user);
+                            const res = await fetch(
+                                thisClone.base_url +
+                                    `/taikhoan/update?data=${new_user}`
+                            );
+                            const data = res.json();
+                            console.log(data);
+
+                            alert('Đổi mật khẩu thành công!');
+                            thisClone.currentTab = 0;
+                            appClone.config.globalProperties.gUserName = '';
+                            appClone.config.globalProperties.gUserType = -1;
+                            thisClone.$router.push('/login');
+                        }
+                        else {
+                            alert('Mật khẩu cũ không chính xác')
+                        }
+                    }
+                );
             }
         },
     },

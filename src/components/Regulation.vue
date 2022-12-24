@@ -19,17 +19,19 @@
         <div class="user">
             <div class="select-user">
                 <span class="title">Cấp quyền</span>
-                <select name="user">
+                <select v-model="selected" name="user">
                     <option value="teacher">Giáo viên</option>
                     <option value="manager">Giáo vụ</option>
                 </select>
             </div>
             <div class="btn-group">
-                <button id="remove">
-                    <i class="bx bx-x"></i><span class="btn-text">Huỷ bỏ cấp quyền</span>
+                <button @click="cancel" id="remove">
+                    <i class="bx bx-x"></i
+                    ><span class="btn-text">Huỷ bỏ cấp quyền</span>
                 </button>
-                <button id="change">
-                    <i class="bx bx-check"></i><span class="btn-text">Xác nhận cấp quyền</span>
+                <button @click="confirm" id="change">
+                    <i class="bx bx-check"></i
+                    ><span class="btn-text">Xác nhận cấp quyền</span>
                 </button>
             </div>
         </div>
@@ -37,7 +39,9 @@
             <table class="info">
                 <tr>
                     <td><label>Họ và tên</label></td>
-                    <td><label>Nguyễn Văn A</label></td>
+                    <td>
+                        <label>{{ fullname }}</label>
+                    </td>
                     <td rowspan="4">
                         <div class="avatar">
                             <img
@@ -50,56 +54,50 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><label>Email</label></td>
-                    <td><label>abc@gmail.com</label></td>
+                    <td><label>Tên đăng nhập</label></td>
+                    <td>
+                        <label>{{ username }}</label>
+                    </td>
                 </tr>
                 <tr>
                     <td><label>Số điện thoại</label></td>
-                    <td><label>0123 456 789</label></td>
+                    <td>
+                        <label>{{ phone }}</label>
+                    </td>
                 </tr>
                 <tr>
                     <td><label>Quyền hiện tại</label></td>
-                    <td><label>Chưa cấp</label></td>
+                    <td>
+                        <label>{{ permission }}</label>
+                    </td>
                 </tr>
             </table>
         </div>
         <div class="search-email">
             <div class="search-email-title">
-                <span>Danh sách</span>
-                <div class="search-input">
-                    <input
-                        id="input-search"
-                        type="text"
-                        placeholder="Nhập email ..."
-                    />
-                    <label for="input-search"
-                        ><button><i class="bx bx-search"></i></button
-                    ></label>
-                </div>
+                <span>Danh sách tài khoản</span>
+                <div class="search-input"></div>
             </div>
             <div class="email-table">
                 <table id="email-std">
                     <thead>
-                        <th style="text-align: left;">User</th>
-                        <th style="text-align: left;">Tên</th>
-                        <th style="text-align: center;">Tài khoản</th>
+                        <th style="text-align: left">User</th>
+                        <!-- <th style="text-align: left;">Tên</th> -->
+                        <th style="text-align: center">Tài khoản</th>
                         <th></th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>ABC@abc.com.vn</td>
-                            <td>Nguyễn Văn A</td>
-                            <td>Chưa cấp</td>
+                        <tr v-for="acc in public_accountList" :key="acc.matk">
+                            <td>{{ acc.tendangnhap }}</td>
+                            <td hidden></td>
+                            <td>{{ getLoaiTK(acc.loaitk) }}</td>
                             <td>
-                                <button id="change">Chọn</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>XYZ</td>
-                            <td>Nguyễn Văn A</td>
-                            <td>Chưa cấp</td>
-                            <td>
-                                <button id="change">Chọn</button>
+                                <button
+                                    @click="userDetails($event, acc.matk)"
+                                    id="change"
+                                >
+                                    Chọn
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -113,10 +111,12 @@
             <span>Quy định hiện hành</span>
             <div class="btn-group">
                 <button id="remove">
-                    <i class="bx bx-x"></i><span class="btn-text">Xoá học sinh</span>
+                    <i class="bx bx-x"></i
+                    ><span class="btn-text">Xoá học sinh</span>
                 </button>
                 <button id="change">
-                    <i class="bx bx-check"></i><span class="btn-text">Hoàn tất sửa đổi</span>
+                    <i class="bx bx-check"></i
+                    ><span class="btn-text">Hoàn tất sửa đổi</span>
                 </button>
             </div>
         </div>
@@ -170,7 +170,19 @@ export default {
     data() {
         return {
             currentTag: 0,
+
+            public_accountList: [],
+
+            username: '',
+            phone: '',
+            permission: '',
+            fullname: '',
+
+            selected: '',
         };
+    },
+    beforeMount() {
+        this.getAccountAll();
     },
     methods: {
         onTagClicked(e, param1) {
@@ -178,6 +190,115 @@ export default {
             if (tagNumber >= 0 && tagNumber <= 1) {
                 this.currentTag = tagNumber;
             }
+        },
+        getAccountAll() {
+            fetch(this.base_url + '/taikhoan/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.public_accountList = api.data.map((std) => std);
+                });
+        },
+        getLoaiTK(x) {
+            let permission = '';
+            if (x === 0) permission = 'Chưa cấp quyền';
+            else if (x === 1) permission = 'Giáo viên';
+            else if (x === 2) permission = 'Giáo vụ';
+            else if (x === 3) permission = 'Quản trị';
+            return permission;
+        },
+        userDetails(e, id) {
+            let account = this.public_accountList.find((acc) => {
+                return acc.matk === id;
+            });
+            if (account === undefined) {
+                return;
+            }
+            this.username = account.tendangnhap;
+            this.phone = '-';
+            this.fullname = '-';
+            switch (account.loaitk) {
+                case 0:
+                    this.permission = 'Chưa cấp quyền';
+                    break;
+                case 1:
+                    this.permission = 'Giáo viên';
+                    break;
+                case 2:
+                    this.permission = 'Giáo vụ';
+                    break;
+                case 3:
+                    this.permission = 'Quản lý';
+                    break;
+                default:
+                    break;
+            }
+        },
+        async confirm() {
+            if (!this.selected) {
+                return;
+            }
+            let account = this.public_accountList.find((acc) => {
+                return acc.tendangnhap === this.username;
+            });
+            if (account === undefined) {
+                return;
+            }
+            if (account.loaitk === 3) {
+                alert('Không thể cấp quyền cho tài khoản này');
+                return;
+            }
+            let user = {
+                MATK: account.matk,
+                TENDANGNHAP: account.tendangnhap,
+                MATKHAU: account.matkhau,
+                LOAITK: 0,
+            };
+            if (this.selected === 'teacher') {
+                user.LOAITK = 1;
+            }
+            if (this.selected === 'manager') {
+                user.LOAITK = 2;
+            }
+            console.log(user);
+            const new_user = JSON.stringify(user);
+            console.log(new_user);
+            const res = await fetch(
+                this.base_url + `/taikhoan/update?data=${new_user}`
+            );
+            const data = res.json();
+            console.log(data);
+            this.getAccountAll();
+            alert('Cấp quyền cho tài khoản thành công');
+            this.permission = this.getLoaiTK(user.LOAITK);
+        },
+        async cancel() {
+            let account = this.public_accountList.find((acc) => {
+                return acc.tendangnhap === this.username;
+            });
+            if (account === undefined) {
+                return;
+            }
+            if (account.loaitk === 3) {
+                alert('Không thể cấp quyền cho tài khoản này');
+                return;
+            }
+            let user = {
+                MATK: account.matk,
+                TENDANGNHAP: account.tendangnhap,
+                MATKHAU: account.matkhau,
+                LOAITK: 0,
+            };
+            console.log(user);
+            const new_user = JSON.stringify(user);
+            console.log(new_user);
+            const res = await fetch(
+                this.base_url + `/taikhoan/update?data=${new_user}`
+            );
+            const data = res.json();
+            console.log(data);
+            this.getAccountAll();
+            alert('Huỷ bỏ cấp quyền cho tài khoản thành công');
+            this.permission = this.getLoaiTK(user.LOAITK);
         },
     },
 };
@@ -514,7 +635,9 @@ export default {
 .input-group label {
     position: relative;
 }
-.input-group label, .input-group input, .input-group button {
+.input-group label,
+.input-group input,
+.input-group button {
     margin: 0 100px;
 }
 .input-group label::after {

@@ -35,12 +35,15 @@
                     <th class="text">Học kì 2</th>
                 </thead>
                 <tbody>
-                    <tr v-for="(student, index) in students" :key="student.mahs">
+                    <tr
+                        v-for="(student, index) in students"
+                        :key="student.mahs"
+                    >
                         <td class="text">{{ index + 1 }}</td>
                         <td class="text">{{ student.hoten }}</td>
-                        <td class="text">{{ student.lop }}</td>
-                        <td class="text">{{ student.semester_1 }}</td>
-                        <td class="text">{{ student.semester_2 }}</td>
+                        <td class="text">{{ student.tenlop }}</td>
+                        <td class="text">{{ student.final1 }}</td>
+                        <td class="text">{{ student.final2 }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -57,22 +60,67 @@ export default {
             students: [],
             keyword: '',
             root_students: [],
+            finalMark: [],
+            isFirst: true,
         };
     },
     beforeMount() {
         fetch(this.base_url + '/hocsinh/all')
             .then((res) => res.json())
-            .then((api) => (this.root_students = api.data.map((x) => x)));
+            .then((api) => {
+                this.root_students = api.data.map((x) => x);
+            });
+        fetch(this.base_url + '/diemtk/all')
+            .then((res) => res.json())
+            .then((api) => {
+                this.finalMark = api.data.map((x) => x);
+            });
     },
     methods: {
+        getData() {
+            if (this.isFirst) {
+                this.isFirst = false;
+                for (let i = 0; i < this.root_students.length; i++) {
+                    let element = this.root_students[i];
+                    let totalMark = this.finalMark.filter((mark) => {
+                        return mark.mahs === element.mahs;
+                    });
+                    let totalMark_term1 = totalMark.filter((mark) => {
+                        return mark.mahk === 'HK001';
+                    });
+                    let totalMark_term2 = totalMark.filter((mark) => {
+                        return mark.mahk === 'HK002';
+                    });
+                    let sum1 = 0.0;
+                    let numOfSubject1 = 0;
+                    totalMark_term1.forEach((el) => {
+                        sum1 += parseFloat(el.diemtk);
+                        numOfSubject1++;
+                    });
+                    let sum2 = 0.0;
+                    let numOfSubject2 = 0;
+                    totalMark_term2.forEach((el) => {
+                        sum2 += parseFloat(el.diemtk);
+                        numOfSubject2++;
+                    });
+                    if (numOfSubject1 === 0) element.final1 = null;
+                    else element.final1 = (sum1 / numOfSubject1).toFixed(2);
+                    if (numOfSubject2 === 0) element.final2 = null;
+                    else element.final2 = (sum2 / numOfSubject2).toFixed(2);
+                    element.tenlop = String(element.malop).substring(1, 5);
+                }
+            }
+        },
         onSearch() {
+            this.getData()
             this.students = this.root_students.filter((student) => {
                 return student.hoten
                     .toLowerCase()
                     .includes(this.keyword.toLowerCase());
             });
+            console.log(this.finalMark);
+            console.log(this.students);
         },
-        
     },
 };
 </script>

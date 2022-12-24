@@ -156,6 +156,7 @@ export default {
             if (!this.getHomePermission()) {
                 return;
             }
+            console.log(this.userType);
             let text = 'Bạn có chắc chắn muốn đăng xuất?';
             if (confirm(text) == true) {
                 this.currentTab = 0;

@@ -337,7 +337,7 @@
                 >
                     <option
                         v-for="_class in public_classList"
-                        :value="_class.tenlop"
+                        :value="_class.malop"
                         :key="_class.malop"
                     >
                         {{ _class.tenlop }}
@@ -354,7 +354,7 @@
                 >
                     <option
                         v-for="semester in public_semesterList"
-                        :value="semester.tenhk"
+                        :value="semester.mahk"
                         :key="semester.mahk"
                     >
                         {{ semester.tenhk }}
@@ -371,7 +371,7 @@
                 >
                     <option
                         v-for="subject in public_subjectList"
-                        :value="subject.tenmh"
+                        :value="subject.mamh"
                         :key="subject.mamh"
                     >
                         {{ subject.tenmh }}
@@ -380,9 +380,14 @@
             </div>
         </div>
         <div class="mark-title-table">
-            <span>{{ mark_classSel }} - {{ mark_semesterSel }} - {{ mark_subjectSel }}</span>
-            <div class="btn-group-mark" @click="mark_cancel">
-                <button id="remove"><i class="bx bx-x"></i><i>Huỷ</i></button>
+            <span
+                >{{ mark_classSel }} - {{ mark_semesterSel }} -
+                {{ mark_subjectSel }}</span
+            >
+            <div class="btn-group-mark">
+                <button @click="mark_Refresh" id="remove">
+                    <i class="bx bx-x"></i><i>Làm mới</i>
+                </button>
                 <button id="change" @click="mark_done">
                     <i class="bx bx-check"></i><i>Xong</i>
                 </button>
@@ -397,27 +402,18 @@
                     <th>Điểm học kì</th>
                 </thead>
                 <tbody>
-                    <tr v-for="(std, index) in studentShow" :key="std.id">
+                    <tr v-for="std in mark_newStudents" :key="std.mahs">
                         <td>
-                            <label for="">{{ std.name }}</label>
+                            <label for="">{{ std.hoten }}</label>
                         </td>
                         <td>
-                            <input
-                                v-model="mark_inputMark[index].exam_1"
-                                type="text"
-                            />
+                            <input v-model="std.exam_1" type="text" />
                         </td>
                         <td>
-                            <input
-                                v-model="mark_inputMark[index].exam_2"
-                                type="text"
-                            />
+                            <input v-model="std.exam_2" type="text" />
                         </td>
                         <td>
-                            <input
-                                v-model="mark_inputMark[index].exam_3"
-                                type="text"
-                            />
+                            <input v-model="std.exam_3" type="text" />
                         </td>
                     </tr>
                 </tbody>
@@ -432,10 +428,10 @@
         <div class="report-select">
             <div class="select-group">
                 <label for="term1">Học kì</label>
-                <select name="term" id="term1" v-model="mark_semesterSel">
+                <select name="term" id="term1" v-model="report_semesterSel">
                     <option
                         v-for="semester in public_semesterList"
-                        :value="semester.tenhk"
+                        :value="semester.mahk"
                         :key="semester.mahk"
                     >
                         {{ semester.tenhk }}
@@ -444,10 +440,10 @@
             </div>
             <div class="select-group">
                 <label for="subject">Môn</label>
-                <select name="subject" id="subject" v-model="mark_subjectSel">
+                <select name="subject" id="subject" v-model="report_subjectSel">
                     <option
                         v-for="subject in public_subjectList"
-                        :value="subject.tenmh"
+                        :value="subject.mamh"
                         :key="subject.mamh"
                     >
                         {{ subject.tenmh }}
@@ -456,10 +452,9 @@
             </div>
         </div>
         <div class="report-title-table">
-            <span>Báo cáo tổng kết {{ mark_semesterSel }} - {{ mark_subjectSel }}</span>
+            <span>Báo cáo tổng kết {{ report_getSubSemName }}</span>
             <div class="btn-group-report">
-                <button id="remove"><i class="bx bx-x"></i><i>Huỷ</i></button>
-                <button id="change">
+                <button @click="report_done" id="change">
                     <i class="bx bx-check"></i><i>Xong</i>
                 </button>
             </div>
@@ -473,11 +468,11 @@
                     <th>Tỉ lệ</th>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>10A1</td>
-                        <td>35</td>
-                        <td>35</td>
-                        <td>100</td>
+                    <tr v-for="(item, key) in report_classList" :key="key">
+                        <td>{{ key }}</td>
+                        <td>{{ item.total }}</td>
+                        <td>{{ item.passed }}</td>
+                        <td>{{ item.rate }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -497,6 +492,8 @@ export default {
             public_semesterList: [], // danh sách các lớp
             public_subjectList: [], // danh sách các môn học
             public_studentList: [], // danh sách học sinh
+            public_detailsMark: [], // danh sách chi tiết điểm
+            public_finalMark: [], // danh sách điểm tk
 
             // dữ liệu phần tiếp nhận học sinh
             add_stdDetail: {}, // chứa thông tin của 1 học sinh khi thêm
@@ -519,10 +516,15 @@ export default {
             mark_classSel: '',
             mark_semesterSel: '',
             mark_subjectSel: '',
-            mark_context: '',
             mark_inputMark: [], // dữ liệu học sinh khi nhập điểm
+            mark_newStudents: [],
+            mark_lastID: null,
 
             // dữ liệu phần báo cáo
+            report_semesterSel: '',
+            report_subjectSel: '',
+            report_inputMark: [], // dữ liệu học sinh khi nhập điểm
+            report_classList: {},
         };
     },
     beforeMount() {
@@ -530,6 +532,9 @@ export default {
         this.getClassAll();
         this.getSemesterAll();
         this.getSubjectAll();
+        this.getDetailsMark();
+        this.getFinalMark();
+        this.getLastID();
 
         // Thêm học sinh
         this.add_stdDetail = {
@@ -554,6 +559,19 @@ export default {
         };
 
         // this.class_classSelected = this.public_classList[0].id;
+    },
+    computed: {
+        report_getSubSemName() {
+            let subList = this.public_subjectList.find((subject) => {
+                return subject.mamh === this.report_subjectSel;
+            });
+            let semList = this.public_semesterList.find((semester) => {
+                return semester.mahk === this.report_semesterSel;
+            });
+            if (subList && semList)
+                return semList.tenhk + ' - ' + subList.tenmh;
+            else return '';
+        },
     },
     methods: {
         // ================ Xử lý chung ===================================
@@ -637,6 +655,30 @@ export default {
                 .then((res) => res.json())
                 .then((api) => {
                     this.public_subjectList = api.data.map((std) => std);
+                });
+        },
+
+        getDetailsMark() {
+            fetch(this.base_url + '/chitietdiem/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.public_detailsMark = api.data.map((std) => std);
+                });
+        },
+
+        getFinalMark() {
+            fetch(this.base_url + '/diemtk/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.public_finalMark = api.data.map((std) => std);
+                });
+        },
+
+        getLastID() {
+            fetch(this.base_url + '/diemtk/max')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.mark_lastID = api.data.map((std) => std);
                 });
         },
 
@@ -1054,82 +1096,165 @@ export default {
                     this.mark_classSel +
                     this.mark_semesterSel +
                     this.mark_subjectSel;
-                console.log('Get Data....');
-                this.studentShow = this.filterStdByAttrValue(
-                    this.public_studentList,
-                    'gender',
-                    'Nam'
-                );
-
-                for (let i = 0; i < this.studentShow.length; i++) {
-                    let new_mark = {
-                        id: this.studentShow[i].id,
-                        exam_1: null,
-                        exam_2: null,
-                        exam_3: null,
-                    };
-                    this.mark_inputMark.push(new_mark);
-                }
+                fetch(
+                    this.base_url +
+                        `/diemtheolop/search?MALOP=${this.mark_classSel}&MAHK=${this.mark_semesterSel}&MAMH=${this.mark_subjectSel}`
+                )
+                    .then((res) => res.json())
+                    .then(
+                        (api) => (this.mark_inputMark = api.data.map((x) => x))
+                    );
             }
         },
 
-        /**
-         * Xóa điểm đã nhập, giữ nguyên dữ liệu học sinh
-         *
-         * @param {object} e Event khi gọi hàm
-         */
-        mark_cancel() {
-            console.log('Get Data....');
-            for (let i = 0; i < this.studentShow.length; i++) {
-                let new_mark = {
-                    id: this.studentShow[i].id,
-                    exam_1: null,
-                    exam_2: null,
-                    exam_3: null,
-                };
-                this.mark_inputMark.push(new_mark);
-            }
-            this.studentShow = this.filterStdByAttrValue(
-                studentAll,
-                'gender',
-                'Nam'
+        mark_Refresh() {
+            this.mark_newStudents = this.filterStdByAttrValue(
+                this.public_studentList,
+                'malop',
+                this.mark_classSel
             );
+            for (let i = 0; i < this.mark_newStudents.length; i++) {
+                let element = this.mark_newStudents[i];
+                let detailsMark = this.mark_inputMark.find((el) => {
+                    return el.mahs === element.mahs;
+                });
+                let isListEmpty = false;
+                if (detailsMark) {
+                    if (detailsMark.chitietdiem.length === 0) {
+                        element.exam_1 = null;
+                        element.exam_2 = null;
+                        element.exam_3 = null;
+                        isListEmpty = true;
+                    } else {
+                        element.exam_1 = detailsMark.chitietdiem[0].diemkt;
+                        element.exam_2 = detailsMark.chitietdiem[1].diemkt;
+                        element.exam_3 = detailsMark.chitietdiem[2].diemkt;
+                    }
+                    element.madiemtk = detailsMark.madiemtk;
+                } else {
+                    element.exam_1 = null;
+                    element.exam_2 = null;
+                    element.exam_3 = null;
+                    element.madiemtk = null;
+                }
+                element.isEmpty = isListEmpty;
+            }
         },
-
         /**
          * Hoàn tất nhập điểm, cập nhật dữ liệu
          *
          */
-        mark_done() {
-            for (let i = 0; i < this.mark_inputMark.length; i++) {
-                this.mark_inputMark[i].exam_1 = parseFloat(
-                    this.mark_inputMark[i].exam_1
-                );
-                this.mark_inputMark[i].exam_2 = parseFloat(
-                    this.mark_inputMark[i].exam_2
-                );
-                this.mark_inputMark[i].exam_3 = parseFloat(
-                    this.mark_inputMark[i].exam_3
-                );
+        async mark_done() {
+            let last_id = String(this.mark_lastID[0].madiemtk).substring(2, 5);
+            last_id = parseInt(last_id);
+            if (last_id < 10) last_id = '00' + String(last_id);
+            else if (last_id >= 10 && last_id <= 99)
+                last_id = '0' + String(last_id);
+            else last_id = String(last_id);
+            for (let i = 0; i < this.mark_newStudents.length; i++) {
+                let element = this.mark_newStudents[i];
+
+                let new_exam = [0.0, 0.0, 0.0];
+
+                new_exam[0] = parseFloat(element.exam_1);
+                new_exam[1] = parseFloat(element.exam_2);
+                new_exam[2] = parseFloat(element.exam_3);
 
                 if (
-                    isNaN(this.mark_inputMark[i].exam_1) ||
-                    this.mark_inputMark[i].exam_1 < 0.0
+                    isNaN(new_exam[0]) ||
+                    new_exam[0] < 0.0 ||
+                    new_exam[0] > 10.0
                 )
-                    this.mark_inputMark[i].exam_1 = null;
+                    new_exam[0] = null;
                 if (
-                    isNaN(this.mark_inputMark[i].exam_2) ||
-                    this.mark_inputMark[i].exam_2 < 0.0
+                    isNaN(new_exam[1]) ||
+                    new_exam[1] < 0.0 ||
+                    new_exam[1] > 10.0
                 )
-                    this.mark_inputMark[i].exam_2 = null;
+                    new_exam[1] = null;
                 if (
-                    isNaN(this.mark_inputMark[i].exam_3) ||
-                    this.mark_inputMark[i].exam_3 < 0.0
+                    isNaN(new_exam[2]) ||
+                    new_exam[2] < 0.0 ||
+                    new_exam[2] > 10.0
                 )
-                    this.mark_inputMark[i].exam_3 = null;
+                    new_exam[2] = null;
+                if (element.madiemtk) {
+                    for (let i = 0; i < 3; i++) {
+                        if (i === 0 && new_exam[0] === element.exam_1) {
+                            continue;
+                        }
+                        if (i === 1 && new_exam[1] === element.exam_2) {
+                            continue;
+                        }
+                        if (i === 2 && new_exam[2] === element.exam_3) {
+                            continue;
+                        }
+                        let record = {
+                            MADIEMKT: element.madiemtk,
+                            MAKT: `KT00${i + 1}`,
+                            DIEMKT: new_exam[i],
+                        };
+                        const new_record = JSON.stringify(record);
+                        console.log(new_record);
+                        const res = await fetch(
+                            this.base_url +
+                                `/chitietdiem/update?data=${new_record}`
+                        );
+                        const data = res.json();
+                        console.log(data);
+                    }
+                } else {
+                    if (
+                        element.exam_1 === null &&
+                        element.exam_2 === null &&
+                        element.exam_3 === null
+                    ) {
+                        console.log('hoc sinh chua dc nhap');
+                        continue;
+                    }
+                    const record = {
+                        MADIEMTK: 'DT' + ++last_id,
+                        DIEMTK: null,
+                        MAHK: this.mark_semesterSel,
+                        MAMH: this.mark_subjectSel,
+                        MAHS: element.mahs,
+                    };
+                    const new_record = JSON.stringify(record);
+                    const res = await fetch(
+                        this.base_url + `/diemtk/create?data=${new_record}`
+                    );
+                    const data = res.json();
+                    console.log(data);
+
+                    for (let i = 0; i < 3; i++) {
+                        if (i === 0 && new_exam[0] === element.exam_1) {
+                            continue;
+                        }
+                        if (i === 1 && new_exam[1] === element.exam_2) {
+                            continue;
+                        }
+                        if (i === 2 && new_exam[2] === element.exam_3) {
+                            continue;
+                        }
+                        let record = {
+                            MADIEMKT: element.madiemtk,
+                            MAKT: `KT00${i + 1}`,
+                            DIEMKT: new_exam[i],
+                        };
+                        console.log(record);
+                        const new_record = JSON.stringify(record);
+                        console.log(new_record);
+                        const res = await fetch(
+                            this.base_url +
+                                `/chitietdiem/update?data=${new_record}`
+                        );
+                        const data = res.json();
+                        console.log(data);
+                    }
+                }
             }
-
-            console.log(this.mark_inputMark);
+            this.mark_selectContext();
+            this.getLastID();
         },
 
         // ================ Lập báo cáo ====================================
@@ -1171,7 +1296,45 @@ export default {
          * Lập báo cáo theo yêu cầu đã chọn
          *
          */
-        report_done() {},
+        report_done() {
+            for (let i = 0; i < this.public_studentList.length; i++) {
+                let element = this.public_studentList[i];
+                let totalMark = this.public_finalMark.filter((mark) => {
+                    return mark.mahs === element.mahs;
+                });
+                let _mark = totalMark.find((mark) => {
+                    return (
+                        mark.mahk === this.report_semesterSel &&
+                        mark.mamh === this.report_subjectSel
+                    );
+                });
+                if (_mark === undefined) element.final = 0;
+                else element.final = _mark.diemtk;
+            }
+            this.public_classList.forEach((el) => {
+                let new_class = {
+                    total: 0,
+                    passed: 0,
+                };
+                this.report_classList[el.tenlop] = new_class;
+            });
+            for (let i = 0; i < this.public_studentList.length; i++) {
+                const element = this.public_studentList[i];
+                if (element.malop) {
+                    this.report_classList[element.tenlop].total += 1;
+                    if (parseFloat(element.final) >= 5.0)
+                        this.report_classList[element.tenlop].passed += 1;
+                }
+            }
+            for (const key in this.report_classList) {
+                let _total = parseFloat(this.report_classList[key].total);
+                let _passed = parseFloat(this.report_classList[key].passed);
+                this.report_classList[key]['rate'] = (
+                    (_passed / _total) *
+                    100.0
+                ).toFixed(0);
+            }
+        },
     },
 };
 </script>

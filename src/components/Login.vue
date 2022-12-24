@@ -3,7 +3,12 @@
         <div class="form">
             <div class="text-center">
                 <h6><span>Đăng nhập</span> <span>Đăng ký</span></h6>
-                <input @click="onFlip" type="checkbox" class="checkbox" id="reg-log" />
+                <input
+                    @click="onFlip"
+                    type="checkbox"
+                    class="checkbox"
+                    id="reg-log"
+                />
                 <label for="reg-log"></label>
                 <div class="card-3d-wrap">
                     <div class="card-3d-wrapper">
@@ -12,17 +17,36 @@
                             <div class="center-wrap">
                                 <h4 class="heading">Đăng nhập</h4>
                                 <div class="form-group">
-                                    <input :value="userNameInput" @input="onUserNameInput" type="text" class="form-style"
-                                        placeholder="Tên đăng nhập" />
-                                    <i class="input-icon material-icons">person</i>
+                                    <input
+                                        :value="userNameInput"
+                                        @input="onUserNameInput"
+                                        type="text"
+                                        class="form-style"
+                                        placeholder="Tên đăng nhập"
+                                    />
+                                    <i class="input-icon material-icons"
+                                        >person</i
+                                    >
                                 </div>
-                                <div class="form-warning">{{ userNameWarning }}</div>
+                                <div class="form-warning">
+                                    {{ userNameWarning }}
+                                </div>
                                 <div class="form-group">
-                                    <input :value="passwordInput" @keyup.enter="onLogin" @input="onPasswordInput" type="password"
-                                        class="form-style" placeholder="Mật khẩu" />
-                                    <i class="input-icon material-icons">lock</i>
+                                    <input
+                                        :value="passwordInput"
+                                        @keyup.enter="onLogin"
+                                        @input="onPasswordInput"
+                                        type="password"
+                                        class="form-style"
+                                        placeholder="Mật khẩu"
+                                    />
+                                    <i class="input-icon material-icons"
+                                        >lock</i
+                                    >
                                 </div>
-                                <div class="form-warning">{{ passwordWarning }}</div>
+                                <div class="form-warning">
+                                    {{ passwordWarning }}
+                                </div>
                                 <button href="#" class="btn" @click="onLogin">
                                     Xong
                                 </button>
@@ -36,23 +60,50 @@
                             <div class="center-wrap">
                                 <h4 class="heading">Đăng ký</h4>
                                 <div class="form-group">
-                                    <input :value="userNameInput" @input="onUserNameInput" type="text" class="form-style"
-                                        placeholder="Tên đăng nhập" />
-                                    <i class="input-icon material-icons">person</i>
+                                    <input
+                                        :value="userNameInput"
+                                        @input="onUserNameInput"
+                                        type="text"
+                                        class="form-style"
+                                        placeholder="Tên đăng nhập"
+                                    />
+                                    <i class="input-icon material-icons"
+                                        >person</i
+                                    >
                                 </div>
-                                <div class="form-warning">{{ userNameWarning }}</div>
+                                <div class="form-warning">
+                                    {{ userNameWarning }}
+                                </div>
                                 <div class="form-group">
-                                    <input :value="passwordInput" @input="onPasswordInput" type="password"
-                                        class="form-style" placeholder="Mật khẩu" />
-                                    <i class="input-icon material-icons">lock</i>
+                                    <input
+                                        :value="passwordInput"
+                                        @input="onPasswordInput"
+                                        type="password"
+                                        class="form-style"
+                                        placeholder="Mật khẩu"
+                                    />
+                                    <i class="input-icon material-icons"
+                                        >lock</i
+                                    >
                                 </div>
-                                <div class="form-warning">{{ passwordWarning }}</div>
+                                <div class="form-warning">
+                                    {{ passwordWarning }}
+                                </div>
                                 <div class="form-group">
-                                    <input :value="passwordReinput" @input="onPasswordReinput" type="password"
-                                        class="form-style" placeholder="Nhập lại mật khẩu" />
-                                    <i class="input-icon material-icons">lock</i>
+                                    <input
+                                        :value="passwordReinput"
+                                        @input="onPasswordReinput"
+                                        type="password"
+                                        class="form-style"
+                                        placeholder="Nhập lại mật khẩu"
+                                    />
+                                    <i class="input-icon material-icons"
+                                        >lock</i
+                                    >
                                 </div>
-                                <div class="form-warning">{{ rePasswordWarning }}</div>
+                                <div class="form-warning">
+                                    {{ rePasswordWarning }}
+                                </div>
                                 <button href="#" class="btn" @click="onSignup">
                                     Xong
                                 </button>
@@ -66,8 +117,8 @@
 </template>
 
 <script scoped>
-
 import { app } from '../main';
+const bcryptjs = require('bcryptjs');
 
 export default {
     name: 'Login-Register',
@@ -86,55 +137,17 @@ export default {
             isPasswordOk: false,
             isRepasswordOk: false,
 
-            accounts: {
-                "abcd": {
-                    "type": 0,
-                    "pass": "Abcd...." 
-                },
-                "xyzt": {
-                    "type": 0,
-                    "pass": "Xyzt...." 
-                },
-                "gvi1": {
-                    "type": 1,
-                    "pass": "Gvi1...." 
-                },
-                "gvi2": {
-                    "type": 1,
-                    "pass": "Gvi2...." 
-                },
-                "gvi3": {
-                    "type": 1,
-                    "pass": "Gvi3...." 
-                },
-                "gvu1": {
-                    "type": 2,
-                    "pass": "Gvu1...." 
-                },
-                "gvu2": {
-                    "type": 2,
-                    "pass": "Gvu2...." 
-                },
-                "gvu3": {
-                    "type": 2,
-                    "pass": "Gvu3...." 
-                },
-                "qly1": {
-                    "type": 3,
-                    "pass": "Qly1...." 
-                },
-                "qly2": {
-                    "type": 3,
-                    "pass": "Qly2...." 
-                }
-            },
+            public_accountList: [],
         };
+    },
+    beforeMount() {
+        this.getAccountAll();
     },
     // methods: functions
     methods: {
         onUserNameInput(e) {
             this.userNameInput = e.target.value;
-            if (!/^[A-Za-z]\w{3,14}$/.test(this.userNameInput)) {
+            if (!/^[A-Za-z]\w{3,120}$/.test(this.userNameInput)) {
                 this.userNameWarning = '⚠ Tên đăng nhập không hợp lệ';
                 this.isUserNameOk = false;
             } else {
@@ -171,63 +184,107 @@ export default {
                 this.rePasswordWarning = '';
                 this.isRepasswordOk = true;
             }
-        }, 
+        },
 
         onFlip() {
             this.userNameInput = '';
             this.passwordInput = '';
             this.passwordReinput = '';
-            
+
             this.userNameWarning = '';
             this.passwordWarning = '';
             this.rePasswordWarning = '';
-            
+
             this.isUserNameOk = false;
             this.isPasswordOk = false;
             this.isRepasswordOk = false;
         },
 
+        getAccountAll() {
+            fetch(this.base_url + '/taikhoan/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.public_accountList = api.data.map((std) => std);
+                });
+        },
+
         onLogin() {
-            // console.log(this.isUserNameOk, this.isPasswordOk);
             if (this.isUserNameOk && this.isPasswordOk) {
                 let userName = this.userNameInput;
                 let pass = this.passwordInput;
-                if (userName in this.accounts && pass) {
-                    let userInfo = this.accounts[userName]
-                    let loginStatus = pass.localeCompare(userInfo["pass"])
-                    if (loginStatus === 0) {
-                        app.config.globalProperties.gUserName = userName;
-                        app.config.globalProperties.gUserType = parseInt(userInfo["type"]);
-                        this.onFlip();
-                        alert("Đăng nhập thành công!");
-                        this.$router.push('/home');
-                    }
-                    else { 
-                        alert("Mật khẩu không chính xác!");
-                    }
+                let thisClone = this;
+                let appClone = app;
+                let accounts = this.public_accountList.find((acc) => {
+                    return acc.tendangnhap === userName;
+                });
+                if (accounts === undefined || !pass) {
+                    alert('Tài khoản không tồn tại!');
                 } else {
-                    alert("Tài khoản chưa tồn tại!")
+                    bcryptjs.compare(pass, accounts.matkhau, function (err, res) {
+                        if (res) {
+                            alert('Đăng nhập thành công!');
+                            appClone.config.globalProperties.gUserName = userName;
+                            appClone.config.globalProperties.gUserType = parseInt(
+                                accounts.loaitk
+                            );
+                            thisClone.onFlip();
+                            thisClone.$router.push('/home');
+                        } else {
+                            alert('Mật khẩu không chính xác');
+                        }
+                    });
                 }
             }
         },
 
-        onSignup() {
+        async onSignup() {
             // console.log(this.isUserNameOk, this.isPasswordOk, this.isRepasswordOk);
             if (this.isUserNameOk && this.isPasswordOk && this.isRepasswordOk) {
                 let userName = this.userNameInput;
                 let pass = this.passwordInput;
                 if (!pass || !userName) {
-                    alert("Tên đăng nhập và Mật khẩu không được trống!");
-                } else if (userName in this.accounts) { 
-                    alert("Tài khoản này đã tồn tại!");
-                } else { 
-                    this.accounts[userName] = {
-                        "type": 0,
-                        "pass": pass
+                    alert('Tên đăng nhập và Mật khẩu không được trống!');
+                } else {
+                    const salt = bcryptjs.genSaltSync(10);
+                    let hash = bcryptjs.hashSync(pass, salt);
+                    console.log(hash);
+
+
+                    let sentinel = this.public_accountList[0].matk
+                    for (let i = 1; i < this.public_accountList.length; i++) {
+                        const element = this.public_accountList[i];
+                        if (sentinel < element.matk)
+                            sentinel = element.matk
                     }
-                    this.onFlip();
-                    alert('Tài khoản đã được tạo thành công!')
-                    this.$router.push('/login')
+                    let last_id = sentinel;
+                    last_id = String(last_id).substring(2, 5);
+                    last_id = parseInt(last_id) + 1;
+                    if (last_id < 10) last_id = '00' + String(last_id);
+                    else if (last_id >= 10 && last_id <= 99)
+                        last_id = '0' + String(last_id);
+                    else last_id = String(last_id);
+
+                    let accounts = this.public_accountList.find((acc) => {
+                        return acc.tendangnhap === userName;
+                    });
+                    if (accounts != undefined) {
+                        alert('Tài khoản đã tồn tại');
+                        return;
+                    }
+                    const user = {
+                        MATK: 'TK' + last_id,
+                        TENDANGNHAP: userName,
+                        MATKHAU: hash,
+                        LOAITK: 0,
+                    };
+                    const new_user = JSON.stringify(user);
+                    const res = await fetch(
+                        this.base_url + `/taikhoan/create?data=${new_user}`
+                    );
+                    const data = res.json();
+                    console.log(data);
+                    alert('Tạo tài khoản thành công');
+                    this.getAccountAll();
                 }
             }
         },
@@ -285,8 +342,8 @@ export default {
     font-size: 16px;
 }
 
-.container-fluid .checkbox:checked+label,
-.container-fluid .checkbox:not(:checked)+label {
+.container-fluid .checkbox:checked + label,
+.container-fluid .checkbox:not(:checked) + label {
     position: relative;
     display: block;
     width: 60px;
@@ -297,8 +354,8 @@ export default {
     cursor: pointer;
 }
 
-.container-fluid .checkbox:checked+label::before,
-.container-fluid .checkbox:not(:checked)+label::before {
+.container-fluid .checkbox:checked + label::before,
+.container-fluid .checkbox:not(:checked) + label::before {
     position: absolute;
     display: block;
     width: 36px;
@@ -316,7 +373,7 @@ export default {
     transition: all 0.5s ease;
 }
 
-.container-fluid .checkbox:checked+label::before {
+.container-fluid .checkbox:checked + label::before {
     transform: translateX(44px) rotate(-270deg);
 }
 
@@ -362,7 +419,7 @@ export default {
     transform: rotateY(180deg);
 }
 
-.container-fluid .checkbox:checked~.card-3d-wrap .card-3d-wrapper {
+.container-fluid .checkbox:checked ~ .card-3d-wrap .card-3d-wrapper {
     transform: rotateY(180deg);
 }
 
