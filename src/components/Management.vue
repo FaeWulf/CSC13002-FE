@@ -1212,8 +1212,9 @@ export default {
                         console.log('hoc sinh chua dc nhap');
                         continue;
                     }
+                    let newMADIEMKT = 'DT' + ++last_id;
                     const record = {
-                        MADIEMTK: 'DT' + ++last_id,
+                        MADIEMTK: newMADIEMKT,
                         DIEMTK: null,
                         MAHK: this.mark_semesterSel,
                         MAMH: this.mark_subjectSel,
@@ -1227,17 +1228,8 @@ export default {
                     console.log(data);
 
                     for (let i = 0; i < 3; i++) {
-                        if (i === 0 && new_exam[0] === element.exam_1) {
-                            continue;
-                        }
-                        if (i === 1 && new_exam[1] === element.exam_2) {
-                            continue;
-                        }
-                        if (i === 2 && new_exam[2] === element.exam_3) {
-                            continue;
-                        }
                         let record = {
-                            MADIEMKT: element.madiemtk,
+                            MADIEMKT: newMADIEMKT,
                             MAKT: `KT00${i + 1}`,
                             DIEMKT: new_exam[i],
                         };
@@ -1246,7 +1238,7 @@ export default {
                         console.log(new_record);
                         const res = await fetch(
                             this.base_url +
-                                `/chitietdiem/update?data=${new_record}`
+                                `/chitietdiem/create?data=${new_record}`
                         );
                         const data = res.json();
                         console.log(data);
