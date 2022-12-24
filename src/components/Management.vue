@@ -779,9 +779,14 @@ export default {
          *
          */
         async add_done() {
-            let len = this.public_studentList.length;
-            let last_id = this.public_studentList[len - 1].mahs;
-            last_id = String(last_id).substring(2, 5);
+            let sentinel = this.public_studentList[0].mahs
+            for (let i = 1; i < this.public_studentList.length; i++) {
+                const element = this.public_studentList[i];
+                if (sentinel < element.mahs)
+                    sentinel = element.mahs
+            }
+            
+            let last_id = String(sentinel).substring(2, 5);
             last_id = parseInt(last_id) + 1;
             if (last_id < 10) last_id = '00' + String(last_id);
             else if (last_id >= 10 && last_id <= 99)
@@ -806,12 +811,23 @@ export default {
                 MALOP: this.add_stdDetail.grade,
             };
             const new_data = JSON.stringify(new_student);
-            const res = await fetch(
+            await fetch(
                 this.base_url + `/hocsinh/create?data=${new_data}`
-            );
-            const data = res.json();
-            console.log(data);
+            ).then((response) => response.json())
+                .then((data) => {
+                    if (data.status === 'ok') alert('Thêm học sinh thành công')
+                    else alert('Thêm học sinh thất bại')
+                });
             this.getStudentAll();
+            this.add_stdDetail = {
+                name: '',
+                grade: '',
+                gender: '',
+                birthdate: '',
+                phone: '',
+                email: '',
+                address: '',
+            };
         },
 
         // ================ Cập nhật học sinh =============================
@@ -872,6 +888,10 @@ export default {
          *
          */
         async edit_remove() {
+            let text = 'Bạn có chắc chắn muốn xóa thông tin học sinh này?';
+            if (confirm(text) == false) {
+                return;
+            }
             this.edit_stdDetail = {
                 name: '',
                 grade: '',
@@ -898,6 +918,10 @@ export default {
          *
          */
         async edit_done() {
+            let text = 'Bạn có chắc chắn muốn lưu những thay đổi?';
+            if (confirm(text) == false) {
+                return;
+            }
             const found = this.public_classList.some(
                 (el) => el.tenlop === this.edit_stdDetail.grade
             );
@@ -1025,6 +1049,10 @@ export default {
          *
          */
         class_removeAll() {
+            let text = 'Bạn có chắc chắn muốn xóa toàn bộ học sinh khỏi lớp này?\n Thông tin chỉ được lưu khi bạn nhấn "Xong".';
+            if (confirm(text) == false) {
+                return;
+            }
             this.class_stdInClass.forEach((student) => {
                 this.class_stdWantRm.push(student.id);
                 student.class = null;
@@ -1039,6 +1067,10 @@ export default {
          *
          */
         async class_done() {
+            let text = 'Bạn có chắc chắn muốn lưu những thay đổi?';
+            if (confirm(text) == false) {
+                return;
+            }
             // console.log('Add ', this.class_stdInClass);
             for (let i = 0; i < this.class_stdInClass.length; i++) {
                 const element = this.class_stdInClass[i];
@@ -1078,6 +1110,11 @@ export default {
                 const data = await res.json();
                 console.log(data);
             }
+            alert('Dữ liệu của bạn đã được cập nhật')
+            this.class_classSelected = '';
+            this.class_stdInClass = [];
+            this.class_stdNoClass = [];
+            this.studentShow = [];
             this.getStudentAll();
         },
 
@@ -1145,6 +1182,10 @@ export default {
          *
          */
         async mark_done() {
+            let text = 'Bạn có chắc chắn muốn lưu những thay đổi?';
+            if (confirm(text) == false) {
+                return;
+            }
             let last_id = String(this.mark_lastID[0].madiemtk).substring(2, 5);
             last_id = parseInt(last_id);
             if (last_id < 10) last_id = '00' + String(last_id);
@@ -1245,8 +1286,10 @@ export default {
                     }
                 }
             }
+            alert('Cập nhật thành công');
             this.mark_selectContext();
             this.getLastID();
+            
         },
 
         // ================ Lập báo cáo ====================================
