@@ -221,19 +221,23 @@ export default {
                 if (accounts === undefined || !pass) {
                     alert('Tài khoản không tồn tại!');
                 } else {
-                    bcryptjs.compare(pass, accounts.matkhau, function (err, res) {
-                        if (res) {
-                            alert('Đăng nhập thành công!');
-                            appClone.config.globalProperties.gUserName = userName;
-                            appClone.config.globalProperties.gUserType = parseInt(
-                                accounts.loaitk
-                            );
-                            thisClone.onFlip();
-                            thisClone.$router.push('/home');
-                        } else {
-                            alert('Mật khẩu không chính xác');
+                    bcryptjs.compare(
+                        pass,
+                        accounts.matkhau,
+                        function (err, res) {
+                            if (res) {
+                                alert('Đăng nhập thành công!');
+                                appClone.config.globalProperties.gUserName =
+                                    userName;
+                                appClone.config.globalProperties.gUserType =
+                                    parseInt(accounts.loaitk);
+                                thisClone.onFlip();
+                                thisClone.$router.push('/home');
+                            } else {
+                                alert('Mật khẩu không chính xác');
+                            }
                         }
-                    });
+                    );
                 }
             }
         },
@@ -250,12 +254,10 @@ export default {
                     let hash = bcryptjs.hashSync(pass, salt);
                     console.log(hash);
 
-
-                    let sentinel = this.public_accountList[0].matk
+                    let sentinel = this.public_accountList[0].matk;
                     for (let i = 1; i < this.public_accountList.length; i++) {
                         const element = this.public_accountList[i];
-                        if (sentinel < element.matk)
-                            sentinel = element.matk
+                        if (sentinel < element.matk) sentinel = element.matk;
                     }
                     let last_id = sentinel;
                     last_id = String(last_id).substring(2, 5);

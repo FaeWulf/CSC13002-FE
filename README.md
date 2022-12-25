@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="#">
-    <img src="./public/img/fit-logo.png" alt="ChatLogo" width="72" height="72">
+    <img src="./public/img/fit-logo.png" alt="ChatLogo">
   </a>
 </p>
 
