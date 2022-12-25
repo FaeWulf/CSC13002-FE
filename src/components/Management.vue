@@ -819,10 +819,11 @@ export default {
             const found = this.public_classList.some(
                 (el) => el.tenlop === this.add_stdDetail.grade
             );
+            let gradeID = this.add_stdDetail.grade
             if (!found) {
-                this.add_stdDetail.grade = null;
+                gradeID = null;
             } else {
-                this.add_stdDetail.grade = 'L' + this.add_stdDetail.grade;
+                gradeID = 'L' + gradeID;
             }
             const new_student = {
                 MAHS: 'HS' + last_id,
@@ -831,7 +832,7 @@ export default {
                 NGAYSINH: this.add_stdDetail.birthdate,
                 DIACHI: this.add_stdDetail.address,
                 EMAIL: this.add_stdDetail.email,
-                MALOP: this.add_stdDetail.grade,
+                MALOP: gradeID,
             };
             const new_data = JSON.stringify(new_student);
             await fetch(
@@ -852,7 +853,6 @@ export default {
                 address: '',
             };
         },
-
         // ================ Cập nhật học sinh =============================
         /**
          * Hiển thị thông tin chi tiết của học sinh trên thẻ cập nhật
@@ -950,10 +950,11 @@ export default {
             const found = this.public_classList.some(
                 (el) => el.tenlop === this.edit_stdDetail.grade
             );
+            let gradeID = this.edit_stdDetail.grade
             if (!found) {
-                this.edit_stdDetail.grade = null;
+                gradeID = null;
             } else {
-                this.edit_stdDetail.grade = 'L' + this.edit_stdDetail.grade;
+                gradeID = 'L' + gradeID;
             }
             const new_student = {
                 MAHS: this.edit_selectedID,
@@ -962,7 +963,7 @@ export default {
                 NGAYSINH: this.edit_stdDetail.birthdate,
                 DIACHI: this.edit_stdDetail.address,
                 EMAIL: this.edit_stdDetail.email,
-                MALOP: this.edit_stdDetail.grade,
+                MALOP: gradeID,
             };
             const new_data = JSON.stringify(new_student);
             await fetch(
