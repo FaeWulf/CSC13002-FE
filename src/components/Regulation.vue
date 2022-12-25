@@ -130,11 +130,11 @@
                 </div>
                 <div class="group">
                     <label class="title-btn" for="">Thay đổi số lượng và tên môn học</label>
-                    <button>Thay đổi</button>
+                    <button @click="incompleteFeature">Thay đổi</button>
                 </div>
                 <div class="group">
                     <label class="title-btn" for="">Thay đổi số lượng lớp và tên lớp</label>
-                    <button>Thay đổi</button>
+                    <button @click="incompleteFeature">Thay đổi</button>
                 </div>
             </div>
         </div>
@@ -387,6 +387,10 @@ export default {
             else alert('Cập nhật thất bại')
             this.getRegulations();
         },
+
+        incompleteFeature() {
+            alert('Chức năng đang được phát triển.')
+        }
 
     },
 };
