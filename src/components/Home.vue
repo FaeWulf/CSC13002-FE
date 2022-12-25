@@ -22,7 +22,7 @@
                 <h1>Thông tin tài khoản</h1>
                 <h3>{{ getDuty }}</h3>
                 <div class="avt-img">
-                    <img id="show-img" src="img/favicon.png" alt="Avatar" />
+                    <img id="show-img" src="img/logo_small.png" alt="Avatar" />
                 </div>
                 <div class="img-btn">
                     <label for="myFile" id="change"><i class='bx bx-check'></i><span>Sửa</span></label>
@@ -69,7 +69,7 @@ export default {
     computed: {
         getDuty() {
             if (this.userType === 0) {
-                return 'Chưa được cấp quyền';
+                return 'Người dùng';
             } else if (this.userType === 1) {
                 return 'Giáo viên';
             } else if (this.userType === 2) {
@@ -164,7 +164,7 @@ export default {
 }
 .avatar h3 {
     margin: auto;
-    width: 100px;
+    width: 120px;
     padding: 10px 0px;
     font-size: 20px;
     color: var(--primary-color);

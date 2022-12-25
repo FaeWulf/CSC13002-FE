@@ -93,6 +93,7 @@
                                     <input
                                         :value="passwordReinput"
                                         @input="onPasswordReinput"
+                                        @keyup.enter="onSignup"
                                         type="password"
                                         class="form-style"
                                         placeholder="Nhập lại mật khẩu"

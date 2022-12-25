@@ -1,18 +1,10 @@
 <template>
     <!-- Regulation Tab -->
     <div class="nav-group">
-        <a
-            href="#"
-            :class="currentTag === 0 ? 'nav-selected' : ''"
-            @click="onTagClicked($event, 0)"
-            ><i class="bx bx-user-circle"></i> Cấp quyền tài khoản</a
-        >
-        <a
-            href="#"
-            :class="currentTag === 1 ? 'nav-selected' : ''"
-            @click="onTagClicked($event, 1)"
-            ><i class="bx bx-wrench"></i> Thay đổi quy định</a
-        >
+        <a href="#" :class="currentTag === 0 ? 'nav-selected' : ''" @click="onTagClicked($event, 0)"><i
+                class="bx bx-user-circle"></i> Cấp quyền tài khoản</a>
+        <a href="#" :class="currentTag === 1 ? 'nav-selected' : ''" @click="onTagClicked($event, 1)"><i
+                class="bx bx-wrench"></i> Thay đổi quy định</a>
     </div>
     <!-- Cấp quyền tài khoản -->
     <div class="tag-content" v-if="currentTag === 0">
@@ -26,12 +18,10 @@
             </div>
             <div class="btn-group">
                 <button @click="cancel" id="remove">
-                    <i class="bx bx-x"></i
-                    ><span class="btn-text">Huỷ bỏ cấp quyền</span>
+                    <i class="bx bx-x"></i><span class="btn-text">Huỷ bỏ cấp quyền</span>
                 </button>
                 <button @click="confirm" id="change">
-                    <i class="bx bx-check"></i
-                    ><span class="btn-text">Xác nhận cấp quyền</span>
+                    <i class="bx bx-check"></i><span class="btn-text">Xác nhận cấp quyền</span>
                 </button>
             </div>
         </div>
@@ -44,11 +34,7 @@
                     </td>
                     <td rowspan="4">
                         <div class="avatar">
-                            <img
-                                class="avatar-img"
-                                src="/img/logo_small.png"
-                                alt=""
-                            />
+                            <img class="avatar-img" src="/img/logo_small.png" alt="" />
                             <span>Ảnh đại diện</span>
                         </div>
                     </td>
@@ -92,10 +78,7 @@
                             <td hidden></td>
                             <td>{{ getLoaiTK(acc.loaitk) }}</td>
                             <td>
-                                <button
-                                    @click="userDetails($event, acc.matk)"
-                                    id="change"
-                                >
+                                <button @click="userDetails($event, acc.matk)" id="change">
                                     Chọn
                                 </button>
                             </td>
@@ -110,13 +93,11 @@
         <div class="title-reg">
             <span>Quy định hiện hành</span>
             <div class="btn-group">
-                <button id="remove">
-                    <i class="bx bx-x"></i
-                    ><span class="btn-text">Xoá học sinh</span>
+                <button id="undo" @click="fetchToInput">
+                    <i class="bx bx-undo"></i><span class="btn-text">Hủy thay đổi</span>
                 </button>
-                <button id="change">
-                    <i class="bx bx-check"></i
-                    ><span class="btn-text">Hoàn tất sửa đổi</span>
+                <button id="change" @click="regApply">
+                    <i class="bx bx-check"></i><span class="btn-text">Hoàn tất sửa đổi</span>
                 </button>
             </div>
         </div>
@@ -133,30 +114,26 @@
             <div class="input-group">
                 <div class="group">
                     <label for="">Tuổi nhập học tối thiểu</label>
-                    <input type="text" value="5" />
+                    <input type="text" v-model="minAge" />
                 </div>
                 <div class="group">
                     <label for="">Tuổi nhập học tối đa</label>
-                    <input type="text" value="5" />
+                    <input type="text" v-model="maxAge" />
                 </div>
                 <div class="group">
                     <label for="">Sĩ số tối đa trong lớp</label>
-                    <input type="text" value="5" />
+                    <input type="text" v-model="maxStd" />
                 </div>
                 <div class="group">
                     <label for="">Điểm chuẩn đạt môn</label>
-                    <input type="text" value="5" />
+                    <input type="text" v-model="admMark" />
                 </div>
                 <div class="group">
-                    <label class="title-btn" for=""
-                        >Thay đổi số lượng và tên môn học</label
-                    >
+                    <label class="title-btn" for="">Thay đổi số lượng và tên môn học</label>
                     <button>Thay đổi</button>
                 </div>
                 <div class="group">
-                    <label class="title-btn" for=""
-                        >Thay đổi số lượng lớp và tên lớp</label
-                    >
+                    <label class="title-btn" for="">Thay đổi số lượng lớp và tên lớp</label>
                     <button>Thay đổi</button>
                 </div>
             </div>
@@ -172,6 +149,7 @@ export default {
             currentTag: 0,
 
             public_accountList: [],
+            public_regulationList: [],
 
             username: '',
             phone: '',
@@ -179,10 +157,16 @@ export default {
             fullname: '',
 
             selected: '',
+            // regulations
+            minAge: null,
+            maxAge: null,
+            maxStd: null,
+            admMark: null,
         };
     },
     beforeMount() {
         this.getAccountAll();
+        this.getRegulations();
     },
     methods: {
         onTagClicked(e, param1) {
@@ -196,6 +180,14 @@ export default {
                 .then((res) => res.json())
                 .then((api) => {
                     this.public_accountList = api.data.map((std) => std);
+                });
+        },
+        getRegulations() {
+            fetch(this.base_url + '/quydinh/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.public_regulationList = api.data.map((dat) => dat);
+                    this.fetchToInput();
                 });
         },
         getLoaiTK(x) {
@@ -234,19 +226,28 @@ export default {
             }
         },
         async confirm() {
-            if (!this.selected) {
-                return;
-            }
             let account = this.public_accountList.find((acc) => {
                 return acc.tendangnhap === this.username;
             });
             if (account === undefined) {
+                alert('Bạn chưa chọn tài khoản');
+                return;
+            }
+            if (!this.selected) {
+                alert('Bạn chưa chọn quyền cần cấp');
+                return;
+            }
+
+            let confirmTxt = prompt("Nhập CONFIRM để xác nhận");
+            if (confirmTxt != 'CONFIRM') {
+                alert('Không thể xác nhận');
                 return;
             }
             if (account.loaitk === 3) {
                 alert('Không thể cấp quyền cho tài khoản này');
                 return;
             }
+
             let user = {
                 MATK: account.matk,
                 TENDANGNHAP: account.tendangnhap,
@@ -259,16 +260,15 @@ export default {
             if (this.selected === 'manager') {
                 user.LOAITK = 2;
             }
-            console.log(user);
             const new_user = JSON.stringify(user);
-            console.log(new_user);
-            const res = await fetch(
+            await fetch(
                 this.base_url + `/taikhoan/update?data=${new_user}`
-            );
-            const data = res.json();
-            console.log(data);
+            ).then((response) => response.json())
+                .then((data) => {
+                    if (data.status === 'ok') alert('Cấp quyền cho tài khoản thành công')
+                    else alert('Cấp quyền cho tài khoản thất bại')
+                });
             this.getAccountAll();
-            alert('Cấp quyền cho tài khoản thành công');
             this.permission = this.getLoaiTK(user.LOAITK);
         },
         async cancel() {
@@ -276,6 +276,12 @@ export default {
                 return acc.tendangnhap === this.username;
             });
             if (account === undefined) {
+                alert('Bạn chưa chọn tài khoản');
+                return;
+            }
+            let confirmTxt = prompt("Nhập CONFIRM để xác nhận");
+            if (confirmTxt != 'CONFIRM') {
+                alert('Không thể xác nhận');
                 return;
             }
             if (account.loaitk === 3) {
@@ -288,18 +294,100 @@ export default {
                 MATKHAU: account.matkhau,
                 LOAITK: 0,
             };
-            console.log(user);
             const new_user = JSON.stringify(user);
-            console.log(new_user);
-            const res = await fetch(
+            await fetch(
                 this.base_url + `/taikhoan/update?data=${new_user}`
-            );
-            const data = res.json();
-            console.log(data);
+            ).then((response) => response.json())
+                .then((data) => {
+                    if (data.status === 'ok') alert('Huỷ bỏ cấp quyền cho tài khoản thành công')
+                    else alert('Huỷ bỏ cấp quyền cho tài khoản thất bại')
+                });
             this.getAccountAll();
-            alert('Huỷ bỏ cấp quyền cho tài khoản thành công');
             this.permission = this.getLoaiTK(user.LOAITK);
         },
+        checkValidInput() {
+            this.minAge = parseInt(this.minAge);
+            this.maxAge = parseInt(this.maxAge);
+            this.maxStd = parseInt(this.maxStd);
+            this.admMark = parseFloat(this.admMark);
+            if (
+                !this.minAge ||
+                !this.maxAge ||
+                !this.maxStd ||
+                !this.admMark ||
+                this.minAge < 0 ||
+                this.maxAge < 0 ||
+                this.minAge > this.maxAge ||
+                this.maxStd < 0 ||
+                this.admMark <= 0.0 ||
+                this.admMark > 10.0
+            ) return false;
+            else return true;
+        },
+        fetchToInput() {
+            try {
+                this.minAge = this.public_regulationList.find(reg => reg.maquydinh === 'QD001').value;
+                this.maxAge = this.public_regulationList.find(reg => reg.maquydinh === 'QD002').value;
+                this.maxStd = this.public_regulationList.find(reg => reg.maquydinh === 'QD003').value;
+                this.admMark = this.public_regulationList.find(reg => reg.maquydinh === 'QD004').value;
+            }
+            catch (err) {
+                console.log('Failed to load data');
+            }
+        },
+        async regApply() {
+            if (!this.checkValidInput()) {
+                alert('Giá trị nhập không hợp lệ');
+                return;
+            }
+            let confirmTxt = prompt("Nhập CONFIRM để xác nhận");
+            if (confirmTxt != 'CONFIRM') {
+                alert('Không thể xác nhận');
+                return;
+            }
+
+            let isSuccess = true;
+            for (let index = 0; index < this.public_regulationList.length; index++) {
+                const reg = this.public_regulationList[index];
+
+                let inputValue = null;
+                switch (reg.maquydinh) {
+                    case 'QD001':
+                        inputValue = parseInt(this.minAge)
+                        break;
+                    case 'QD002':
+                        inputValue = parseInt(this.maxAge)
+                        break;
+                    case 'QD003':
+                        inputValue = parseInt(this.maxStd)
+                        break;
+                    case 'QD004':
+                        inputValue = parseFloat(this.admMark)
+                        break;
+                }
+                if (!inputValue || inputValue === reg.value) {
+                    continue;
+                }
+
+                let data = {
+                    MAQUYDINH: reg.maquydinh,
+                    TENQUYDINH: reg.tenquydinh,
+                    VALUE: inputValue,
+                }
+                const new_data = JSON.stringify(data);
+                await fetch(
+                    this.base_url + `/quydinh/update?data=${new_data}`
+                ).then((response) => response.json())
+                    .then((data) => {
+                        if (data.status != 'ok') isSuccess = false
+                    });
+                if (!isSuccess) break;
+            }
+            if (isSuccess) alert('Cập nhật thành công')
+            else alert('Cập nhật thất bại')
+            this.getRegulations();
+        },
+
     },
 };
 </script>
@@ -310,11 +398,13 @@ export default {
     justify-content: center;
     margin-top: 40px;
 }
+
 .nav-group .nav-selected {
     color: #fff;
     background-color: var(--primary-color);
     opacity: 1;
 }
+
 .nav-group a {
     display: flex;
     align-items: center;
@@ -328,11 +418,13 @@ export default {
     transition: var(--tran-03);
     margin: 0 10px;
 }
+
 .nav-group .nav-selected:hover {
     color: #fff;
     background-color: var(--selected-hover-color);
     opacity: 1;
 }
+
 .nav-group a:hover {
     background-color: var(--hover-color);
     border-radius: 6px;
@@ -342,51 +434,71 @@ export default {
 .nav-group i {
     padding-right: 10px;
 }
+
 /* CSS for User permission tab */
 .user {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     margin: 55px 0;
 }
+
 .user .title {
     font-size: 28px;
     color: var(--primary-color);
     font-weight: 900;
     padding: 0 10px;
 }
+
 .user select {
     height: 40px;
     font-size: 20px;
     background: var(--body-color);
     color: var(--text-color);
     margin-left: 10px;
+    margin-right: 110px;
     padding: 10px;
     border: 1px solid var(--text-color);
     border-radius: 5px;
 }
+
 .info-table {
     display: flex;
     justify-content: center;
     margin-top: 40px;
 }
+
 .info-table table {
     border-spacing: 30px;
     border: 2px solid var(--text-color);
     border-radius: 25px;
     max-width: 1200px;
-    width: 1000px;
+    width: 900px;
 }
+
 .info-table table label {
     color: var(--text-color);
 }
+
 .info tr {
     padding: 20px;
     margin: 50px;
 }
+
+.info-table td:first-child {
+    padding-left: 40px;
+    text-align: left;
+    width: 300px;
+}
+
+.info-table td:nth-child(2) {
+    width: 200px;
+}
+
 .info-table label {
     font-size: 23px;
 }
+
 .info-table table input {
     height: 30px;
     max-width: 300px;
@@ -396,22 +508,26 @@ export default {
     padding: 10px;
     border: 0;
 }
+
 .avatar img,
 .avatar span {
     display: block;
-    margin: 5px;
+    margin-top: 20px;
     text-align: center;
     margin-left: auto;
     margin-right: auto;
     width: 15rem;
     color: var(--text-color);
+    border-radius: 50%;
 }
+
 /* CSS title search email  */
 .search-email-title {
     display: flex;
     justify-content: space-evenly;
     margin-top: 55px;
 }
+
 .search-email-title span {
     font-size: 28px;
     color: var(--primary-color);
@@ -453,12 +569,16 @@ export default {
     justify-content: center;
     align-items: center;
 }
+
 .email-table {
     display: flex;
     justify-content: center;
     margin-top: 40px;
     max-height: 40vh;
     overflow-y: auto;
+}
+.email-table table {
+    margin-bottom: 50px;
 }
 
 #email-std {
@@ -556,6 +676,11 @@ export default {
     padding-right: 5px;
 }
 
+.btn-group #undo {
+    background-color: #777;
+
+}
+
 .btn-group #remove {
     background-color: var(--remove-btn);
 }
@@ -573,11 +698,13 @@ export default {
     color: var(--text-color);
     padding: 10px;
 }
+
 .notice {
     display: flex;
     justify-content: space-around;
     margin-top: 30px;
 }
+
 .notice p {
     border: 2px solid var(--text-color);
     border-radius: 10px;
@@ -586,11 +713,13 @@ export default {
     line-height: 30px;
     color: var(--primary-color);
 }
+
 .input-reg {
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
+
 .input-group {
     display: flex;
     flex-direction: column;
@@ -600,6 +729,7 @@ export default {
     padding: 10px 30px;
     font-size: 23px;
     color: var(--text-color);
+    margin-bottom: 50px;
 }
 
 .input-group button {
@@ -613,14 +743,17 @@ export default {
     border: 2px solid var(--primary-color);
     color: var(--primary-color);
 }
+
 .input-group button:hover {
     background-color: var(--primary-color);
     color: var(--text-color);
 }
+
 .group {
     margin: 25px;
     font-weight: 700;
 }
+
 .input-group input {
     max-width: 120px;
     height: 30px;
@@ -628,18 +761,22 @@ export default {
     font-size: 23px;
     text-align: center;
 }
+
 .input-group input,
 .input-group button {
     float: right;
 }
+
 .input-group label {
     position: relative;
 }
+
 .input-group label,
 .input-group input,
 .input-group button {
     margin: 0 100px;
 }
+
 .input-group label::after {
     position: absolute;
     content: '';

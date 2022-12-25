@@ -1,5 +1,5 @@
 <template>
-    <nav class="sidebar" :class="isNavClose ? 'close' : ''">
+    <nav class="sidebar" :class="isNavClose ? 'close' : ''" @click="fetchInfo">
         <!-- Header: Group's name and Logo -->
         <header>
             <div class="image-text">
@@ -100,7 +100,7 @@
                     </label>
                 </li>
                 <!-- Dark/Light mode -->
-                <li class="mode">
+                <li @click="changeMode" class="mode">
                     <div class="sun-moon">
                         <i class="bx bx-moon icon moon"></i>
                         <i class="bx bx-sun icon sun"></i>
@@ -108,7 +108,7 @@
                     <span class="mode-text text">{{
                         this.isDarkMode ? 'Chế độ sáng' : 'Chế độ tối'
                     }}</span>
-                    <div @click="changeMode" class="toggle-switch">
+                    <div class="toggle-switch">
                         <span class="switch"></span>
                     </div>
                 </li>
@@ -153,6 +153,7 @@ export default {
             }
         },
         onLogOut() {
+            this.fetchInfo();
             if (!this.getHomePermission()) {
                 return;
             }
@@ -188,8 +189,10 @@ export default {
                         this.currentTab = tabNum;
                         this.$router.push('/search');
                     } else if (this.getHomePermission()) {
+                        alert('Bạn chưa được cấp quyền để truy cập trang này');
                         this.$router.push('/home');
                     } else {
+                        alert('Bạn phải đăng nhập để xem trang này');
                         this.$router.push('/');
                     }
                     break;
@@ -198,8 +201,10 @@ export default {
                         this.currentTab = tabNum;
                         this.$router.push('/management');
                     } else if (this.getHomePermission()) {
+                        alert('Bạn chưa được cấp quyền để truy cập trang này');
                         this.$router.push('/home');
                     } else {
+                        alert('Bạn phải đăng nhập để xem trang này');
                         this.$router.push('/');
                     }
                     break;
@@ -208,8 +213,10 @@ export default {
                         this.currentTab = tabNum;
                         this.$router.push('/regulation');
                     } else if (this.getHomePermission()) {
+                        alert('Bạn chưa được cấp quyền để truy cập trang này');
                         this.$router.push('/home');
                     } else {
+                        alert('Bạn phải đăng nhập để xem trang này');
                         this.$router.push('/');
                     }
                     break;
@@ -218,6 +225,7 @@ export default {
                         this.currentTab = tabNum;
                         this.$router.push('/about');
                     } else {
+                        alert('Bạn phải đăng nhập để xem trang này');
                         this.$router.push('/');
                     }
                     break;
@@ -226,6 +234,7 @@ export default {
                         this.currentTab = tabNum;
                         this.$router.push('/resetpassword');
                     } else {
+                        alert('Bạn phải đăng nhập để xem trang này');
                         this.$router.push('/');
                     }
                     break;
@@ -342,10 +351,14 @@ ul a {
     font-size: 18px;
     font-weight: 600;
     padding-bottom: 5px;
+    font-family: 'Audiowide', cursive;
 }
 
 .sidebar .image-text .groupname {
-    font-family: 'Kumar One Outline', cursive;
+    margin-left: 5px;
+    font-size: 24px;
+    font-family: 'Audiowide', cursive;
+    color: var(--primary-color);
 }
 
 .sidebar .image-text .name ::before {
@@ -431,6 +444,7 @@ body.dark .sidebar header .toggle {
 
 .sidebar li label:hover {
     background-color: var(--hover-color);
+    cursor: pointer;    
 }
 
 .sidebar li label:hover .icon,
@@ -459,6 +473,7 @@ body.dark .sidebar li label:hover .text {
     border-radius: 6px;
     position: relative;
     transition: var(--tran-05);
+    cursor: pointer;
 }
 
 .menu-bar .mode .sun-moon {
@@ -491,7 +506,6 @@ body.dark .mode .sun-moon i.moon {
     align-items: center;
     justify-content: center;
     border-radius: 6px;
-    cursor: pointer;
 }
 
 .toggle-switch .switch {

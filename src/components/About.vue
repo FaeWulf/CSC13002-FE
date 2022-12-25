@@ -33,11 +33,11 @@ export default {
 
 .info-text {
     position: absolute;
-    width: 75%;
-    max-width: 800px;
+    width: 80%;
+    max-width: 700px;
     top: 50%;
     left: 35%;
-    padding: 0 80px;
+    padding-left: 80px;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     color: var(--text-color);
@@ -65,19 +65,19 @@ ul {
 }
 .info-text .name {
     max-height: 60px;
-    padding-left: 100px;
-    text-align: right;
+    padding-left: 60px;
+    text-align: left;
 }
 .info-text .name span {
     color: var(--primary-color);
 }
 
 .img-logo {
-    width: 380px;
+    width: 350px;
     height: inherit;
     position: absolute;
     top: 50%;
-    left: 80%;
+    left: 85%;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     color: var(--text-color);

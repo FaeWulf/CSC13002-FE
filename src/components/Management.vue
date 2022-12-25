@@ -57,7 +57,7 @@
                         <label>Email</label
                         ><input type="text" v-model="add_stdDetail.email" />
                     </td>
-                    <td>
+                    <td style="width: 300px;">
                         <label>Giới tính</label
                         ><input type="text" v-model="add_stdDetail.gender" />
                     </td>
@@ -71,19 +71,20 @@
                         <label>Ngày sinh</label
                         ><input type="date" v-model="add_stdDetail.birthdate" />
                     </td>
-                    <td>
-                        <label>Số điện thoại</label
-                        ><input type="text" v-model="add_stdDetail.phone" />
+                    <td style="width: 300px;">
+                        <label>Số điện thoại</label>
+                        <input type="text" v-model="add_stdDetail.phone"/>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <label>Địa chỉ</label
-                        ><textarea
+                        <label style="margin-right: 20px;">Địa chỉ</label
+                        ><input
                             id="address"
                             type="text"
                             v-model="add_stdDetail.address"
-                        ></textarea>
+                            style="min-width: 600px;"
+                        />
                     </td>
                 </tr>
             </table>
@@ -128,7 +129,7 @@
                                 />
                             </td>
                             <td>
-                                <label>Giới tính</label
+                                <label style="width: 300px;">Giới tính</label
                                 ><input
                                     type="text"
                                     v-model="edit_stdDetail.gender"
@@ -151,7 +152,7 @@
                                 />
                             </td>
                             <td>
-                                <label>Số điện thoại</label
+                                <label style="width: 300px;">Số điện thoại</label
                                 ><input
                                     type="text"
                                     v-model="edit_stdDetail.phone"
@@ -160,12 +161,13 @@
                         </tr>
                         <tr>
                             <td colspan="3">
-                                <label>Địa chỉ</label
-                                ><textarea
+                                <label style="margin-right: 20px;">Địa chỉ</label
+                                ><input
                                     id="address"
                                     type="text"
                                     v-model="edit_stdDetail.address"
-                                ></textarea>
+                                    style="min-width: 600px;"
+                                />
                             </td>
                         </tr>
                     </tbody>
@@ -295,7 +297,7 @@
                 </div>
             </div>
             <div class="insert-table">
-                <table id="table-std">
+                <table id="table-std" style="margin-bottom: 50px;">
                     <thead>
                         <th style="text-align: left">Tên</th>
                         <th>Lớp</th>
@@ -381,12 +383,11 @@
         </div>
         <div class="mark-title-table">
             <span
-                >{{ mark_classSel }} - {{ mark_semesterSel }} -
-                {{ mark_subjectSel }}</span
+                >{{ mark_getContextName }}</span
             >
             <div class="btn-group-mark">
-                <button @click="mark_Refresh" id="remove">
-                    <i class="bx bx-x"></i><i>Làm mới</i>
+                <button @click="mark_Refresh" id="refresh">
+                    <i class="bx bx-refresh"></i><i>Làm mới</i>
                 </button>
                 <button id="change" @click="mark_done">
                     <i class="bx bx-check"></i><i>Xong</i>
@@ -465,7 +466,7 @@
                     <th>Lớp</th>
                     <th>Sĩ số</th>
                     <th>Số lượng đạt</th>
-                    <th>Tỉ lệ</th>
+                    <th>Tỉ lệ (%)</th>
                 </thead>
                 <tbody>
                     <tr v-for="(item, key) in report_classList" :key="key">
@@ -480,8 +481,6 @@
     </div>
 </template>
 <script>
-import studentAll from '../assets/data/students.json';
-
 export default {
     name: 'ManagementComponent',
     data() {
@@ -494,6 +493,7 @@ export default {
             public_studentList: [], // danh sách học sinh
             public_detailsMark: [], // danh sách chi tiết điểm
             public_finalMark: [], // danh sách điểm tk
+            public_regList: [], // danh sách các quy định
 
             // dữ liệu phần tiếp nhận học sinh
             add_stdDetail: {}, // chứa thông tin của 1 học sinh khi thêm
@@ -535,6 +535,7 @@ export default {
         this.getDetailsMark();
         this.getFinalMark();
         this.getLastID();
+        this.getRegulations();
 
         // Thêm học sinh
         this.add_stdDetail = {
@@ -561,6 +562,20 @@ export default {
         // this.class_classSelected = this.public_classList[0].id;
     },
     computed: {
+        mark_getContextName() {
+            let classList = this.public_classList.find((grade) => {
+                return grade.malop === this.mark_classSel;
+            });
+            let semList = this.public_semesterList.find((semester) => {
+                return semester.mahk === this.mark_semesterSel;
+            });
+            let subList = this.public_subjectList.find((subject) => {
+                return subject.mamh === this.mark_subjectSel;
+            });
+            if (subList && semList)
+                return 'Bảng điểm lớp ' + classList.tenlop + ' - ' +  semList.tenhk + ' - ' + subList.tenmh;
+            else return '';
+        },
         report_getSubSemName() {
             let subList = this.public_subjectList.find((subject) => {
                 return subject.mamh === this.report_subjectSel;
@@ -682,8 +697,16 @@ export default {
                 });
         },
 
+        getRegulations() {
+            fetch(this.base_url + '/quydinh/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.public_regList = api.data.map((std) => std);
+                });
+        },
+
         /**
-         * Lọc ra học sinh có tên chứa từ khóa trong studentAll
+         * Lọc ra học sinh có tên chứa từ khóa trong danh sách
          *
          * @param {array} stdArr danh sách học sinh cần tra cứu
          * @param {string} keyword Từ khóa tìm kiếm học sinh
@@ -902,11 +925,13 @@ export default {
                 address: '',
             };
             // console.log('Remove ', this.edit_selectedID);
-            const res = await fetch(
+            await fetch(
                 this.base_url + `/hocsinh/delete?id=${this.edit_selectedID}`
-            );
-            const data = res.json();
-            console.log(data);
+            ).then((response) => response.json())
+                .then((data) => {
+                    if (data.status === 'ok') alert('Xóa học sinh thành công')
+                    else alert('Xóa học sinh thất bại')
+                });
             this.getStudentAll();
             this.studentShow = this.public_studentList;
             this.edit_selectedID = '';
@@ -939,13 +964,14 @@ export default {
                 EMAIL: this.edit_stdDetail.email,
                 MALOP: this.edit_stdDetail.grade,
             };
-            console.log(new_student);
             const new_data = JSON.stringify(new_student);
-            const res = await fetch(
+            await fetch(
                 this.base_url + `/hocsinh/update?data=${new_data}`
-            );
-            const data = await res.json();
-            console.log(data);
+            ).then((response) => response.json())
+                .then((data) => {
+                    if (data.status === 'ok') alert('Chỉnh sửa thông tin sinh thành công')
+                    else alert('Chỉnh sửa thông tin học sinh thất bại')
+                });
             this.getStudentAll();
             this.studentShow = this.public_studentList;
         },
@@ -1035,7 +1061,6 @@ export default {
          *
          */
         class_cancel() {
-            // console.log(studentAll);
             this.class_classSelected = '';
             this.class_stdInClass = [];
             this.class_stdNoClass = [];
@@ -1071,7 +1096,7 @@ export default {
             if (confirm(text) == false) {
                 return;
             }
-            // console.log('Add ', this.class_stdInClass);
+            let isSuccess = true;
             for (let i = 0; i < this.class_stdInClass.length; i++) {
                 const element = this.class_stdInClass[i];
                 const new_student = {
@@ -1084,13 +1109,13 @@ export default {
                     MALOP: element.malop,
                 };
                 const new_data = JSON.stringify(new_student);
-                const res = await fetch(
+                await fetch(
                     this.base_url + `/hocsinh/update?data=${new_data}`
-                );
-                const data = await res.json();
-                console.log(data);
+                ).then((response) => response.json())
+                    .then((data) => {
+                        if (data.status != 'ok') isSuccess = false;
+                    });
             }
-            // console.log('Remove ', this.class_stdNoClass);
             for (let i = 0; i < this.class_stdNoClass.length; i++) {
                 const element = this.class_stdNoClass[i];
                 let temp = null;
@@ -1104,13 +1129,18 @@ export default {
                     MALOP: temp,
                 };
                 const new_data = JSON.stringify(new_student);
-                const res = await fetch(
+                await fetch(
                     this.base_url + `/hocsinh/update?data=${new_data}`
-                );
-                const data = await res.json();
-                console.log(data);
+                ).then((response) => response.json())
+                    .then((data) => {
+                        if (data.status != 'ok') isSuccess = false;
+                    });
             }
-            alert('Dữ liệu của bạn đã được cập nhật')
+            if (isSuccess) {
+                alert('Dữ liệu của bạn đã được cập nhật')
+            } else {
+                alert('Dữ liệu cập nhật không thành công')
+            }
             this.class_classSelected = '';
             this.class_stdInClass = [];
             this.class_stdNoClass = [];
@@ -1192,6 +1222,8 @@ export default {
             else if (last_id >= 10 && last_id <= 99)
                 last_id = '0' + String(last_id);
             else last_id = String(last_id);
+
+            let isSuccess = true;
             for (let i = 0; i < this.mark_newStudents.length; i++) {
                 let element = this.mark_newStudents[i];
 
@@ -1236,13 +1268,12 @@ export default {
                             DIEMKT: new_exam[i],
                         };
                         const new_record = JSON.stringify(record);
-                        console.log(new_record);
-                        const res = await fetch(
-                            this.base_url +
-                                `/chitietdiem/update?data=${new_record}`
-                        );
-                        const data = res.json();
-                        console.log(data);
+                        await fetch(
+                            this.base_url + `/chitietdiem/update?data=${new_record}`
+                        ).then((response) => response.json())
+                            .then((data) => {
+                                if (data.status != 'ok') isSuccess = false;
+                            });
                     }
                 } else {
                     if (
@@ -1262,11 +1293,12 @@ export default {
                         MAHS: element.mahs,
                     };
                     const new_record = JSON.stringify(record);
-                    const res = await fetch(
+                    await fetch(
                         this.base_url + `/diemtk/create?data=${new_record}`
-                    );
-                    const data = res.json();
-                    console.log(data);
+                    ).then((response) => response.json())
+                        .then((data) => {
+                            if (data.status != 'ok') isSuccess = false;
+                        });
 
                     for (let i = 0; i < 3; i++) {
                         let record = {
@@ -1276,62 +1308,43 @@ export default {
                         };
                         console.log(record);
                         const new_record = JSON.stringify(record);
-                        console.log(new_record);
-                        const res = await fetch(
-                            this.base_url +
-                                `/chitietdiem/create?data=${new_record}`
-                        );
-                        const data = res.json();
-                        console.log(data);
+                        await fetch(
+                            this.base_url + `/chitietdiem/create?data=${new_record}`
+                        ).then((response) => response.json())
+                            .then((data) => {
+                                if (data.status != 'ok') isSuccess = false;
+                            });
                     }
                 }
             }
-            alert('Cập nhật thành công');
+            if (isSuccess) alert('Cập nhật thành công');
+            else alert ('Cập nhật không thành công');
             this.mark_selectContext();
             this.getLastID();
-            
         },
 
         // ================ Lập báo cáo ====================================
-        /**
-         * Chọn Học kì và Môn học cần lập báo cáo
-         *
-         * @param {object} e Event khi gọi hàm
-         */
-        report_selectContext() {
-            if (
-                this.mark_classSel &&
-                this.mark_semesterSel &&
-                this.mark_subjectSel
-            ) {
-                this.mark_context =
-                    this.mark_classSel +
-                    this.mark_semesterSel +
-                    this.mark_subjectSel;
-                console.log('Get Data....');
-                this.studentShow = this.filterStdByAttrValue(
-                    studentAll,
-                    'gender',
-                    'Nam'
-                );
-
-                for (let i = 0; i < this.studentShow.length; i++) {
-                    let new_mark = {
-                        id: this.studentShow[i].id,
-                        exam_1: null,
-                        exam_2: null,
-                        exam_3: null,
-                    };
-                    this.mark_inputMark.push(new_mark);
-                }
-            }
-        },
-
         /**
          * Lập báo cáo theo yêu cầu đã chọn
          *
          */
         report_done() {
+            if(!this.report_semesterSel || !this.report_subjectSel) {
+                alert('Bạn chưa chọn học kì và môn!')
+                return;
+            }
+
+            let admMark = null;
+            try {
+                admMark = parseFloat(this.public_regList.find(reg => reg.maquydinh === 'QD004').value);
+            }
+            catch(err) {
+                console.log('Không thể lấy điểm chuẩn đạt môn');
+                return
+            }
+
+            console.log(admMark);
+
             for (let i = 0; i < this.public_studentList.length; i++) {
                 let element = this.public_studentList[i];
                 let totalMark = this.public_finalMark.filter((mark) => {
@@ -1343,9 +1356,11 @@ export default {
                         mark.mamh === this.report_subjectSel
                     );
                 });
-                if (_mark === undefined) element.final = 0;
+                if (!_mark) element.final = 0.0;
+                else if (!_mark.diemtk) element.final = 0.0
                 else element.final = _mark.diemtk;
             }
+
             this.public_classList.forEach((el) => {
                 let new_class = {
                     total: 0,
@@ -1353,11 +1368,12 @@ export default {
                 };
                 this.report_classList[el.tenlop] = new_class;
             });
+
             for (let i = 0; i < this.public_studentList.length; i++) {
                 const element = this.public_studentList[i];
                 if (element.malop) {
                     this.report_classList[element.tenlop].total += 1;
-                    if (parseFloat(element.final) >= 5.0)
+                    if (parseFloat(element.final) >= admMark)
                         this.report_classList[element.tenlop].passed += 1;
                 }
             }
@@ -1515,6 +1531,7 @@ export default {
     padding: 10px 0;
     max-width: 1060px;
     text-align: center;
+    margin-bottom: 50px;
 }
 
 .update-table td:first-child,
@@ -1620,6 +1637,7 @@ select {
     padding: 10px 0;
     max-width: 960px;
     text-align: center;
+    margin-bottom: 10px;
 }
 
 #table-std td:first-child,
@@ -1775,13 +1793,13 @@ select {
 
 .mark-title-table {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     margin-top: 55px;
 }
 
 .mark-title-table span {
     position: absolute;
-    left: 300px;
+    left: 220px;
     font-size: 28px;
     color: var(--text-color);
     padding: 10px;
@@ -1810,8 +1828,8 @@ select {
     padding-right: 5px;
     font-style: normal;
 }
-.btn-group-mark #remove {
-    background-color: var(--remove-btn);
+.btn-group-mark #refresh {
+    background-color: #777;
 }
 .btn-group-mark #change {
     background-color: var(--change-btn);
@@ -1833,6 +1851,7 @@ select {
     border-radius: 25px;
     padding: 10px 0;
     max-width: 960px;
+    margin-bottom: 50px;
 }
 
 .mark-table td:first-child,
@@ -1971,14 +1990,27 @@ select {
     display: flex;
     justify-content: center;
     margin-top: 40px;
-    height: 50vh;
+    max-height: 50vh;
     overflow-y: auto;
 }
 
 .report-table table {
-    border-spacing: 40px;
     border: 2px solid var(--text-color);
     border-radius: 25px;
+    margin-bottom: 50px;
+}
+
+.report-table th:nth-child(1) {
+    width: 160px;
+}
+.report-table th:nth-child(2) {
+    width: 160px;
+}
+.report-table th:nth-child(3) {
+    width: 200px;
+}
+.report-table th:nth-child(4) {
+    width: 160px;
 }
 
 .report-table table label {
@@ -2002,9 +2034,12 @@ select {
     text-align: center;
 }
 
+.report-table th, td {
+    height: 50px;
+}
 .report-table td {
+    text-align: center;
     font-size: 20px;
-    padding: 5px 50px;
     color: var(--text-color);
 }
 </style>

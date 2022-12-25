@@ -41,9 +41,9 @@
                     >
                         <td class="text">{{ index + 1 }}</td>
                         <td class="text">{{ student.hoten }}</td>
-                        <td class="text">{{ student.tenlop }}</td>
-                        <td class="text">{{ student.final1 }}</td>
-                        <td class="text">{{ student.final2 }}</td>
+                        <td class="text">{{ student.tenlop ? student.tenlop : '-' }}</td>
+                        <td class="text">{{ student.final1 ? student.final1 : '-' }}</td>
+                        <td class="text">{{ student.final2 ? student.final2 : '-'}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -65,18 +65,21 @@ export default {
         };
     },
     beforeMount() {
-        fetch(this.base_url + '/hocsinh/all')
-            .then((res) => res.json())
-            .then((api) => {
-                this.root_students = api.data.map((x) => x);
-            });
-        fetch(this.base_url + '/diemtk/all')
-            .then((res) => res.json())
-            .then((api) => {
-                this.finalMark = api.data.map((x) => x);
-            });
+        this.fetchRootData();
     },
     methods: {
+        fetchRootData () {
+            fetch(this.base_url + '/hocsinh/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.root_students = api.data.map((x) => x);
+                });
+            fetch(this.base_url + '/diemtk/all')
+                .then((res) => res.json())
+                .then((api) => {
+                    this.finalMark = api.data.map((x) => x);
+                });
+        },
         getData() {
             if (this.isFirst) {
                 this.isFirst = false;
@@ -103,23 +106,27 @@ export default {
                         sum2 += parseFloat(el.diemtk);
                         numOfSubject2++;
                     });
-                    if (numOfSubject1 === 0) element.final1 = null;
+                    if (numOfSubject1 === 0 || isNaN(sum1)) element.final1 = null;
                     else element.final1 = (sum1 / numOfSubject1).toFixed(2);
-                    if (numOfSubject2 === 0) element.final2 = null;
+                    if (numOfSubject2 === 0 || isNaN(sum2)) element.final2 = null;
                     else element.final2 = (sum2 / numOfSubject2).toFixed(2);
-                    element.tenlop = String(element.malop).substring(1, 5);
+                    if (element.malop) {
+                        element.tenlop = String(element.malop).substring(1, 5);
+                    }
+                    else element.tenlop = '';
                 }
             }
         },
         onSearch() {
-            this.getData()
+            this.getData();
             this.students = this.root_students.filter((student) => {
                 return student.hoten
                     .toLowerCase()
                     .includes(this.keyword.toLowerCase());
             });
-            console.log(this.finalMark);
-            console.log(this.students);
+            if(this.students.length === 0) {
+                alert('Không tìm thấy')
+            }
         },
     },
 };
@@ -235,6 +242,7 @@ h3 {
     border-collapse: separate;
     border: 2px solid var(--text-color);
     border-radius: 15px;
+    margin-bottom: 50px;
 }
 
 #table-std .text {
