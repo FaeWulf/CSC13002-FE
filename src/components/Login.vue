@@ -3,12 +3,7 @@
         <div class="form">
             <div class="text-center">
                 <h6><span>Đăng nhập</span> <span>Đăng ký</span></h6>
-                <input
-                    @click="onFlip"
-                    type="checkbox"
-                    class="checkbox"
-                    id="reg-log"
-                />
+                <input @click="onFlip" type="checkbox" class="checkbox" id="reg-log" />
                 <label for="reg-log"></label>
                 <div class="card-3d-wrap">
                     <div class="card-3d-wrapper">
@@ -17,32 +12,17 @@
                             <div class="center-wrap">
                                 <h4 class="heading">Đăng nhập</h4>
                                 <div class="form-group">
-                                    <input
-                                        :value="userNameInput"
-                                        @input="onUserNameInput"
-                                        type="text"
-                                        class="form-style"
-                                        placeholder="Tên đăng nhập"
-                                    />
-                                    <i class="input-icon material-icons"
-                                        >person</i
-                                    >
+                                    <input :value="userNameInput" @input="onUserNameInput" type="text"
+                                        class="form-style" placeholder="Tên đăng nhập" />
+                                    <i class="input-icon material-icons">person</i>
                                 </div>
                                 <div class="form-warning">
                                     {{ userNameWarning }}
                                 </div>
                                 <div class="form-group">
-                                    <input
-                                        :value="passwordInput"
-                                        @keyup.enter="onLogin"
-                                        @input="onPasswordInput"
-                                        type="password"
-                                        class="form-style"
-                                        placeholder="Mật khẩu"
-                                    />
-                                    <i class="input-icon material-icons"
-                                        >lock</i
-                                    >
+                                    <input :value="passwordInput" @keyup.enter="onLogin" @input="onPasswordInput"
+                                        type="password" class="form-style" placeholder="Mật khẩu" />
+                                    <i class="input-icon material-icons">lock</i>
                                 </div>
                                 <div class="form-warning">
                                     {{ passwordWarning }}
@@ -60,47 +40,25 @@
                             <div class="center-wrap">
                                 <h4 class="heading">Đăng ký</h4>
                                 <div class="form-group">
-                                    <input
-                                        :value="userNameInput"
-                                        @input="onUserNameInput"
-                                        type="text"
-                                        class="form-style"
-                                        placeholder="Tên đăng nhập"
-                                    />
-                                    <i class="input-icon material-icons"
-                                        >person</i
-                                    >
+                                    <input :value="userNameInput" @input="onUserNameInput" type="text"
+                                        class="form-style" placeholder="Tên đăng nhập" />
+                                    <i class="input-icon material-icons">person</i>
                                 </div>
                                 <div class="form-warning">
                                     {{ userNameWarning }}
                                 </div>
                                 <div class="form-group">
-                                    <input
-                                        :value="passwordInput"
-                                        @input="onPasswordInput"
-                                        type="password"
-                                        class="form-style"
-                                        placeholder="Mật khẩu"
-                                    />
-                                    <i class="input-icon material-icons"
-                                        >lock</i
-                                    >
+                                    <input :value="passwordInput" @input="onPasswordInput" type="password"
+                                        class="form-style" placeholder="Mật khẩu" />
+                                    <i class="input-icon material-icons">lock</i>
                                 </div>
                                 <div class="form-warning">
                                     {{ passwordWarning }}
                                 </div>
                                 <div class="form-group">
-                                    <input
-                                        :value="passwordReinput"
-                                        @input="onPasswordReinput"
-                                        @keyup.enter="onSignup"
-                                        type="password"
-                                        class="form-style"
-                                        placeholder="Nhập lại mật khẩu"
-                                    />
-                                    <i class="input-icon material-icons"
-                                        >lock</i
-                                    >
+                                    <input :value="passwordReinput" @input="onPasswordReinput" @keyup.enter="onSignup"
+                                        type="password" class="form-style" placeholder="Nhập lại mật khẩu" />
+                                    <i class="input-icon material-icons">lock</i>
                                 </div>
                                 <div class="form-warning">
                                     {{ rePasswordWarning }}
@@ -243,7 +201,6 @@ export default {
         },
 
         async onSignup() {
-            // console.log(this.isUserNameOk, this.isPasswordOk, this.isRepasswordOk);
             if (this.isUserNameOk && this.isPasswordOk && this.isRepasswordOk) {
                 let userName = this.userNameInput;
                 let pass = this.passwordInput;
@@ -252,9 +209,26 @@ export default {
                 } else {
                     const salt = bcryptjs.genSaltSync(10);
                     let hash = bcryptjs.hashSync(pass, salt);
-                    console.log(hash);
 
-                    let sentinel = this.public_accountList[0].matk;
+                    if (this.public_accountList.length === 0) {
+                        const user = {
+                            MATK: 'TK001',
+                            TENDANGNHAP: userName,
+                            MATKHAU: hash,
+                            LOAITK: 3,
+                        };
+                        const new_user = JSON.stringify(user);
+                        const res = await fetch(
+                            this.base_url + `/taikhoan/create?data=${new_user}`
+                        );
+                        const data = res.json();
+                        console.log(data);
+                        alert('Tạo tài khoản thành công');
+                        this.getAccountAll();
+                        return;
+                    }
+                    else {
+                        let sentinel = this.public_accountList[0].matk;
                     for (let i = 1; i < this.public_accountList.length; i++) {
                         const element = this.public_accountList[i];
                         if (sentinel < element.matk) sentinel = element.matk;
@@ -288,6 +262,7 @@ export default {
                     console.log(data);
                     alert('Tạo tài khoản thành công');
                     this.getAccountAll();
+                    }
                 }
             }
         },
@@ -345,8 +320,8 @@ export default {
     font-size: 16px;
 }
 
-.container-fluid .checkbox:checked + label,
-.container-fluid .checkbox:not(:checked) + label {
+.container-fluid .checkbox:checked+label,
+.container-fluid .checkbox:not(:checked)+label {
     position: relative;
     display: block;
     width: 60px;
@@ -357,8 +332,8 @@ export default {
     cursor: pointer;
 }
 
-.container-fluid .checkbox:checked + label::before,
-.container-fluid .checkbox:not(:checked) + label::before {
+.container-fluid .checkbox:checked+label::before,
+.container-fluid .checkbox:not(:checked)+label::before {
     position: absolute;
     display: block;
     width: 36px;
@@ -376,7 +351,7 @@ export default {
     transition: all 0.5s ease;
 }
 
-.container-fluid .checkbox:checked + label::before {
+.container-fluid .checkbox:checked+label::before {
     transform: translateX(44px) rotate(-270deg);
 }
 
@@ -422,7 +397,7 @@ export default {
     transform: rotateY(180deg);
 }
 
-.container-fluid .checkbox:checked ~ .card-3d-wrap .card-3d-wrapper {
+.container-fluid .checkbox:checked~.card-3d-wrap .card-3d-wrapper {
     transform: rotateY(180deg);
 }
 
